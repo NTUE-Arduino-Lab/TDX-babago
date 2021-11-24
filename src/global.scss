@@ -1,0 +1,85 @@
+/*
+ * This is for global css usage.
+ */
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  font-family: 'Noto Sans TC', 'PingFangTC-Regular', 'Microsoft JhengHei',
+    'Roboto', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  outline: none;
+}
+
+body,
+input,
+select,
+textarea,
+button {
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Noto Sans TC', 'PingFangTC-Regular', 'Microsoft JhengHei',
+    sans-serif;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  width: 100%;
+  background-color: #fff;
+}
+
+textarea,
+input {
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-appearance: none;
+  border-radius: 0;
+
+  &::placeholder {
+    color: var(--light-gray);
+  }
+}
+
+input {
+  width: 100%;
+  border: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: var(--black);
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  // &:-webkit-autofill {
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  // -webkit-box-shadow: 0 0 0 30px white inset;-webkit-box-shadow
+  // }
+
+  &[type='number'] {
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -moz-appearance: textfield;
+  }
+}
+
+a {
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+}
