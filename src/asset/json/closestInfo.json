@@ -1,0 +1,31 @@
+{
+    "title": "捷運科技大樓站",
+    "distance": "10 公尺",
+    "busList": [
+        {
+            "busName":"278",
+            "busDirection":"往景美捷運站",
+            "busState": "進站中"
+        },
+        {
+            "busName":"278區",
+            "busDirection":"往景美捷運站",
+            "busState":"尚未發車"
+        },
+        {
+            "busName":"685",
+            "busDirection":"往麟光新村",
+            "busState":"5 分"
+        },
+        {
+            "busName":"復興幹線",
+            "busDirection":"往景美",
+            "busState":"17 分"
+        },
+        {
+            "busName":"懷恩專車S33",
+            "busDirection":"往第二殯儀館",
+            "busState":"20 分"
+        }
+    ]
+}
