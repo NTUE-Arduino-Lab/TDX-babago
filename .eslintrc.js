@@ -14,7 +14,7 @@ module.exports = {
 		'ecmaFeatures': {
 			'jsx': true
 		},
-		'ecmaVersion': 13,
+		'ecmaVersion': 12,
 		'sourceType': 'module'
 	},
 	'plugins': [
@@ -23,11 +23,11 @@ module.exports = {
 	'rules': {
 		'indent': [
 			'error',
-			'space'
+			2
 		],
 		'linebreak-style': [
 			'error',
-			'windows'
+			'unix'
 		],
 		'quotes': [
 			'error',
