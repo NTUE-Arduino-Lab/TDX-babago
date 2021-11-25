@@ -1,44 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import styles from './styles.module.scss';
 
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 
+import { setPosition, setLocation } from '../../store/actions';
+import { StoreContext } from '../../store/reducer';
 function LocationMarker() {
-  const [position, setPosition] = useState(null);
-  const [location, setLocation] = useState([]);
+  const {
+    state: { position },
+    dispatch,
+  } = useContext(StoreContext);
 
   const map = useMap();
 
   useEffect(() => {
     map.locate().on('locationfound', function (e) {
-      setPosition(e.latlng);
+      // console.log(e.latlng);
+      setPosition(dispatch, { position: e.latlng });
       map.flyTo(e.latlng, map.getZoom());
     });
   }, [map]);
 
   useEffect(() => {
     if (position) {
-      fetch(
-        `https://api.nlsc.gov.tw/other/TownVillagePointQuery/${position.lng}/${position.lat}`,
-      )
-        .then((response) => response.text())
-        .then((str) => new window.DOMParser().parseFromString(str, 'text/xml'))
-        .then((data) =>
-          setLocation([
-            data.getElementsByTagName('ctyName')[0].innerHTML,
-            data.getElementsByTagName('townName')[0].innerHTML,
-          ]),
-        );
+      setLocation(dispatch, { lng: position.lng, lat: position.lat });
     }
   }, [position]);
 
-  return location.length === 0 ? (
-    0
-  ) : (
+  return position === null ? null : (
     <Marker position={position}>
       <Popup>
-        <b>city</b>: {location[0]} <br />
-        <b>town</b>: {location[1]}
+        <b>lng</b>: {position.lng} <br />
+        <b>lat</b>: {position.lat}
       </Popup>
     </Marker>
   );

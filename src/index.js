@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { StoreProvider } from './store/reducer';
+
 import './global.scss';
 import Home from './layouts/Home';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Home />
+    <StoreProvider>
+      <Home />
+    </StoreProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
