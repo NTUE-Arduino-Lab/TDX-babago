@@ -2,17 +2,23 @@ import React, { useEffect, useContext } from 'react';
 import moment from 'moment';
 import styles from './styles.module.scss';
 
-import nearbyInfoJson from '../../asset/json/nearbyInfo.json';
+// import nearbyInfoJson from '../../asset/json/nearbyInfo.json';
 import closestInfoJson from '../../asset/json/closestInfo.json';
 
-import { setWeather } from '../../store/actions';
+import { setNearbyStops, setWeather } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 function Sidebar() {
   const {
-    state: { location, weather },
+    state: { position, location, weather, nearbyStops },
     dispatch,
   } = useContext(StoreContext);
+
+  useEffect(() => {
+    if (position) {
+      setNearbyStops(dispatch, { lng: position.lng, lat: position.lat });
+    }
+  }, [position]);
 
   useEffect(() => {
     if (location) {
@@ -31,6 +37,8 @@ function Sidebar() {
       });
     }
   }, [location]);
+
+  useEffect(() => {}, [nearbyStops]);
 
   return (
     <div className={styles.sidebar}>
@@ -151,36 +159,42 @@ function Sidebar() {
           <div className={styles.linkRow__fontSize}>附近站牌</div>
           <div className={styles.linkRow_arrowIcon}></div>
         </div>
-        {nearbyInfoJson.map((nearbyInfo, index) => (
-          <div className={styles.nearbyBox__marginBottom} key={index}>
-            <div
-              className={`${styles.busStopBox_stopInfoBox} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
-            >
-              <div className={styles.stopInfoBox_stopName__fontSize}>
-                {nearbyInfo.title}
-              </div>
-              <div className={styles.stopInfoBox_stopDistance__fontSize}>
-                {nearbyInfo.distance}
-              </div>
-            </div>
-            <div
-              className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
-            >
-              <div className={styles.busStopBox_busNameBox}>
-                {nearbyInfo.busList.map((busName) => (
-                  <div key={busName}>
-                    <div
-                      className={`${styles.busNameBox_busName} ${styles.linkRow__fontSize}`}
-                    >
-                      {busName}
-                    </div>
+        {nearbyStops ? (
+          <>
+            {nearbyStops.map((nearbyStop, index) => (
+              <div className={styles.nearbyBox__marginBottom} key={index}>
+                <div
+                  className={`${styles.busStopBox_stopInfoBox} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
+                >
+                  <div className={styles.stopInfoBox_stopName__fontSize}>
+                    {nearbyStop.stationName}
                   </div>
-                ))}
+                  <div className={styles.stopInfoBox_stopDistance__fontSize}>
+                    {nearbyStop.stationDistance} 公尺
+                  </div>
+                </div>
+                <div
+                  className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
+                >
+                  <div className={styles.busStopBox_busNameBox}>
+                    {nearbyStop.buses.map((busName, index) => (
+                      <div key={index}>
+                        <div
+                          className={`${styles.busNameBox_busName} ${styles.linkRow__fontSize}`}
+                        >
+                          {busName}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className={styles.linkRow_arrowIcon}></div>
+                </div>
               </div>
-              <div className={styles.linkRow_arrowIcon}></div>
-            </div>
-          </div>
-        ))}
+            ))}
+          </>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

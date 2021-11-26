@@ -1,10 +1,36 @@
 import axios from 'axios';
+import jsSHA from 'jssha';
+import { getDistance } from 'geolib';
+
 import type from './actionTypes';
 
 import cityJson from '../asset/json/city.json';
 
 const LOCATION_URL = 'https://api.nlsc.gov.tw/other/TownVillagePointQuery';
 const WEATHER_URL = 'https://opendata.cwb.gov.tw/api/v1/rest/datastore';
+const TDXBUS_URL = 'https://ptx.transportdata.tw/MOTC/v2/Bus';
+
+function GetAuthorizationHeader() {
+  var AppID = '88836dc3bd984400b7b3ea51e35e2627';
+  var AppKey = 'AqupXvSAdKge3ptnkghRmreRdrc';
+
+  var GMTString = new Date().toGMTString();
+  var ShaObj = new jsSHA('SHA-1', 'TEXT');
+  ShaObj.setHMACKey(AppKey, 'TEXT');
+  ShaObj.update('x-date: ' + GMTString);
+  var HMAC = ShaObj.getHMAC('B64');
+  var Authorization =
+    'hmac username="' +
+    AppID +
+    '", algorithm="hmac-sha1", headers="x-date", signature="' +
+    HMAC +
+    '"';
+
+  return {
+    Authorization: Authorization,
+    'X-Date': GMTString /*,'Accept-Encoding': 'gzip'*/,
+  }; //如果要將js運行在伺服器，可額外加入 'Accept-Encoding': 'gzip'，要求壓縮以減少網路傳輸資料量
+}
 
 export const setPosition = async (dispatch, options) => {
   dispatch({ type: type.BEGIN_DATA_REQUEST });
@@ -82,7 +108,7 @@ export const setWeather = async (dispatch, options) => {
           maxTemp: maxTemp,
         };
 
-        console.log(weather);
+        // console.log(weather);
 
         dispatch({
           type: type.SET_WEATHER,
@@ -93,5 +119,64 @@ export const setWeather = async (dispatch, options) => {
         dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
       }
     }
+  }
+};
+
+export const setNearbyStops = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { lng, lat } = options;
+
+  try {
+    const url = `${TDXBUS_URL}/Station/NearBy?$spatialFilter=nearby(${lat},${lng},500)&$format=JSON'/${lng}/${lat}`;
+    let config = {
+      headers: GetAuthorizationHeader(),
+    };
+    const response = await axios.get(url, config);
+    const data = response.data;
+
+    const nearbyStops = [];
+
+    data.map((station) => {
+      const stationName = station.StationName.Zh_tw;
+      const stationLon = station.StationPosition.PositionLon;
+      const stationLat = station.StationPosition.PositionLat;
+
+      const stationDistance = getDistance(
+        { latitude: lat, longitude: lng },
+        { latitude: stationLat, longitude: stationLon },
+      );
+
+      const buses = [];
+      station.Stops.map((stops) => buses.push(stops.RouteName.Zh_tw));
+
+      nearbyStops.push({
+        stationName: stationName,
+        stationLon: stationLon,
+        stationLat: stationLat,
+        stationDistance: stationDistance,
+        buses: buses,
+      });
+    });
+
+    nearbyStops.sort(function (a, b) {
+      if (a.stationDistance > b.stationDistance) {
+        return 1;
+      }
+      if (a.stationDistance < b.stationDistance) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
+
+    // console.log(nearbyStops);
+
+    dispatch({
+      type: type.SET_NEARBYSTOPS,
+      payload: nearbyStops,
+    });
+    dispatch({ type: type.SUCCESS_DATA_REQUEST });
+  } catch (error) {
+    dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
   }
 };
