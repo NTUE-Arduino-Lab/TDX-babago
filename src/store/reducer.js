@@ -8,6 +8,7 @@ export const StoreContext = createContext();
 const initialState = {
   position: null,
   location: null,
+  weather: null,
   requestdata: { loading: false, error: null },
 };
 
@@ -22,6 +23,11 @@ function reducer(state, action) {
       return {
         ...state,
         location: action.payload,
+      };
+    case type.SET_WEATHER:
+      return {
+        ...state,
+        weather: action.payload,
       };
     case type.BEGIN_DATA_REQUEST:
       return {

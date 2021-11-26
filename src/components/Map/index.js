@@ -16,7 +16,9 @@ function LocationMarker() {
   useEffect(() => {
     map.locate().on('locationfound', function (e) {
       // console.log(e.latlng);
+      // console.log(e.bounds._northEast);
       setPosition(dispatch, { position: e.latlng });
+      // setPosition(dispatch, { position: e.bounds._northEast });
       map.flyTo(e.latlng, map.getZoom());
     });
   }, [map]);
