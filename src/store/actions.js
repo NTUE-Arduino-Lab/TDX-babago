@@ -137,6 +137,7 @@ export const setNearbyStops = async (dispatch, options) => {
     const nearbyStops = [];
 
     data.map((station) => {
+      const stationID = station.StationID;
       const stationName = station.StationName.Zh_tw;
       const stationLon = station.StationPosition.PositionLon;
       const stationLat = station.StationPosition.PositionLat;
@@ -146,15 +147,16 @@ export const setNearbyStops = async (dispatch, options) => {
         { latitude: stationLat, longitude: stationLon },
       );
 
-      const buses = [];
-      station.Stops.map((stops) => buses.push(stops.RouteName.Zh_tw));
+      const routes = [];
+      station.Stops.map((stops) => routes.push(stops.RouteName.Zh_tw));
 
       nearbyStops.push({
+        stationID: stationID,
         stationName: stationName,
         stationLon: stationLon,
         stationLat: stationLat,
         stationDistance: stationDistance,
-        buses: buses,
+        routes: routes,
       });
     });
 
@@ -178,5 +180,60 @@ export const setNearbyStops = async (dispatch, options) => {
     dispatch({ type: type.SUCCESS_DATA_REQUEST });
   } catch (error) {
     dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+  }
+};
+
+export const setCertainRoutes = async (dispatch, options) => {
+  dispatch({ type: type.SET_CERTAINSTOP });
+  const { stationID, city } = options;
+
+  for (var i = 0; i < cityJson.length; i++) {
+    if (cityJson[i].city === city) {
+      const cityEn = cityJson[i].cityEn;
+
+      // console.log(stationID);
+      // console.log(cityEn);
+
+      try {
+        const url = `${TDXBUS_URL}/EstimatedTimeOfArrival/City/${cityEn}/PassThrough/Station/${stationID}`;
+        let config = {
+          headers: GetAuthorizationHeader(),
+        };
+        const response = await axios.get(url, config);
+        const data = response.data;
+
+        const certainRoutes = [];
+
+        data.map((stop) => {
+          const routeID = stop.RouteID;
+          const routeName = stop.RouteName.Zh_tw;
+          const stopStatusArray = [
+            `${Math.round(stop.EstimateTime / 60)} 分`,
+            '尚未發車',
+            '交管不停靠',
+            '末班車已過',
+            '今日未營運',
+          ];
+          const stopStatus =
+            stop.StopStatus >= 0 ? stopStatusArray[stop.StopStatus] : null;
+
+          certainRoutes.push({
+            routeID: routeID,
+            routeName: routeName,
+            stopStatus: stopStatus,
+          });
+        });
+
+        // console.log(certainRoutes);
+
+        dispatch({
+          type: type.SET_CERTAINROUTES,
+          payload: certainRoutes,
+        });
+        dispatch({ type: type.SUCCESS_DATA_REQUEST });
+      } catch (error) {
+        dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+      }
+    }
   }
 };

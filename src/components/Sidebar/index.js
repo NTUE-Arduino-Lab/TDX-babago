@@ -3,14 +3,18 @@ import moment from 'moment';
 import styles from './styles.module.scss';
 
 // import nearbyInfoJson from '../../asset/json/nearbyInfo.json';
-import closestInfoJson from '../../asset/json/closestInfo.json';
+// import closestInfoJson from '../../asset/json/closestInfo.json';
 
-import { setNearbyStops, setWeather } from '../../store/actions';
+import {
+  setNearbyStops,
+  setWeather,
+  setCertainRoutes,
+} from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 function Sidebar() {
   const {
-    state: { position, location, weather, nearbyStops },
+    state: { position, location, weather, nearbyStops, certainRoutes },
     dispatch,
   } = useContext(StoreContext);
 
@@ -38,7 +42,16 @@ function Sidebar() {
     }
   }, [location]);
 
-  useEffect(() => {}, [nearbyStops]);
+  useEffect(() => {
+    if (nearbyStops && location) {
+      setCertainRoutes(dispatch, {
+        city: location.city,
+        stationID: nearbyStops[0].stationID,
+      });
+    }
+  }, [nearbyStops, location]);
+
+  useEffect(() => {}, [certainRoutes]);
 
   return (
     <div className={styles.sidebar}>
@@ -127,29 +140,41 @@ function Sidebar() {
         <div
           className={`${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
         >
-          <div className={styles.closestBox_stopName}>
-            {closestInfoJson.title}
-          </div>
-          <div className={styles.closestBox_stopDistance__fontSize}>
-            {closestInfoJson.distance}
-          </div>
+          {nearbyStops ? (
+            <>
+              <div className={styles.closestBox_stopName}>
+                {nearbyStops[0].stationName}
+              </div>
+              <div className={styles.closestBox_stopDistance__fontSize}>
+                {nearbyStops[0].stationDistance} 公尺
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
-        {closestInfoJson.busList.map((busInfo, index) => (
-          <div
-            className={`${styles.closestBox_currentInfoBox} ${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter}`}
-            key={index}
-          >
-            <div className={styles.currentInfoBox_busName}>
-              {busInfo.busName}
-            </div>
-            <div className={styles.currentInfoBox_busDirection}>
-              {busInfo.busDirection}
-            </div>
-            <div className={styles.currentInfoBox_busState}>
-              {busInfo.busState}
-            </div>
-          </div>
-        ))}
+        {certainRoutes ? (
+          <>
+            {certainRoutes.map((certainRoute, index) => (
+              <div
+                className={`${styles.closestBox_currentInfoBox} ${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter}`}
+                key={index}
+              >
+                <div className={styles.currentInfoBox_routeName}>
+                  {certainRoute.routeName}
+                </div>
+                <div className={styles.currentInfoBox_routeDirection}>
+                  {certainRoute.routeID}
+                </div>
+                <div className={styles.currentInfoBox_routeState}>
+                  {certainRoute.stopStatus}
+                </div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <></>
+        )}
       </div>
 
       <div className={styles.sidebar_box}>
@@ -164,7 +189,7 @@ function Sidebar() {
             {nearbyStops.map((nearbyStop, index) => (
               <div className={styles.nearbyBox__marginBottom} key={index}>
                 <div
-                  className={`${styles.busStopBox_stopInfoBox} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
+                  className={`${styles.routeStopBox_routeNameBox} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
                 >
                   <div className={styles.stopInfoBox_stopName__fontSize}>
                     {nearbyStop.stationName}
@@ -176,13 +201,13 @@ function Sidebar() {
                 <div
                   className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
                 >
-                  <div className={styles.busStopBox_busNameBox}>
-                    {nearbyStop.buses.map((busName, index) => (
+                  <div className={styles.routeStopBox_routeNameBox}>
+                    {nearbyStop.routes.map((routeName, index) => (
                       <div key={index}>
                         <div
-                          className={`${styles.busNameBox_busName} ${styles.linkRow__fontSize}`}
+                          className={`${styles.routeNameBox_routeName} ${styles.linkRow__fontSize}`}
                         >
-                          {busName}
+                          {routeName}
                         </div>
                       </div>
                     ))}

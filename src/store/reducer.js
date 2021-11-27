@@ -9,7 +9,8 @@ const initialState = {
   position: null,
   location: null,
   weather: null,
-  nearbyStops: [],
+  nearbyStops: null,
+  certainRoutes: null,
   requestdata: { loading: false, error: null },
 };
 
@@ -34,6 +35,11 @@ function reducer(state, action) {
       return {
         ...state,
         nearbyStops: action.payload,
+      };
+    case type.SET_CERTAINROUTES:
+      return {
+        ...state,
+        certainRoutes: action.payload,
       };
     case type.BEGIN_DATA_REQUEST:
       return {

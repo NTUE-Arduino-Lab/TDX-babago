@@ -1,90 +1,117 @@
 [
     {
         "city":"宜蘭縣",
+        "cityEn":"YilanCounty",
         "cityID":"F-D0047-001"
     },
     {
         "city":"桃園市",
+        "cityEn":"Taoyuan",
         "cityID":"F-D0047-005"
     },
     {
         "city":"新竹縣",
+        "cityEn":"HsinchuCounty",
         "cityID":"F-D0047-009"
     },
     {
         "city":"苗栗縣",
+        "cityEn":"MiaoliCounty",
         "cityID":"F-D0047-013"
     },
     {
         "city":"彰化縣",
+        "cityEn":"ChanghuaCounty",
         "cityID":"F-D0047-017"
     },
     {
         "city":"南投縣",
+        "cityEn":"NantouCounty",
         "cityID":"F-D0047-021"
     },
     {
         "city":"雲林縣",
+        "cityEn":"YunlinCounty",
         "cityID":"F-D0047-025"
     },
     {
         "city":"嘉義縣",
+        "cityEn":"ChiayiCounty",
         "cityID":"F-D0047-029"
     },
     {
         "city":"屏東縣",
+        "cityEn":"PingtungCounty",
         "cityID":"F-D0047-033"
     },
     {
         "city":"臺東縣",
+        "cityEn":"TaitungCounty",
         "cityID":"F-D0047-037"
     },
     {
         "city":"花蓮縣",
+        "cityEn":"HualienCounty",
         "cityID":"F-D0047-041"
     },
     {
         "city":"澎湖縣",
+        "cityEn":"PenghuCounty",
         "cityID":"F-D0047-045"
     },
     {
+        "city":"基隆市",
+        "cityEn":"Keelung",
+        "cityID":"F-D0047-049"
+    },
+    {
         "city":"基隆縣",
+        "cityEn":"Keelung",
         "cityID":"F-D0047-049"
     },
     {
         "city":"新竹市",
+        "cityEn":"Hsinchu",
         "cityID":"F-D0047-053"
     },
     {
         "city":"嘉義市",
+        "cityEn":"Chiayi",
         "cityID":"F-D0047-057"
     },
     {
         "city":"臺北市",
+        "cityEn":"Taipei",
         "cityID":"F-D0047-061"
     },
     {
         "city":"高雄市",
+        "cityEn":"Kaohsiung",
         "cityID":"F-D0047-065"
     },
     {
         "city":"新北市",
+        "cityEn":"NewTaipei",
         "cityID":"F-D0047-069"
     },
     {
         "city":"臺中市",
+        "cityEn":"Taichung",
         "cityID":"F-D0047-073"
     },
     {
         "city":"臺南市",
+        "cityEn":"Tainan",
         "cityID":"F-D0047-077"
     },
     {
         "city":"連江縣",
+        "cityEn":"LienchiangCounty",
         "cityID":"F-D0047-081"
     },
     {
         "city":"金門縣",
+        "cityEn":"KinmenCounty",
         "cityID":"F-D0047-085"
     }
 ]
