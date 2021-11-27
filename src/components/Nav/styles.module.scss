@@ -1,3 +1,9 @@
+.box__spaceBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+// nav
 .nav {
   position: absolute;
   background-color: #fcfcfc;

@@ -4,11 +4,10 @@ import styles from './styles.module.scss';
 import Nav from '../../components/Nav';
 import Search from '../../components/Search';
 import WeatherBox from '../../components/WeatherBox';
-import ClosestBox from '../../components/ClosestBox';
 import NearbyBox from '../../components/NearbyBox';
 import Map from '../../components/Map';
 
-function Home() {
+function NearbyStop() {
   return (
     <Fragment>
       <div className={styles.container}>
@@ -16,7 +15,6 @@ function Home() {
         <div className={styles.sidebar}>
           <Search></Search>
           <WeatherBox></WeatherBox>
-          <ClosestBox></ClosestBox>
           <NearbyBox></NearbyBox>
         </div>
         <Map></Map>
@@ -25,4 +23,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default NearbyStop;

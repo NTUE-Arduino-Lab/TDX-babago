@@ -97,18 +97,20 @@ function LocationMarker() {
 
 function Map() {
   return (
-    <MapContainer
-      center={[51.505, -0.09]}
-      zoom={16}
-      scrollWheelZoom={true}
-      className={styles.map}
-    >
-      <TileLayer
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <LocationMarker />
-    </MapContainer>
+    <Fragment>
+      <MapContainer
+        center={[25.022729, 121.545103]}
+        zoom={17}
+        scrollWheelZoom={true}
+        className={styles.map}
+      >
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <LocationMarker />
+      </MapContainer>
+    </Fragment>
   );
 }
 
