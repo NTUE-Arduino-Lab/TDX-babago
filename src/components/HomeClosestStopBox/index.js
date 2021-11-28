@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
-import { setCertainRoutes } from '../../store/actions';
+import { setCertainRoutes, setSelectStopIndex } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
-function ClosestBox() {
+function ClosestStopBox() {
   const [closestStop, setClosestStop] = useState(null);
   const [frontCertainRoutes, SetFrontCertainRoutes] = useState([]);
   const {
@@ -50,7 +50,11 @@ function ClosestBox() {
         className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.closestBox_titlebox__marginBottom}`}
       >
         <div className={styles.linkRow__fontSize}>最近站牌</div>
-        <Link to={path.closest}>
+        <Link
+          to={path.certainStop}
+          state={{ clickStopIndex: 0 }}
+          onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
+        >
           <div className={styles.linkRow_arrowIcon}></div>
         </Link>
       </div>
@@ -96,4 +100,4 @@ function ClosestBox() {
   );
 }
 
-export default ClosestBox;
+export default ClosestStopBox;

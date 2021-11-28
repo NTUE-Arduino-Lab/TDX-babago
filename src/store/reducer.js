@@ -11,6 +11,7 @@ const initialState = {
   weather: null,
   nearbyStops: null,
   certainRoutes: null,
+  selectStopIndex: 0,
   requestdata: { loading: false, error: null },
 };
 
@@ -40,6 +41,11 @@ function reducer(state, action) {
       return {
         ...state,
         certainRoutes: action.payload,
+      };
+    case type.SET_SELECTSTOPINDEX:
+      return {
+        ...state,
+        selectStopIndex: action.payload,
       };
     case type.BEGIN_DATA_REQUEST:
       return {

@@ -1,4 +1,14 @@
 .map {
-  width: 66.6%;
+  width: 66%;
   height: 100%;
+}
+
+.selectIcon{
+  z-index: 1000 !important;
+}
+.currentIcon{
+  z-index: 1001 !important;
+}
+.tooltip {
+  z-index: 1003 !important;
 }

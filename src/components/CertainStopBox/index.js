@@ -1,30 +1,48 @@
 import React, { useEffect, useContext, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import styles from './styles.module.scss';
 
-import { setCertainRoutes } from '../../store/actions';
+import { setNearbyStops, setCertainRoutes } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
-function ClosestBox() {
-  const [closestStop, setClosestStop] = useState(null);
+function CertainStopBox() {
+  const reactlocation = useLocation();
+  var { clickStopIndex } = reactlocation.state;
+  const [certainStop, setCertainStop] = useState(null);
+  const [changeLocation, setChangeLocation] = useState(null);
   const {
-    state: { location, nearbyStops, certainRoutes },
+    state: { position, location, nearbyStops, certainRoutes },
     dispatch,
   } = useContext(StoreContext);
 
   useEffect(() => {
-    if (nearbyStops && nearbyStops.length > 0) {
-      setClosestStop(nearbyStops[0]);
+    console.log('certainPage: ' + clickStopIndex);
+    if (changeLocation === null) {
+      setChangeLocation(false);
+    } else {
+      clickStopIndex = 0;
+      setChangeLocation(true);
+      if (position) {
+        setNearbyStops(dispatch, { lng: position.lng, lat: position.lat });
+      }
     }
-  }, [nearbyStops]);
+  }, [location]);
 
   useEffect(() => {
-    if (location && closestStop) {
+    if (nearbyStops && nearbyStops.length > clickStopIndex) {
+      setCertainStop(nearbyStops[clickStopIndex]);
+    }
+  }, [nearbyStops, clickStopIndex]);
+
+  useEffect(() => {
+    if (location && certainStop) {
       setCertainRoutes(dispatch, {
         city: location.city,
-        stationID: closestStop.stationID,
+        stationID: certainStop.stationID,
       });
     }
-  }, [location, closestStop]);
+  }, [location, certainStop]);
 
   useEffect(() => {}, [certainRoutes]);
 
@@ -39,13 +57,13 @@ function ClosestBox() {
       <div
         className={`${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
       >
-        {nearbyStops && nearbyStops[0] ? (
+        {nearbyStops && nearbyStops[clickStopIndex] ? (
           <>
             <div className={styles.closestBox_stopName}>
-              {nearbyStops[0].stationName}
+              {nearbyStops[clickStopIndex].stationName}
             </div>
             <div className={styles.closestBox_stopDistance__fontSize}>
-              {nearbyStops[0].stationDistance} 公尺
+              {nearbyStops[clickStopIndex].stationDistance} 公尺
             </div>
           </>
         ) : (
@@ -78,4 +96,4 @@ function ClosestBox() {
   );
 }
 
-export default ClosestBox;
+export default CertainStopBox;

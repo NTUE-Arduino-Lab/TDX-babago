@@ -3,8 +3,8 @@ import styles from './styles.module.scss';
 
 import Search from '../../components/Search';
 import WeatherBox from '../../components/WeatherBox';
-import HomeClosestBox from '../../components/HomeClosestBox';
-import HomeNearbyBox from '../../components/HomeNearbyBox';
+import HomeClosestStopBox from '../../components/HomeClosestStopBox';
+import HomeNearbyStopsBox from '../../components/HomeNearbyStopsBox';
 
 function Home() {
   return (
@@ -12,8 +12,8 @@ function Home() {
       <div className={styles.sidebar}>
         <Search></Search>
         <WeatherBox></WeatherBox>
-        <HomeClosestBox></HomeClosestBox>
-        <HomeNearbyBox></HomeNearbyBox>
+        <HomeClosestStopBox></HomeClosestStopBox>
+        <HomeNearbyStopsBox></HomeNearbyStopsBox>
       </div>
     </Fragment>
   );

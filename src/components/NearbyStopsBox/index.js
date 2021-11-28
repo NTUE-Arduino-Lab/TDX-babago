@@ -1,10 +1,13 @@
 import React, { useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
+
+import path from '../../router/path';
 import styles from './styles.module.scss';
 
-import { setNearbyStops } from '../../store/actions';
+import { setNearbyStops, setSelectStopIndex } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
-function NearbyBox() {
+function NearbyStopsBox() {
   const {
     state: { position, nearbyStops },
     dispatch,
@@ -54,7 +57,13 @@ function NearbyBox() {
                     </div>
                   ))}
                 </div>
-                <div className={styles.linkRow_arrowIcon}></div>
+                <Link
+                  to={path.certainStop}
+                  state={{ clickStopIndex: index }}
+                  onClick={() => setSelectStopIndex(dispatch, { index: index })}
+                >
+                  <div className={styles.linkRow_arrowIcon}></div>
+                </Link>
               </div>
             </div>
           ))}
@@ -66,4 +75,4 @@ function NearbyBox() {
   );
 }
 
-export default NearbyBox;
+export default NearbyStopsBox;

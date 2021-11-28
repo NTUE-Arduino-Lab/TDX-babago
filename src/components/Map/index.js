@@ -1,4 +1,7 @@
 import React, { useEffect, useContext, useState, Fragment } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import path from '../../router/path';
 import styles from './styles.module.scss';
 
 import L from 'leaflet';
@@ -6,24 +9,53 @@ import {
   MapContainer,
   TileLayer,
   Marker,
-  Popup,
+  Tooltip,
   useMap,
   useMapEvents,
 } from 'react-leaflet';
 
-import { setPosition, setLocation } from '../../store/actions';
+import {
+  setPosition,
+  setLocation,
+  setSelectStopIndex,
+} from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 function LocationMarker() {
+  const navigate = useNavigate();
   const [markers, setMarkers] = useState([]);
   const {
-    state: { position, location, nearbyStops },
+    state: { position, location, nearbyStops, selectStopIndex },
     dispatch,
   } = useContext(StoreContext);
 
   const redIcon = new L.Icon({
     iconUrl:
       'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    shadowUrl:
+      'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+    className: styles.currentIcon,
+  });
+
+  const largeBlueIcon = new L.Icon({
+    iconUrl:
+      'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl:
+      'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [37, 61],
+    iconAnchor: [19, 61],
+    popupAnchor: [1, -34],
+    shadowSize: [61, 61],
+    className: styles.selectIcon,
+  });
+
+  const blueIcon = new L.Icon({
+    iconUrl:
+      'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
     shadowUrl:
       'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
@@ -39,6 +71,7 @@ function LocationMarker() {
       // console.log(e.latlng);
       // console.log(e.bounds._northEast);
       setPosition(dispatch, { position: e.latlng });
+      setSelectStopIndex(dispatch, { index: 0 });
       // setPosition(dispatch, { position: e.bounds._northEast });
       initMap.flyTo(e.latlng, initMap.getZoom());
     });
@@ -47,6 +80,7 @@ function LocationMarker() {
   const clickMap = useMapEvents({
     click(e) {
       setPosition(dispatch, { position: e.latlng });
+      setSelectStopIndex(dispatch, { index: 0 });
       clickMap.flyTo(e.latlng, clickMap.getZoom());
     },
   });
@@ -60,35 +94,46 @@ function LocationMarker() {
 
   useEffect(() => {
     if (nearbyStops) {
+      var stopsArray = [];
       nearbyStops.map((nearbyStop) => {
-        setMarkers((prevValue) => [
-          ...prevValue,
-          {
-            position: {
-              lat: nearbyStop.stationLat,
-              lng: nearbyStop.stationLon,
-            },
-            stationName: nearbyStop.stationName,
+        stopsArray.push({
+          position: {
+            lat: nearbyStop.stationLat,
+            lng: nearbyStop.stationLon,
           },
-        ]);
+          stationName: nearbyStop.stationName,
+        });
       });
+      setMarkers(stopsArray);
     }
   }, [nearbyStops]);
 
   return location === null ? null : (
     <Fragment>
       <Marker position={position} icon={redIcon}>
-        <Popup>
+        <Tooltip className={styles.tooltip} direction="top" offset={[0, -41]}>
           <b>縣市</b>: {location.city} <br />
           <b>鄉鎮</b>: {location.town}
-        </Popup>
+        </Tooltip>
       </Marker>
       {markers.map((marker, index) => (
-        <Marker position={marker.position} key={index}>
-          <Popup>
+        <Marker
+          key={index}
+          position={marker.position}
+          icon={index === selectStopIndex ? largeBlueIcon : blueIcon}
+          className={styles.allIcon}
+          eventHandlers={{
+            click: () => {
+              setSelectStopIndex(dispatch, { index: index });
+              navigate(path.certainStop, {
+                state: { clickStopIndex: index },
+              });
+            },
+          }}
+        >
+          <Tooltip className={styles.tooltip} direction="top" offset={[0, -40]}>
             <b>站牌名稱</b>: {marker.stationName} <br />
-            {/* <b>lat</b>: {marker.lat} */}
-          </Popup>
+          </Tooltip>
         </Marker>
       ))}
     </Fragment>

@@ -10,8 +10,8 @@ import Nav from '../components/Nav';
 import Map from '../components/Map';
 
 import HomePage from '../sidebar/Home';
-import NearbyPage from '../sidebar/Nearby';
-import ClosestPage from '../sidebar/Closest';
+import NearbyStopsPage from '../sidebar/NearbyStops';
+import CertainStopPage from '../sidebar/CertainStop';
 
 const Router = () => {
   return (
@@ -21,8 +21,16 @@ const Router = () => {
           <Nav></Nav>
           <Routes>
             <Route exact path={path.home} element={<HomePage />} />
-            <Route exact path={path.closest} element={<ClosestPage />} />
-            <Route exact path={path.nearby} element={<NearbyPage />} />
+            <Route
+              exact
+              path={path.certainStop}
+              element={<CertainStopPage />}
+            />
+            <Route
+              exact
+              path={path.nearbyStops}
+              element={<NearbyStopsPage />}
+            />
           </Routes>
           <Map></Map>
         </div>

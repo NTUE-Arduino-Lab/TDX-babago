@@ -3,18 +3,18 @@ import styles from './styles.module.scss';
 
 import Search from '../../components/Search';
 import WeatherBox from '../../components/WeatherBox';
-import NearbyBox from '../../components/NearbyBox';
+import NearbyStopsBox from '../../components/NearbyStopsBox';
 
-function Nearby() {
+function NearbyStops() {
   return (
     <Fragment>
       <div className={styles.sidebar}>
         <Search></Search>
         <WeatherBox></WeatherBox>
-        <NearbyBox></NearbyBox>
+        <NearbyStopsBox></NearbyStopsBox>
       </div>
     </Fragment>
   );
 }
 
-export default Nearby;
+export default NearbyStops;

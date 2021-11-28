@@ -73,7 +73,7 @@ export const setLocation = async (dispatch, options) => {
 };
 
 export const setWeather = async (dispatch, options) => {
-  dispatch({ type: type.SET_WEATHER });
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
   const { city, town, timeFrom, timeTo } = options;
 
   for (var i = 0; i < cityJson.length; i++) {
@@ -191,7 +191,7 @@ export const setNearbyStops = async (dispatch, options) => {
 };
 
 export const setCertainRoutes = async (dispatch, options) => {
-  dispatch({ type: type.SET_CERTAINSTOP });
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
   const { stationID, city } = options;
 
   for (var i = 0; i < cityJson.length; i++) {
@@ -242,5 +242,21 @@ export const setCertainRoutes = async (dispatch, options) => {
         dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
       }
     }
+  }
+};
+
+export const setSelectStopIndex = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { index } = options;
+
+  try {
+    dispatch({
+      type: type.SET_SELECTSTOPINDEX,
+      payload: index,
+    });
+
+    dispatch({ type: type.SUCCESS_DATA_REQUEST });
+  } catch (error) {
+    dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
   }
 };
