@@ -92,9 +92,16 @@ export const setWeather = async (dispatch, options) => {
         const rainRate = PoP12h.time[0].elementValue[0].value;
         const weatherState = Wx.time[0].elementValue[0].value;
         const tempArray = [];
-        T.time.map((timeData) =>
-          tempArray.push(timeData.elementValue[0].value),
-        );
+
+        if (T.time.length > 8) {
+          for (var j = 0; j < 8; j++) {
+            tempArray.push(T.time[j].elementValue[0].value);
+          }
+        } else {
+          T.time.map((timeData) =>
+            tempArray.push(timeData.elementValue[0].value),
+          );
+        }
 
         const currentTemp = tempArray[0];
         const minTemp = tempArray.sort()[0];

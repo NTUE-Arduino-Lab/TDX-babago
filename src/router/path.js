@@ -1,1 +1,5 @@
-export default { home: '/' };
+export default {
+  home: '/',
+  closest: '/closest',
+  nearby: '/nearby',
+};
