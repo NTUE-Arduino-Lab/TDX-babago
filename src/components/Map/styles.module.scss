@@ -3,12 +3,38 @@
   height: 100%;
 }
 
-.selectIcon{
+.selectIcon {
   z-index: 1000 !important;
 }
-.currentIcon{
+.currentIcon {
   z-index: 1001 !important;
 }
 .tooltip {
   z-index: 1003 !important;
+  background-color: #fcfcfc;
+  box-shadow: none;
+  // border: 1px solid #160f29;
+}
+// .leaflet-tooltip-top:before,
+// .leaflet-tooltip-bottom:before,
+// .leaflet-tooltip-left:before,
+// .leaflet-tooltip-right:before {
+//   border: none !important;
+// }
+
+.tooltip_rowBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 2px;
+}
+.rowBox_titleText {
+  font-size: 16px;
+  color: #246a73;
+}
+.rowBox_stopDistance {
+  font-size: 12px;
+}
+.rowBox__marginRight {
+  margin-right: 12px;
 }

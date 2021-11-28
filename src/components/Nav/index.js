@@ -22,20 +22,26 @@ function Nav() {
         <div className={styles.nav_logo}></div>
       </Link>
       <div className={styles.nav_buttonBox}>
-        <Link
-          to={path.home}
-          className={styles.buttonBox_button}
-          onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
-        >
-          <FontAwesomeIcon className={styles.button_icon} icon={faHome} />
-        </Link>
-        <Link
-          to={path.nearbyStops}
-          className={styles.buttonBox_button}
-          onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
-        >
-          <FontAwesomeIcon className={styles.button_icon} icon={faMap} />
-        </Link>
+        <div className={styles.buttonBox_button}>
+          <Link
+            to={path.home}
+            className={styles.buttonBox_front}
+            onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
+          >
+            <FontAwesomeIcon className={styles.button_icon} icon={faHome} />
+          </Link>
+          <div className={styles.buttonBox_shadow}></div>
+        </div>
+        <div className={styles.buttonBox_button}>
+          <Link
+            to={path.nearbyStops}
+            className={styles.buttonBox_front}
+            onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
+          >
+            <FontAwesomeIcon className={styles.button_icon} icon={faMap} />
+          </Link>
+          <div className={styles.buttonBox_shadow}></div>
+        </div>
       </div>
     </div>
   );

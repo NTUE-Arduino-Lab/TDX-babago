@@ -3,65 +3,94 @@
   border: 1px solid #160f29;
   border-radius: 12px;
   margin-bottom: 24px;
-  padding: 20px 16px 0 16px;
+  padding: 32px 24px 16px 24px;
 }
 
 .box__alignItemsCenter {
   display: flex;
   align-items: center;
 }
-.box__spaceBetween {
+.box__center {
+  display: flex;
+  justify-content: center;
+}
+
+.certainStopBox_titlebox__marginBottom {
+  margin-bottom: 32px;
+}
+.certainStopBox_stopName {
+  height: 36px;
+  font-weight: bold;
+  font-size: 24px;
+  color: #246a73;
+}
+.certainStopBox_stopInfo {
+  width: 100%;
+  height: 24px;
+  font-size: 16px;
+}
+
+.stopInfo_detailBox {
+  width: 66%;
   display: flex;
   justify-content: space-between;
 }
 
-.box_linkRow {
+// certainRouteBox
+.certainStopBox_certainRouteBox {
+  position: relative;
   width: 100%;
-  height: 32px;
-}
-.linkRow__fontSize {
-  font-size: 16px;
-}
-.linkRow_arrowIcon {
-  // width: 16px;
-  // height: 16px;
-  font-size: 16px;
-  color: #160f29;
-}
-
-// closestBox
-.closestBox_titlebox__marginBottom {
-  margin-bottom: 16px;
-}
-.closestBox_box__marginBottom {
+  height: 52px;
   margin-bottom: 12px;
-}
-.closestBox_stopName {
-  font-weight: bold;
-  font-size: 20px;
-  color: #246a73;
-}
-.closestBox_stopDistance__fontSize {
-  font-size: 14px;
+
+  .certainRouteBox_frontBox {
+    position: absolute;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    border: 1px solid #160f29;
+    border-radius: 5px;
+    background-color: #fcfcfc;
+    z-index: 2;
+    padding: 0 4%;
+  }
+
+  .certainRouteBox_shadow {
+    position: absolute;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    top: 4px;
+    left: 4px;
+    border-radius: 5px;
+    background-color: #160f29;
+    opacity: 0;
+    transition: 0.2s;
+  }
+
+  &:hover {
+    .certainRouteBox_shadow {
+      opacity: 1;
+    }
+  }
 }
 
-.closestBox_currentInfoBox {
-  display: flex;
-  width: 100%;
-  height: 24px;
+.certainRouteBox_routeName {
+  width: 40%;
+  font-size: 20px;
+  font-style: bold;
 }
-.currentInfoBox_routeName {
-  width: 112px;
+.certainRouteBox_routeDirection {
+  width: calc(53% - 96px);
   font-size: 16px;
-}
-.currentInfoBox_routeDirection {
-  width: calc(100% - 204px);
-  font-size: 14px;
   text-align: center;
   color: #ddbea8;
 }
-.currentInfoBox_routeState {
-  width: 92px;
+.certainRouteBox_routeState {
+  width: calc(80px + 7%);
   font-size: 16px;
   text-align: center;
+}
+.certainRouteBox_arrowIcon {
+  font-size: 16px;
+  text-align: center;
+  color: #160f29;
 }

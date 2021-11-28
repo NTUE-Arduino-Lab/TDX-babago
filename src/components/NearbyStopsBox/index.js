@@ -27,53 +27,54 @@ function NearbyStopsBox() {
   return (
     <div className={styles.sidebar_box}>
       <div
-        className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.nearbyBox__marginBottom}`}
+        className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.nearbyBox_titleBox}`}
       >
-        <div className={styles.linkRow__fontSize}>附近站牌</div>
-        <FontAwesomeIcon
-          className={styles.searchBar_icon}
-          icon={faArrowRight}
-        />
+        附近站牌
       </div>
       {nearbyStops ? (
         <>
           {nearbyStops.map((nearbyStop, index) => (
-            <div className={styles.nearbyBox__marginBottom} key={index}>
-              <div
-                className={`${styles.routeStopBox_stopInfoBox} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
-              >
-                <div className={styles.stopInfoBox_stopName__fontSize}>
-                  {nearbyStop.stationName}
-                </div>
-                <div className={styles.stopInfoBox_stopDistance__fontSize}>
-                  {nearbyStop.stationDistance} 公尺
-                </div>
-              </div>
-              <div
-                className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
-              >
-                <div className={styles.routeStopBox_routeNameBox}>
-                  {nearbyStop.routes.map((routeName, index) => (
-                    <div key={index}>
-                      <div
-                        className={`${styles.routeNameBox_routeName} ${styles.linkRow__fontSize}`}
-                      >
-                        {routeName}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Link
-                  to={path.certainStop}
-                  state={{ clickStopIndex: index }}
-                  onClick={() => setSelectStopIndex(dispatch, { index: index })}
+            <div className={styles.nearbyBox_certainStopBox} key={index}>
+              <div className={styles.certainStopBox_frontBox}>
+                <div
+                  className={`${styles.routeStopBox_stopInfoBox} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
                 >
-                  <FontAwesomeIcon
-                    className={styles.linkRow_arrowIcon}
-                    icon={faArrowRight}
-                  />
-                </Link>
+                  <div className={styles.stopInfoBox_stopName__fontSize}>
+                    {nearbyStop.stationName}
+                  </div>
+                  <div className={styles.stopInfoBox_stopDistance__fontSize}>
+                    {nearbyStop.stationDistance} 公尺
+                  </div>
+                </div>
+                <div
+                  className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
+                >
+                  <div className={styles.routeStopBox_routeNameBox}>
+                    {nearbyStop.routes.map((routeName, index) => (
+                      <div key={index}>
+                        <div
+                          className={`${styles.routeNameBox_routeName} ${styles.linkRow__fontSize} ${styles.box__alignItemsCenter}`}
+                        >
+                          {routeName}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <Link
+                    to={path.certainStop}
+                    state={{ clickStopIndex: index }}
+                    onClick={() =>
+                      setSelectStopIndex(dispatch, { index: index })
+                    }
+                  >
+                    <FontAwesomeIcon
+                      className={styles.linkRow_arrowIcon}
+                      icon={faArrowRight}
+                    />
+                  </Link>
+                </div>
               </div>
+              <div className={styles.certainStopBox_shadow}></div>
             </div>
           ))}
         </>

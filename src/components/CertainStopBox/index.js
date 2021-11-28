@@ -51,25 +51,22 @@ function CertainStopBox() {
 
   return (
     <div className={styles.sidebar_box}>
-      <div
-        className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.closestBox_titlebox__marginBottom}`}
-      >
-        <div className={styles.linkRow__fontSize}>最近站牌</div>
-        <FontAwesomeIcon
-          className={styles.linkRow_arrowIcon}
-          icon={faArrowRight}
-        />
-      </div>
-      <div
-        className={`${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
-      >
-        {nearbyStops && nearbyStops[clickStopIndex] ? (
+      <div className={styles.certainStopBox_titlebox__marginBottom}>
+        {nearbyStops && nearbyStops[clickStopIndex] && location ? (
           <>
-            <div className={styles.closestBox_stopName}>
+            <div
+              className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopName}`}
+            >
               {nearbyStops[clickStopIndex].stationName}
             </div>
-            <div className={styles.closestBox_stopDistance__fontSize}>
-              {nearbyStops[clickStopIndex].stationDistance} 公尺
+            <div
+              className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopInfo}`}
+            >
+              <div className={styles.stopInfo_detailBox}>
+                <div>{location.city}</div>
+                <div>{location.town}</div>
+                <div>{nearbyStops[clickStopIndex].stationDistance} 公尺</div>
+              </div>
             </div>
           </>
         ) : (
@@ -79,19 +76,26 @@ function CertainStopBox() {
       {certainRoutes ? (
         <>
           {certainRoutes.map((certainRoute, index) => (
-            <div
-              className={`${styles.closestBox_currentInfoBox} ${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter}`}
-              key={index}
-            >
-              <div className={styles.currentInfoBox_routeName}>
-                {certainRoute.routeName}
+            <div className={styles.certainStopBox_certainRouteBox} key={index}>
+              <div
+                className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}
+                key={index}
+              >
+                <div className={styles.certainRouteBox_routeName}>
+                  {certainRoute.routeName}
+                </div>
+                <div className={styles.certainRouteBox_routeDirection}>
+                  {certainRoute.routeID}
+                </div>
+                <div className={styles.certainRouteBox_routeState}>
+                  {certainRoute.stopStatus}
+                </div>
+                <FontAwesomeIcon
+                  className={styles.certainRouteBox_arrowIcon}
+                  icon={faArrowRight}
+                />
               </div>
-              <div className={styles.currentInfoBox_routeDirection}>
-                {certainRoute.routeID}
-              </div>
-              <div className={styles.currentInfoBox_routeState}>
-                {certainRoute.stopStatus}
-              </div>
+              <div className={styles.certainRouteBox_shadow}></div>
             </div>
           ))}
         </>

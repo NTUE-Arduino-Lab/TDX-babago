@@ -65,13 +65,13 @@ function HomeNearbyStopsBox() {
                 </div>
               </div>
               <div
-                className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
+                className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.nearbyBox__marginBottom}`}
               >
                 <div className={styles.routeStopBox_routeNameBox}>
                   {nearbyStop.routes.map((routeName, index) => (
                     <div key={index}>
                       <div
-                        className={`${styles.routeNameBox_routeName} ${styles.linkRow__fontSize}`}
+                        className={`${styles.routeNameBox_routeName} ${styles.linkRow__fontSize} ${styles.box__alignItemsCenter}`}
                       >
                         {routeName}
                       </div>

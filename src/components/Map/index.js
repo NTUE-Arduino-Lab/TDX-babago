@@ -96,6 +96,7 @@ function LocationMarker() {
             lng: nearbyStop.stationLon,
           },
           stationName: nearbyStop.stationName,
+          stationDistance: nearbyStop.stationDistance,
         });
       });
       setMarkers(stopsArray);
@@ -105,9 +106,20 @@ function LocationMarker() {
   return location === null ? null : (
     <Fragment>
       <Marker position={position} icon={redIcon}>
-        <Tooltip className={styles.tooltip} direction="top" offset={[0, -41]}>
-          <b>縣市</b>: {location.city} <br />
-          <b>鄉鎮</b>: {location.town}
+        <Tooltip
+          className={styles.tooltip}
+          direction="top"
+          opacity={1}
+          offset={[0, -41]}
+        >
+          <div className={styles.tooltip_rowBox}>
+            <div
+              className={`${styles.rowBox_titleText} ${styles.rowBox__marginRight}`}
+            >
+              {location.city}
+            </div>
+            <div className={styles.rowBox_titleText}>{location.town}</div>
+          </div>
         </Tooltip>
       </Marker>
       {markers.map((marker, index) => (
@@ -125,8 +137,22 @@ function LocationMarker() {
             },
           }}
         >
-          <Tooltip className={styles.tooltip} direction="top" offset={[0, -40]}>
-            <b>站牌名稱</b>: {marker.stationName} <br />
+          <Tooltip
+            className={styles.tooltip}
+            direction="top"
+            opacity={1}
+            offset={[0, -40]}
+          >
+            <div className={styles.tooltip_rowBox}>
+              <div
+                className={`${styles.rowBox_titleText} ${styles.rowBox__marginRight}`}
+              >
+                {marker.stationName}
+              </div>
+              <div className={styles.rowBox_stopDistance}>
+                {marker.stationDistance} 公尺
+              </div>
+            </div>
           </Tooltip>
         </Marker>
       ))}
