@@ -7,6 +7,9 @@ import styles from './styles.module.scss';
 import { setSelectStopIndex } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faMap } from '@fortawesome/free-solid-svg-icons';
+
 function Nav() {
   const { dispatch } = useContext(StoreContext);
 
@@ -24,14 +27,14 @@ function Nav() {
           className={styles.buttonBox_button}
           onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
         >
-          <div className={styles.button_icon}></div>
+          <FontAwesomeIcon className={styles.button_icon} icon={faHome} />
         </Link>
         <Link
           to={path.nearbyStops}
           className={styles.buttonBox_button}
           onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
         >
-          <div className={styles.button_icon}></div>
+          <FontAwesomeIcon className={styles.button_icon} icon={faMap} />
         </Link>
       </div>
     </div>

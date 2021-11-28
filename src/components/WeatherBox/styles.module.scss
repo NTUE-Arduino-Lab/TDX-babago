@@ -27,10 +27,11 @@
 }
 
 .leftInfoBox_locationIcon {
-  width: 16px;
-  height: 16px;
+  // width: 16px;
+  // height: 16px;
+  font-size: 16px;
   margin: 0 8px;
-  background-color: #160f29;
+  color: #160f29;
 }
 .leftInfoBox_locationText {
   font-size: 16px;
@@ -50,7 +51,8 @@
   margin-right: 16px;
 }
 .rightInfoBox_weatherIcon {
-  width: 40px;
-  height: 40px;
-  background-color: #160f29;
+  // width: 40px;
+  // height: 40px;
+  font-size: 40px;
+  color: #246A73;
 }

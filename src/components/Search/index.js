@@ -1,10 +1,13 @@
 import React from 'react';
 import styles from './styles.module.scss';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+
 function Search() {
   return (
     <div className={styles.searchBar}>
-      <div className={styles.searchBar_icon}></div>
+      <FontAwesomeIcon className={styles.searchBar_icon} icon={faSearch} />
       <div
         className={`${styles.searchBar_inputBox} ${styles.box__alignItemsCenter}`}
       >

@@ -7,6 +7,9 @@ import styles from './styles.module.scss';
 import { setNearbyStops, setSelectStopIndex } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 function HomeNearbyStopsBox() {
   const [frontNearbyStops, SetFrontNearbyStops] = useState([]);
   const {
@@ -41,7 +44,10 @@ function HomeNearbyStopsBox() {
       >
         <div className={styles.linkRow__fontSize}>附近站牌</div>
         <Link to={path.nearbyStops}>
-          <div className={styles.linkRow_arrowIcon}></div>
+          <FontAwesomeIcon
+            className={styles.linkRow_arrowIcon}
+            icon={faArrowRight}
+          />
         </Link>
       </div>
       {nearbyStops ? (
@@ -77,7 +83,10 @@ function HomeNearbyStopsBox() {
                   state={{ clickStopIndex: index }}
                   onClick={() => setSelectStopIndex(dispatch, { index: index })}
                 >
-                  <div className={styles.linkRow_arrowIcon}></div>
+                  <FontAwesomeIcon
+                    className={styles.linkRow_arrowIcon}
+                    icon={faArrowRight}
+                  />
                 </Link>
               </div>
             </div>

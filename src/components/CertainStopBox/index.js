@@ -6,6 +6,9 @@ import styles from './styles.module.scss';
 import { setNearbyStops, setCertainRoutes } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 function CertainStopBox() {
   const reactlocation = useLocation();
   var { clickStopIndex } = reactlocation.state;
@@ -52,7 +55,10 @@ function CertainStopBox() {
         className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.closestBox_titlebox__marginBottom}`}
       >
         <div className={styles.linkRow__fontSize}>最近站牌</div>
-        <div className={styles.linkRow_arrowIcon}></div>
+        <FontAwesomeIcon
+          className={styles.linkRow_arrowIcon}
+          icon={faArrowRight}
+        />
       </div>
       <div
         className={`${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}

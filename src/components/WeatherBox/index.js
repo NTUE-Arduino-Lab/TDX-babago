@@ -5,6 +5,19 @@ import styles from './styles.module.scss';
 import { setWeather } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faMapMarkerAlt,
+  faCloudSunRain,
+  faCloudRain,
+  faCloudSun,
+  faSnowflake,
+  faSmog,
+  faBolt,
+  faSun,
+  faCloud,
+} from '@fortawesome/free-solid-svg-icons';
+
 function WeatherBox() {
   const {
     state: { location, weather },
@@ -41,7 +54,10 @@ function WeatherBox() {
             <div
               className={`${styles.leftInfoBox__marginBottom} ${styles.box__alignItemsCenter}`}
             >
-              <div className={styles.leftInfoBox_locationIcon}></div>
+              <FontAwesomeIcon
+                className={styles.leftInfoBox_locationIcon}
+                icon={faMapMarkerAlt}
+              />
               <div className={styles.leftInfoBox_locationText}>
                 {location.city}
               </div>
@@ -74,7 +90,28 @@ function WeatherBox() {
             <div className={styles.rightInfoBox_currentTemp}>
               {weather.currentTemp} ˚C
             </div>
-            <div className={styles.rightInfoBox_weatherIcon}></div>
+            <FontAwesomeIcon
+              className={styles.rightInfoBox_weatherIcon}
+              icon={
+                weather.weatherState.includes('晴') &&
+                weather.weatherState.includes('雨')
+                  ? faCloudSunRain
+                  : weather.weatherState.includes('晴') &&
+                    weather.weatherState.includes('雲')
+                  ? faCloudSun
+                  : weather.weatherState.includes('雪')
+                  ? faSnowflake
+                  : weather.weatherState.includes('霧')
+                  ? faSmog
+                  : weather.weatherState.includes('雷')
+                  ? faBolt
+                  : weather.weatherState.includes('雨')
+                  ? faCloudRain
+                  : weather.weatherState.includes('晴')
+                  ? faSun
+                  : faCloud
+              }
+            />
           </div>
         </>
       ) : (

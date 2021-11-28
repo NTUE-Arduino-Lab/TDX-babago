@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
+import currentMarker from '../../asset/imgs/currentMarker.svg';
+import stopMarker from '../../asset/imgs/stopMarker.svg';
+
 import L from 'leaflet';
 import {
   MapContainer,
@@ -30,10 +33,7 @@ function LocationMarker() {
   } = useContext(StoreContext);
 
   const redIcon = new L.Icon({
-    iconUrl:
-      'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-    shadowUrl:
-      'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconUrl: currentMarker,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -42,10 +42,7 @@ function LocationMarker() {
   });
 
   const largeBlueIcon = new L.Icon({
-    iconUrl:
-      'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl:
-      'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconUrl: stopMarker,
     iconSize: [37, 61],
     iconAnchor: [19, 61],
     popupAnchor: [1, -34],
@@ -54,10 +51,7 @@ function LocationMarker() {
   });
 
   const blueIcon = new L.Icon({
-    iconUrl:
-      'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl:
-      'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconUrl: stopMarker,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -145,7 +139,7 @@ function Map() {
     <Fragment>
       <MapContainer
         center={[25.022729, 121.545103]}
-        zoom={17}
+        zoom={30}
         scrollWheelZoom={true}
         className={styles.map}
       >

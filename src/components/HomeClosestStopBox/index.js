@@ -7,6 +7,9 @@ import styles from './styles.module.scss';
 import { setCertainRoutes, setSelectStopIndex } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 function ClosestStopBox() {
   const [closestStop, setClosestStop] = useState(null);
   const [frontCertainRoutes, SetFrontCertainRoutes] = useState([]);
@@ -55,7 +58,10 @@ function ClosestStopBox() {
           state={{ clickStopIndex: 0 }}
           onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
         >
-          <div className={styles.linkRow_arrowIcon}></div>
+          <FontAwesomeIcon
+            className={styles.linkRow_arrowIcon}
+            icon={faArrowRight}
+          />
         </Link>
       </div>
       <div
