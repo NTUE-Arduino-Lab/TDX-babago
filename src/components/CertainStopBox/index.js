@@ -1,6 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
+import path from '../../router/path';
 import styles from './styles.module.scss';
 
 import { setNearbyStops, setCertainRoutes } from '../../store/actions';
@@ -20,7 +22,7 @@ function CertainStopBox() {
   } = useContext(StoreContext);
 
   useEffect(() => {
-    console.log('certainPage: ' + clickStopIndex);
+    // console.log('certainPage: ' + clickStopIndex);
     if (changeLocation === null) {
       setChangeLocation(false);
     } else {
@@ -77,25 +79,31 @@ function CertainStopBox() {
         <>
           {certainRoutes.map((certainRoute, index) => (
             <div className={styles.certainStopBox_certainRouteBox} key={index}>
-              <div
-                className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}
-                key={index}
+              <Link
+                to={path.certainRoute}
+                className={styles.certainRouteBox_linkSetting}
+                state={{ clickRouteName: certainRoute.routeName }}
               >
-                <div className={styles.certainRouteBox_routeName}>
-                  {certainRoute.routeName}
+                <div
+                  className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}
+                  key={index}
+                >
+                  <div className={styles.certainRouteBox_routeName}>
+                    {certainRoute.routeName}
+                  </div>
+                  <div className={styles.certainRouteBox_routeDirection}>
+                    {certainRoute.routeID}
+                  </div>
+                  <div className={styles.certainRouteBox_routeState}>
+                    {certainRoute.stopStatus}
+                  </div>
+                  <FontAwesomeIcon
+                    className={styles.certainRouteBox_arrowIcon}
+                    icon={faArrowRight}
+                  />
                 </div>
-                <div className={styles.certainRouteBox_routeDirection}>
-                  {certainRoute.routeID}
-                </div>
-                <div className={styles.certainRouteBox_routeState}>
-                  {certainRoute.stopStatus}
-                </div>
-                <FontAwesomeIcon
-                  className={styles.certainRouteBox_arrowIcon}
-                  icon={faArrowRight}
-                />
-              </div>
-              <div className={styles.certainRouteBox_shadow}></div>
+                <div className={styles.certainRouteBox_shadow}></div>
+              </Link>
             </div>
           ))}
         </>

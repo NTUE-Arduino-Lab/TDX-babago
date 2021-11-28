@@ -12,6 +12,7 @@ import Map from '../components/Map';
 import HomePage from '../sidebar/Home';
 import NearbyStopsPage from '../sidebar/NearbyStops';
 import CertainStopPage from '../sidebar/CertainStop';
+import CertainRoutePage from '../sidebar/CertainRoute';
 
 const Router = () => {
   return (
@@ -25,6 +26,11 @@ const Router = () => {
               exact
               path={path.certainStop}
               element={<CertainStopPage />}
+            />
+            <Route
+              exact
+              path={path.certainRoute}
+              element={<CertainRoutePage />}
             />
             <Route
               exact

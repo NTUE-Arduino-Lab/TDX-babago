@@ -37,6 +37,9 @@
 }
 
 // certainRouteBox
+.certainRouteBox_linkSetting{
+  text-decoration: none;
+}
 .certainStopBox_certainRouteBox {
   position: relative;
   width: 100%;
@@ -77,6 +80,7 @@
   width: 40%;
   font-size: 20px;
   font-style: bold;
+  color: #160F29;
 }
 .certainRouteBox_routeDirection {
   width: calc(53% - 96px);
@@ -88,6 +92,7 @@
   width: calc(80px + 7%);
   font-size: 16px;
   text-align: center;
+  color: #160F29;
 }
 .certainRouteBox_arrowIcon {
   font-size: 16px;

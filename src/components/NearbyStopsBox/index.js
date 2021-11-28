@@ -35,46 +35,45 @@ function NearbyStopsBox() {
         <>
           {nearbyStops.map((nearbyStop, index) => (
             <div className={styles.nearbyBox_certainStopBox} key={index}>
-              <div className={styles.certainStopBox_frontBox}>
-                <div
-                  className={`${styles.routeStopBox_stopInfoBox} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
-                >
-                  <div className={styles.stopInfoBox_stopName__fontSize}>
-                    {nearbyStop.stationName}
-                  </div>
-                  <div className={styles.stopInfoBox_stopDistance__fontSize}>
-                    {nearbyStop.stationDistance} 公尺
-                  </div>
-                </div>
-                <div
-                  className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
-                >
-                  <div className={styles.routeStopBox_routeNameBox}>
-                    {nearbyStop.routes.map((routeName, index) => (
-                      <div key={index}>
-                        <div
-                          className={`${styles.routeNameBox_routeName} ${styles.linkRow__fontSize} ${styles.box__alignItemsCenter}`}
-                        >
-                          {routeName}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <Link
-                    to={path.certainStop}
-                    state={{ clickStopIndex: index }}
-                    onClick={() =>
-                      setSelectStopIndex(dispatch, { index: index })
-                    }
+              <Link
+                to={path.certainStop}
+                className={styles.certainStopBox_linkSetting}
+                state={{ clickStopIndex: index }}
+                onClick={() => setSelectStopIndex(dispatch, { index: index })}
+              >
+                <div className={styles.certainStopBox_frontBox}>
+                  <div
+                    className={`${styles.routeStopBox_stopInfoBox} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
                   >
-                    <FontAwesomeIcon
-                      className={styles.linkRow_arrowIcon}
-                      icon={faArrowRight}
-                    />
-                  </Link>
+                    <div className={styles.stopInfoBox_stopName__fontSize}>
+                      {nearbyStop.stationName}
+                    </div>
+                    <div className={styles.stopInfoBox_stopDistance__fontSize}>
+                      {nearbyStop.stationDistance} 公尺
+                    </div>
+                  </div>
+                  <div
+                    className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
+                  >
+                    <div className={styles.routeStopBox_routeNameBox}>
+                      {nearbyStop.routes.map((routeName, index) => (
+                        <div key={index}>
+                          <div
+                            className={`${styles.routeNameBox_routeName} ${styles.linkRow__fontSize} ${styles.box__alignItemsCenter}`}
+                          >
+                            {routeName}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className={styles.certainStopBox_shadow}></div>
+                <div className={styles.certainStopBox_shadow}></div>
+                <FontAwesomeIcon
+                  className={styles.linkRow_arrowIcon}
+                  icon={faArrowRight}
+                />
+              </Link>
             </div>
           ))}
         </>

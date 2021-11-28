@@ -1,0 +1,98 @@
+.sidebar_box {
+  width: 100%;
+  border: 1px solid #160f29;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  padding: 32px 24px 16px 24px;
+}
+.topBox_padding {
+  width: 100%;
+  padding: 32px 24px 20px 24px;
+}
+.bottomBox_padding {
+  width: 100%;
+  padding: 20px 24px 20px 24px;
+}
+
+.box__alignItemsCenter {
+  display: flex;
+  align-items: center;
+}
+.box__center {
+  display: flex;
+  justify-content: center;
+}
+.box__spaceBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+// certainRouteBox
+.certainRouteBox_titleBox {
+  height: 36px;
+  font-weight: bold;
+  font-size: 24px;
+  color: #246a73;
+  margin-bottom: 32px;
+}
+.certainRouteBox_buttonBox {
+  width: 100%;
+}
+.buttonBox_button {
+  width: 40%;
+  padding: 4px 0;
+  border: 1px solid #160f29;
+  border-radius: 5px;
+  background: #fcfcfc;
+  font-size: 20px;
+  color: #160f29;
+}
+
+.certainRouteBox_routeStopBox {
+  width: 90%;
+}
+.routeStopBox_stopInfoBox {
+  display: flex;
+  width: 100%;
+  height: 24px;
+  margin-bottom: 16px;
+}
+.stopInfoBox_busStatus {
+  font-size: 16px;
+  color: #160f29;
+  width: 25%;
+}
+.stopInfoBox_stopName {
+  font-size: 16px;
+  color: #160f29;
+  width: 75%;
+}
+
+.certainRouteBox_routeDotBox {
+  position: relative;
+  width: 10%;
+}
+.routeDotBox_routeLine {
+  position: absolute;
+  width: 2px;
+  background-color: #160f29;
+  top: 12px;
+  left: calc(50% - 1.5px);
+  height: calc(100% - 48px);
+  z-index: 1;
+}
+.routeDotBox_stopCircleBox {
+  width: 100%;
+  min-width: 20px;
+  height: 24px;
+  margin-bottom: 16px;
+  z-index: 2;
+}
+.stopCircleBox_stopCircle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #fcfcfc;
+  border: 1px solid #160f29;
+  z-index: 1;
+}
