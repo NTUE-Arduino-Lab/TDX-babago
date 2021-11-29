@@ -220,9 +220,17 @@ export const setCertainRoutes = async (dispatch, options) => {
             '交管不停靠',
             '末班車已過',
             '今日未營運',
+            '進站中',
           ];
-          const stopStatus =
-            stop.StopStatus >= 0 ? stopStatusArray[stop.StopStatus] : null;
+
+          var stopStatus = null;
+          if (Math.round(stop.EstimateTime / 60) <= 1) {
+            stopStatus = stopStatusArray[5];
+          } else if (stop.StopStatus >= 0) {
+            stopStatus = stopStatusArray[stop.StopStatus];
+          } else {
+            stopStatus = null;
+          }
 
           certainRoutes.push({
             routeID: routeID,

@@ -93,7 +93,18 @@ function ClosestStopBox() {
               <div className={styles.currentInfoBox_routeDirection}>
                 {certainRoute.routeID}
               </div>
-              <div className={styles.currentInfoBox_routeState}>
+              <div
+                className={
+                  certainRoute.stopStatus === '進站中'
+                    ? `${styles.currentInfoBox_routeState} ${styles.routeState__textGreen}`
+                    : certainRoute.stopStatus === '尚未發車' ||
+                      certainRoute.stopStatus === '交管不停靠' ||
+                      certainRoute.stopStatus === '末班車已過' ||
+                      certainRoute.stopStatus === '今日未營運'
+                    ? `${styles.currentInfoBox_routeState} ${styles.routeState__textPink}`
+                    : `${styles.currentInfoBox_routeState} ${styles.routeState__textDark}`
+                }
+              >
                 {certainRoute.stopStatus}
               </div>
             </div>
