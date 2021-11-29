@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# The F2E - Take a Bus
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 作品說明
 
-## Available Scripts
+Week 3 全台公車動態時刻查詢應用服務
+使用 React 實作，串接政府公開 API。
+感謝 [Lilian Chen](https://2021.thef2e.com/users/6296432819610583955) 精美的 UI 設計！
 
-In the project directory, you can run:
+## 系統說明
 
-### `npm start`
+版本
+- react - 17.0.2
+- npm - 6.14.11
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+安裝 `npm install`
+執行 `npm start`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+排版
+- Prettier
 
-### `npm test`
+語法檢查
+- ELint - 檢查 js 語法
+- Stylelint - 檢查 CSS 語法
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 資料夾說明
 
-### `npm run build`
+- asset - 使用圖片、檔案
+- component - 頁面元件
+- router - 頁面路由
+- sidebar - 側邊欄的頁面
+- store - 全域變數存取
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 使用技術
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- React
+- Axios
+- Prettier
+- ELint
+- Stylelint
+- SCSS
+- git
+- Leaflet（react-leaflet）
+- fontawesome
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 第三方服務
 
-### `npm run eject`
+- [內政資料開放平台](https://data.moi.gov.tw/moiod/default/Index.aspx)
+- [氣象資料開放平台](https://opendata.cwb.gov.tw/index)
+- [TDX](https://ptx.transportdata.tw/PTX/)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 未來項目
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 串接路線公車動態
+- 搜尋功能
+- loading 畫面
+- RWD
