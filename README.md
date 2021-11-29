@@ -13,6 +13,7 @@ Week 3：全台公車動態時刻查詢應用服務</br>
 - npm - 6.14.11
 
 安裝 `npm install`
+
 執行 `npm start`
 
 排版
