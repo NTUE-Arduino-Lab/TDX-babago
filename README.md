@@ -2,8 +2,8 @@
 
 ## 作品說明
 
-Week 3 全台公車動態時刻查詢應用服務
-使用 React 實作，串接政府公開 API。
+Week 3：全台公車動態時刻查詢應用服務</br>
+使用 React 實作，串接政府公開 API。</br>
 感謝 [Lilian Chen](https://2021.thef2e.com/users/6296432819610583955) 精美的 UI 設計！
 
 ## 系統說明
@@ -13,6 +13,7 @@ Week 3 全台公車動態時刻查詢應用服務
 - npm - 6.14.11
 
 安裝 `npm install`
+
 執行 `npm start`
 
 排版
