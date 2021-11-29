@@ -66,13 +66,13 @@ function NearbyStopsBox() {
                         </div>
                       ))}
                     </div>
+                    <FontAwesomeIcon
+                      className={styles.linkRow_arrowIcon}
+                      icon={faArrowRight}
+                    />
                   </div>
                 </div>
                 <div className={styles.certainStopBox_shadow}></div>
-                <FontAwesomeIcon
-                  className={styles.linkRow_arrowIcon}
-                  icon={faArrowRight}
-                />
               </Link>
             </div>
           ))}
