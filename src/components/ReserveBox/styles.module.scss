@@ -1,0 +1,38 @@
+.sidebar_box {
+  width: 100%;
+  border: 1px solid #160f29;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  padding: 32px 24px 16px 24px;
+}
+
+.box__alignItemsCenter {
+  display: flex;
+  align-items: center;
+}
+.box__center {
+  display: flex;
+  justify-content: center;
+}
+.box__flex {
+  display: flex;
+}
+.box__end {
+  display: flex;
+  justify-content: end;
+}
+.box__spaceBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.buttonBox_button {
+  width: 40%;
+  padding: 4px 0;
+  border: 1px solid #160f29;
+  border-radius: 5px;
+  background: #fcfcfc;
+  font-size: 20px;
+  color: #160f29;
+}
