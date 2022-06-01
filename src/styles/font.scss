@@ -1,0 +1,30 @@
+@mixin P {
+    font-size: 16px;
+}
+
+@mixin P_Bold {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+@mixin miniP {
+    font-size: 14px;
+}
+
+@mixin H1 {
+    font-size: 24px;
+}
+
+@mixin H1_Bold {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+@mixin H2 {
+    font-size: 20px;
+}
+
+@mixin H2_Bold {
+    font-size: 20px;
+    font-weight: bold;
+}
