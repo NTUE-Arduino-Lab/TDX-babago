@@ -20,7 +20,7 @@ Week 3：全台公車動態時刻查詢應用服務</br>
 - Prettier
 
 語法檢查
-- ELint - 檢查 js 語法
+- ESLint - 檢查 js 語法
 - Stylelint - 檢查 CSS 語法
 
 ## 資料夾說明
