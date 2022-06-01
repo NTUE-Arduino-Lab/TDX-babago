@@ -8,7 +8,6 @@ export const StoreContext = createContext();
 const initialState = {
   position: null,
   location: null,
-  weather: null,
   nearbyStops: null,
   certainRoutes: null,
   selectStopIndex: 0,
@@ -26,11 +25,6 @@ function reducer(state, action) {
       return {
         ...state,
         location: action.payload,
-      };
-    case type.SET_WEATHER:
-      return {
-        ...state,
-        weather: action.payload,
       };
     case type.SET_NEARBYSTOPS:
       return {
