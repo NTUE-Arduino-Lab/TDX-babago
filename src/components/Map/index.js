@@ -165,7 +165,7 @@ function Map() {
     <Fragment>
       <MapContainer
         center={[25.022729, 121.545103]}
-        zoom={30}
+        zoom={17}
         scrollWheelZoom={true}
         className={styles.map}
       >
