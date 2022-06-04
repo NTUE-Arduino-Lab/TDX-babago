@@ -1,9 +1,9 @@
+@import "../../styles/color.scss";
+@import "../../styles/font.scss";
+
 .sidebar_box {
   width: 100%;
-  border: 1px solid #160f29;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  padding: 32px 24px 16px 24px;
+  padding: 32px 24px;
 }
 
 .box__alignItemsCenter {
@@ -20,19 +20,64 @@
 .box__end {
   display: flex;
   justify-content: end;
+  flex-wrap: wrap;
+  gap: 0px 16px;
 }
 .box__spaceBetween {
   display: flex;
   justify-content: space-between;
 }
 
+.reserveBox {
+  border-radius: 12px;
+  background-color: $color-background;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px 0;
+}
+
+.reserveBox_routeInfoBox {
+  flex-wrap: wrap;
+}
+.routeInfoBox_routeName {
+  @include H1_Bold;
+}
+.routeInfoBox_routeDirection {
+  @include miniP;
+}
+
+.routeInfoBox_routeTimeBox {
+  align-items: flex-end;
+}
+.routeTimeBox_Time {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: -8px;
+}
+.routeTimeBox_Minute{
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.routeInfoBox_stopName {
+  gap: 0px 6px;
+  @include P;
+}
 
 .buttonBox_button {
-  width: 40%;
-  padding: 4px 0;
-  border: 1px solid #160f29;
+  // width: 40%;
+  padding: 4px 12px;
   border-radius: 5px;
-  background: #fcfcfc;
-  font-size: 20px;
-  color: #160f29;
+  @include P;
+}
+.button_cancel {
+  background: #fff;
+  color: $color-main;
+  border: $color-main 1px solid;
+}
+.button_help {
+  background: $color-main;
+  color: #fff;
+  gap: 6px;
 }

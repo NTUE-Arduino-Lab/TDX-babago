@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
+// eslint-disable-next-line no-unused-vars
 import { setNearbyStops, setSelectStopIndex } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
@@ -60,25 +61,25 @@ function HomeNearbyStopsBox() {
                 <div className={styles.stopInfoBox_stopName__fontSize}>
                   {nearbyStop.stationName}
                 </div>
-                <div className={styles.stopInfoBox_stopDistance__fontSize}>
+                {/* <div className={styles.stopInfoBox_stopDistance__fontSize}>
                   {nearbyStop.stationDistance} 公尺
-                </div>
+                </div> */}
               </div>
               <div
-                className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.nearbyBox__marginBottom}`}
+                className={`${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.nearbyBox__marginBottom}`}
               >
                 <div className={styles.routeStopBox_routeNameBox}>
                   {nearbyStop.routes.map((routeName, index) => (
                     <div key={index}>
                       <div
-                        className={`${styles.routeNameBox_routeName} ${styles.linkRow__fontSize} ${styles.box__alignItemsCenter}`}
+                        className={`${styles.routeNameBox_routeName} ${styles.box__alignItemsCenter}`}
                       >
                         {routeName}
                       </div>
                     </div>
                   ))}
                 </div>
-                <Link
+                {/* <Link
                   to={path.certainStop}
                   state={{ clickStopIndex: index }}
                   onClick={() => setSelectStopIndex(dispatch, { index: index })}
@@ -87,7 +88,7 @@ function HomeNearbyStopsBox() {
                     className={styles.linkRow_arrowIcon}
                     icon={faArrowRight}
                   />
-                </Link>
+                </Link> */}
               </div>
             </div>
           ))}
