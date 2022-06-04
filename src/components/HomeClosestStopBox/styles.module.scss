@@ -3,11 +3,19 @@
 
 .sidebar_box {
   width: 100%;
-  // border: 1px solid #160f29;
-  border-radius: 20px;
-  margin-bottom: 24px;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
   background-color: $color-background;
-  // padding: 0px 16px 0 16px;
+  padding: 32px 24px;
+  position: relative;
+}
+.sidebar_box::after{
+  position: absolute;
+  bottom: 0;
+  content: "";
+  width: calc(100% - 48px);
+  height: 1px;
+  background-color: $color-gray;
 }
 
 .box__alignItemsCenter {
@@ -17,6 +25,14 @@
 .box__spaceBetween {
   display: flex;
   justify-content: space-between;
+}
+.box__spaceAruond{
+  display: flex;
+  justify-content: space-around;
+}
+.box__alignItemsFlexStart {
+  display: flex;
+  align-items: flex-start;
 }
 
 .box_linkRow {
@@ -52,24 +68,50 @@
 
 .closestBox_currentInfoBox {
   display: flex;
-  flex-flow: row wrap;
+  flex-wrap: wrap;
+  gap: 16px 0px;
   justify-content: space-between;
   width: 100%;
 }
-.currentInfoBox_routeName {
-  width: 112px;
+.currentInfoBox_routeInfoBox{
+  margin: 0;
+  padding: 0;
+}
+.routeInfoBox_routeName {
+  margin-top: -5px;
+  // width: 112px;
   @include H1;
 }
-.currentInfoBox_routeDirection {
+.routeInfoBox_routeDirection {
   // width: calc(100% - 204px);
   @include miniP;
-  // text-align: center;
   color: $color-black;
 }
+
 .currentInfoBox_routeState {
   width: 92px;
   text-align: center;
   @include P;
+}
+
+.currentInfoBox_ButtonBox{
+  // width: 40%;
+  // max-width: 104px;
+}
+.ButtonBox_Button{
+  padding: 4px 4px 4px 6px;
+  border-radius: 5px;
+  @include P;
+  gap: 0 6px;
+}
+.ButtonBox_openButton{
+  background: $color-main;
+  color: #fff;
+}
+.ButtonBox_cancelButton{
+  background: #fff;
+  color: $color-main;
+  border: $color-main 1px solid;
 }
 
 .routeState__textYellow {
@@ -83,8 +125,4 @@
 .routeState__textDark {
   color: $color-black;
   font-weight: 700;
-}
-
-.line_break{
-  width: 100%;
 }

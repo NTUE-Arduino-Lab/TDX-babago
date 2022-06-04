@@ -2,39 +2,46 @@ import React from 'react';
 import styles from './styles.module.scss';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faFlag, faUser } from '@fortawesome/free-solid-svg-icons';
 
 function ReserveBox() {
   return (
     <div className={styles.sidebar_box}>
-      <div
-        className={` ${styles.box__spaceBetween} ${styles.box__alignItemsCenter}`}
-      >
-        <div>
-          <div>278</div>
-          <div>往景美捷運站</div>
-        </div>
-        <div className={` ${styles.box__flex}`}>
-          <div>20</div>
-          <div>分</div>
-        </div>
-      </div>
-
-      <div className={` ${styles.box__flex}`}>
-        <FontAwesomeIcon className={styles.button_icon} icon={faSearch} />
-        <div>國立台北教育大學</div>
-      </div>
-      <div className={styles.box__end}>
+      <div className={`${styles.reserveBox}`}>
         <div
-          className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button}`}
+          className={`${styles.reserveBox_routeInfoBox} ${styles.box__spaceBetween} ${styles.box__alignItemsCenter}`}
         >
-          取消預約
+          <div>
+            <div className={styles.routeInfoBox_routeName}>278</div>
+            <div className={styles.routeInfoBox_routeDirection}>
+              往景美捷運站
+            </div>
+          </div>
+          <div
+            className={`${styles.routeInfoBox_routeTimeBox} ${styles.box__flex}`}
+          >
+            <div className={styles.routeTimeBox_Time}>20</div>
+            <div className={styles.routeTimeBox_Minute}>分</div>
+          </div>
         </div>
         <div
-          className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button}`}
+          className={`${styles.routeInfoBox_stopName} ${styles.box__flex} ${styles.box__alignItemsCenter}`}
         >
-          <FontAwesomeIcon className={styles.button_icon} icon={faSearch} />
-          <div>司機協助</div>
+          <FontAwesomeIcon className={styles.button_icon} icon={faFlag} />
+          <div>國立台北教育大學</div>
+        </div>
+        <div className={styles.box__end}>
+          <div
+            className={`${styles.buttonBox_button} ${styles.button_cancel} ${styles.box__alignItemsCenter} ${styles.box__center}`}
+          >
+            取消預約
+          </div>
+          <div
+            className={`${styles.buttonBox_button} ${styles.button_help} ${styles.box__alignItemsCenter} ${styles.box__center} `}
+          >
+            <FontAwesomeIcon className={styles.button_icon} icon={faUser} />
+            <div>司機協助</div>
+          </div>
         </div>
       </div>
     </div>

@@ -8,7 +8,9 @@ import { setCertainRoutes, setSelectStopIndex } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+// eslint-disable-next-line no-unused-vars
+import { faArrowRight, faBell } from '@fortawesome/free-solid-svg-icons';
+import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 
 function ClosestStopBox() {
   const [closestStop, setClosestStop] = useState(null);
@@ -49,6 +51,7 @@ function ClosestStopBox() {
 
   return (
     <div className={styles.sidebar_box}>
+      <div className={styles.top}></div>
       <div
         className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.closestBox_titlebox__marginBottom}`}
       >
@@ -84,11 +87,16 @@ function ClosestStopBox() {
         <>
           {frontCertainRoutes.map((certainRoute, index) => (
             <div
-              className={`${styles.closestBox_currentInfoBox} ${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter}`}
+              className={`${styles.closestBox_currentInfoBox} ${styles.box__alignItemsFlexStart}`}
               key={index}
             >
-              <div className={styles.currentInfoBox_routeName}>
-                {certainRoute.routeName}
+              <div className={styles.currentInfoBox_routeInfoBox}>
+                <div className={styles.routeInfoBox_routeName}>
+                  {certainRoute.routeName}
+                </div>
+                <div className={styles.routeInfoBox_routeDirection}>
+                  {certainRoute.routeID}
+                </div>
               </div>
               <div
                 className={
@@ -104,11 +112,20 @@ function ClosestStopBox() {
               >
                 {certainRoute.stopStatus}
               </div>
-              <div className={styles.currentInfoBox_openButton}>開啟提醒</div>
-              {/* 換行 */}
-              <div className={styles.line_break}></div>
-              <div className={styles.currentInfoBox_routeDirection}>
-                {certainRoute.routeID}
+              {/* 提醒按鈕區 */}
+              <div className={styles.currentInfoBox_ButtonBox}>
+                <div
+                  className={`${styles.ButtonBox_Button} ${styles.ButtonBox_openButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
+                >
+                  <FontAwesomeIcon icon={farBell} />
+                  <div>開啟提醒</div>
+                </div>
+                {/* <div
+                  className={`${styles.ButtonBox_Button} ${styles.ButtonBox_cancelButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
+                >
+                  <FontAwesomeIcon icon={faBell} />
+                  <div>取消提醒</div>
+                </div> */}
               </div>
             </div>
           ))}
