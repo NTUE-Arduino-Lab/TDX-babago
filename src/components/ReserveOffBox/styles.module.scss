@@ -40,12 +40,10 @@
 .reserveBox_routeInfoBox {
   // flex-wrap: wrap;
 }
-.routeInfoBox_routeName {
+.routeInfoBox_StopName {
   @include H1_Bold;
 }
-.routeInfoBox_routeDirection {
-  @include miniP;
-}
+
 
 .routeInfoBox_routeTimeBox {
   align-items: flex-end;
@@ -59,10 +57,21 @@
   font-size: 18px;
   font-weight: 700;
 }
+.routeInfoBox_busName {
+  gap: 0px 6px;
+  @include P;
+}
 
 .routeInfoBox_stopName {
   gap: 0px 6px;
   @include P;
+}
+.stopName_name {
+  padding-right: 6px;
+  border-right: 1px solid #000;
+}
+.stopName_number {
+
 }
 
 .buttonBox_button {

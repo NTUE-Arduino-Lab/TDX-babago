@@ -2,9 +2,9 @@ import React from 'react';
 import styles from './styles.module.scss';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFlag, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faFlag } from '@fortawesome/free-solid-svg-icons';
 
-function ReserveBox() {
+function RemindBox() {
   return (
     <div className={styles.sidebar_box}>
       <div className={`${styles.reserveBox}`}>
@@ -34,13 +34,7 @@ function ReserveBox() {
           <div
             className={`${styles.buttonBox_button} ${styles.button_cancel} ${styles.box__alignItemsCenter} ${styles.box__center}`}
           >
-            取消預約
-          </div>
-          <div
-            className={`${styles.buttonBox_button} ${styles.button_help} ${styles.box__alignItemsCenter} ${styles.box__center} `}
-          >
-            <FontAwesomeIcon icon={faUser} />
-            <div>司機協助</div>
+            取消提醒
           </div>
         </div>
       </div>
@@ -48,4 +42,4 @@ function ReserveBox() {
   );
 }
 
-export default ReserveBox;
+export default RemindBox;

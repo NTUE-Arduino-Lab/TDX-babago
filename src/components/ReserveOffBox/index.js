@@ -2,9 +2,9 @@ import React from 'react';
 import styles from './styles.module.scss';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFlag, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBus, faFlag, faUser } from '@fortawesome/free-solid-svg-icons';
 
-function ReserveBox() {
+function ReserveOffBox() {
   return (
     <div className={styles.sidebar_box}>
       <div className={`${styles.reserveBox}`}>
@@ -12,23 +12,29 @@ function ReserveBox() {
           className={`${styles.reserveBox_routeInfoBox} ${styles.box__spaceBetween} ${styles.box__alignItemsCenter}`}
         >
           <div>
-            <div className={styles.routeInfoBox_routeName}>278</div>
-            <div className={styles.routeInfoBox_routeDirection}>
-              往景美捷運站
+            <div className={styles.routeInfoBox_StopName}>
+              捷運中正紀念堂站(羅斯福)
             </div>
           </div>
           <div
             className={`${styles.routeInfoBox_routeTimeBox} ${styles.box__flex}`}
           >
-            <div className={styles.routeTimeBox_Time}>20</div>
+            <div className={styles.routeTimeBox_Time}>28</div>
             <div className={styles.routeTimeBox_Minute}>分</div>
           </div>
+        </div>
+        <div
+          className={`${styles.routeInfoBox_busName} ${styles.box__flex} ${styles.box__alignItemsCenter}`}
+        >
+          <FontAwesomeIcon icon={faBus} />
+          <div>羅斯福路幹線 - 往臺北車站</div>
         </div>
         <div
           className={`${styles.routeInfoBox_stopName} ${styles.box__flex} ${styles.box__alignItemsCenter}`}
         >
           <FontAwesomeIcon icon={faFlag} />
-          <div>國立台北教育大學</div>
+          <div className={styles.stopName_name}>目前：文山運動中心(興隆)</div>
+          <div className={styles.stopName_number}>19站</div>
         </div>
         <div className={styles.box__end}>
           <div
@@ -48,4 +54,4 @@ function ReserveBox() {
   );
 }
 
-export default ReserveBox;
+export default ReserveOffBox;
