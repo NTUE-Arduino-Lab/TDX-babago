@@ -120,8 +120,6 @@ export const setNearbyStops = async (dispatch, options) => {
       return 0;
     });
 
-    // console.log(nearbyStops);
-
     dispatch({
       type: type.SET_NEARBYSTOPS,
       payload: nearbyStops,
@@ -132,16 +130,13 @@ export const setNearbyStops = async (dispatch, options) => {
   }
 };
 
-export const setCertainRoutes = async (dispatch, options) => {
+export const setCurrentBuses = async (dispatch, options) => {
   dispatch({ type: type.BEGIN_DATA_REQUEST });
   const { stationID, city } = options;
 
   for (var i = 0; i < cityJson.length; i++) {
     if (cityJson[i].city === city) {
       const cityEn = cityJson[i].cityEn;
-
-      // console.log(stationID);
-      // console.log(cityEn);
 
       try {
         const url = `${TDXBUS_URL}/EstimatedTimeOfArrival/City/${cityEn}/PassThrough/Station/${stationID}`;
@@ -151,13 +146,14 @@ export const setCertainRoutes = async (dispatch, options) => {
         const response = await axios.get(url, config);
         const data = response.data;
 
-        const certainRoutes = [];
+        const currentBuses = [];
 
-        data.map((stop) => {
-          const routeID = stop.RouteID;
-          const routeName = stop.RouteName.Zh_tw;
+        data.map((bus) => {
+          const direction = bus.Direction;
+          const routeUID = bus.RouteUID;
+          const routeName = bus.RouteName.Zh_tw;
           const stopStatusArray = [
-            `${Math.round(stop.EstimateTime / 60)} 分`,
+            `${Math.round(bus.EstimateTime / 60)} 分`,
             '尚未發車',
             '交管不停靠',
             '末班車已過',
@@ -166,27 +162,69 @@ export const setCertainRoutes = async (dispatch, options) => {
           ];
 
           var stopStatus = null;
-          if (Math.round(stop.EstimateTime / 60) <= 1) {
+          if (Math.round(bus.EstimateTime / 60) <= 1) {
             stopStatus = stopStatusArray[5];
-          } else if (stop.StopStatus >= 0) {
-            stopStatus = stopStatusArray[stop.StopStatus];
+          } else if (bus.StopStatus >= 0) {
+            stopStatus = stopStatusArray[bus.StopStatus];
           } else {
             stopStatus = null;
           }
 
-          certainRoutes.push({
-            routeID: routeID,
+          currentBuses.push({
+            direction: direction,
+            routeUID: routeUID,
             routeName: routeName,
             stopStatus: stopStatus,
           });
         });
 
-        // console.log(certainRoutes);
+        dispatch({
+          type: type.SET_CURRENTBUSES,
+          payload: currentBuses,
+        });
+        dispatch({ type: type.SUCCESS_DATA_REQUEST });
+      } catch (error) {
+        dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+      }
+    }
+  }
+};
+
+export const setCertainRoutes = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { city, currentBuses } = options;
+
+  for (var i = 0; i < cityJson.length; i++) {
+    if (cityJson[i].city === city) {
+      const cityEn = cityJson[i].cityEn;
+
+      try {
+        const certainRoutes = [];
+        for (var j = 0; j < currentBuses.length; j++) {
+          const url = `${TDXBUS_URL}/Route/City/${cityEn}/${currentBuses[j].routeName}`;
+
+          let config = {
+            headers: GetAuthorizationHeader(),
+          };
+          const response = await axios.get(url, config);
+          const data = response.data;
+
+          for (var k = 0; k < data.length; k++) {
+            if (data[k].RouteUID == currentBuses[j].routeUID) {
+              certainRoutes.push({
+                routeName: currentBuses[j].routeName,
+                departureStopNameZh: data[k].DepartureStopNameZh,
+                destinationStopNameZh: data[k].DestinationStopNameZh,
+              });
+            }
+          }
+        }
 
         dispatch({
           type: type.SET_CERTAINROUTES,
           payload: certainRoutes,
         });
+
         dispatch({ type: type.SUCCESS_DATA_REQUEST });
       } catch (error) {
         dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });

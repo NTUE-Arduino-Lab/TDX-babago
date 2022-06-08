@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
-import { setCertainRoutes, setSelectStopIndex } from '../../store/actions';
+import {
+  setCurrentBuses,
+  setCertainRoutes,
+  setSelectStopIndex,
+} from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,8 +19,10 @@ import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 function ClosestStopBox() {
   const [closestStop, setClosestStop] = useState(null);
   const [frontCertainRoutes, SetFrontCertainRoutes] = useState([]);
+  const [currentRoutesBuses, SetCurrentRoutesBuses] = useState([]);
+  // const [certainRoutesInfo, SetCertainRoutesInfo] = useState([]);
   const {
-    state: { location, nearbyStops, certainRoutes },
+    state: { location, nearbyStops, currentBuses, certainRoutes },
     dispatch,
   } = useContext(StoreContext);
 
@@ -28,7 +34,7 @@ function ClosestStopBox() {
 
   useEffect(() => {
     if (location && closestStop) {
-      setCertainRoutes(dispatch, {
+      setCurrentBuses(dispatch, {
         city: location.city,
         stationID: closestStop.stationID,
       });
@@ -36,18 +42,46 @@ function ClosestStopBox() {
   }, [location, closestStop]);
 
   useEffect(() => {
-    if (certainRoutes) {
-      if (certainRoutes.length > 5) {
+    if (currentBuses) {
+      if (currentBuses.length > 5) {
         const array = [];
         for (var i = 0; i < 5; i++) {
-          array.push(certainRoutes[i]);
+          array.push(currentBuses[i]);
         }
-        SetFrontCertainRoutes(array);
+        SetCurrentRoutesBuses(array);
       } else {
-        SetFrontCertainRoutes(certainRoutes);
+        SetCurrentRoutesBuses(currentBuses);
       }
     }
+  }, [currentBuses]);
+
+  useEffect(() => {
+    // let currentRoutesBusArray = [];
+
+    // currentRoutesBus.map((bus) => {
+    //   currentRoutesBusArray.push({
+    //     routeName: bus.routeName,
+    //   });
+    // });
+    // console.log(currentRoutesBusArray);
+
+    // if (currentRoutesBusArray != frontCertainRoutes) {
+    if (location && currentRoutesBuses.length > 0) {
+      setCertainRoutes(dispatch, {
+        city: location.city,
+        currentBuses: currentRoutesBuses,
+      });
+    }
+    // }
+  }, [currentRoutesBuses]);
+
+  useEffect(() => {
+    if (certainRoutes) {
+      SetFrontCertainRoutes(certainRoutes);
+    }
   }, [certainRoutes]);
+
+  useEffect(() => {}, [frontCertainRoutes]);
 
   return (
     <div className={styles.sidebar_box}>
@@ -83,9 +117,9 @@ function ClosestStopBox() {
           <></>
         )}
       </div>
-      {certainRoutes ? (
+      {currentRoutesBuses && frontCertainRoutes ? (
         <>
-          {frontCertainRoutes.map((certainRoute, index) => (
+          {currentRoutesBuses.map((currentRoutesBus, index) => (
             <div
               className={`${styles.closestBox_currentInfoBox} ${styles.box__alignItemsFlexStart}`}
               key={index}
@@ -93,25 +127,30 @@ function ClosestStopBox() {
               <div className={`${styles.closestBox_flexBox}`}>
                 <div className={styles.currentInfoBox_routeInfoBox}>
                   <div className={styles.routeInfoBox_routeName}>
-                    {certainRoute.routeName}
+                    {currentRoutesBus.routeName}
                   </div>
                   <div className={styles.routeInfoBox_routeDirection}>
-                    {certainRoute.routeID}
+                    {frontCertainRoutes[index] ||
+                    currentRoutesBus.direction == 225
+                      ? currentRoutesBus.direction == 1
+                        ? `往${frontCertainRoutes[index].departureStopNameZh}`
+                        : `往${frontCertainRoutes[index].destinationStopNameZh}`
+                      : ''}
                   </div>
                 </div>
                 <div
                   className={
-                    certainRoute.stopStatus === '進站中'
+                    currentRoutesBus.stopStatus === '進站中'
                       ? `${styles.currentInfoBox_routeState} ${styles.routeState__textYellow}`
-                      : certainRoute.stopStatus === '尚未發車' ||
-                        certainRoute.stopStatus === '交管不停靠' ||
-                        certainRoute.stopStatus === '末班車已過' ||
-                        certainRoute.stopStatus === '今日未營運'
+                      : currentRoutesBus.stopStatus === '尚未發車' ||
+                        currentRoutesBus.stopStatus === '交管不停靠' ||
+                        currentRoutesBus.stopStatus === '末班車已過' ||
+                        currentRoutesBus.stopStatus === '今日未營運'
                       ? `${styles.currentInfoBox_routeState} ${styles.routeState__textGray}`
                       : `${styles.currentInfoBox_routeState} ${styles.routeState__textDark}`
                   }
                 >
-                  {certainRoute.stopStatus}
+                  {currentRoutesBus.stopStatus}
                 </div>
               </div>
               {/* 提醒按鈕區 */}
