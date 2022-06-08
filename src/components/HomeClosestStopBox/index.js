@@ -90,27 +90,29 @@ function ClosestStopBox() {
               className={`${styles.closestBox_currentInfoBox} ${styles.box__alignItemsFlexStart}`}
               key={index}
             >
-              <div className={styles.currentInfoBox_routeInfoBox}>
-                <div className={styles.routeInfoBox_routeName}>
-                  {certainRoute.routeName}
+              <div className={`${styles.closestBox_flexBox}`}>
+                <div className={styles.currentInfoBox_routeInfoBox}>
+                  <div className={styles.routeInfoBox_routeName}>
+                    {certainRoute.routeName}
+                  </div>
+                  <div className={styles.routeInfoBox_routeDirection}>
+                    {certainRoute.routeID}
+                  </div>
                 </div>
-                <div className={styles.routeInfoBox_routeDirection}>
-                  {certainRoute.routeID}
+                <div
+                  className={
+                    certainRoute.stopStatus === '進站中'
+                      ? `${styles.currentInfoBox_routeState} ${styles.routeState__textYellow}`
+                      : certainRoute.stopStatus === '尚未發車' ||
+                        certainRoute.stopStatus === '交管不停靠' ||
+                        certainRoute.stopStatus === '末班車已過' ||
+                        certainRoute.stopStatus === '今日未營運'
+                      ? `${styles.currentInfoBox_routeState} ${styles.routeState__textGray}`
+                      : `${styles.currentInfoBox_routeState} ${styles.routeState__textDark}`
+                  }
+                >
+                  {certainRoute.stopStatus}
                 </div>
-              </div>
-              <div
-                className={
-                  certainRoute.stopStatus === '進站中'
-                    ? `${styles.currentInfoBox_routeState} ${styles.routeState__textYellow}`
-                    : certainRoute.stopStatus === '尚未發車' ||
-                      certainRoute.stopStatus === '交管不停靠' ||
-                      certainRoute.stopStatus === '末班車已過' ||
-                      certainRoute.stopStatus === '今日未營運'
-                    ? `${styles.currentInfoBox_routeState} ${styles.routeState__textGray}`
-                    : `${styles.currentInfoBox_routeState} ${styles.routeState__textDark}`
-                }
-              >
-                {certainRoute.stopStatus}
               </div>
               {/* 提醒按鈕區 */}
               <div className={styles.currentInfoBox_ButtonBox}>

@@ -73,13 +73,16 @@
   justify-content: space-between;
   width: 100%;
 }
+.closestBox_flexBox {
+  display: flex;
+}
 .currentInfoBox_routeInfoBox{
   margin: 0;
   padding: 0;
 }
 .routeInfoBox_routeName {
   margin-top: -5px;
-  // width: 112px;
+  width: 112px;
   @include H1;
 }
 .routeInfoBox_routeDirection {
