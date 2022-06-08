@@ -51,7 +51,6 @@ function ClosestStopBox() {
 
   return (
     <div className={styles.sidebar_box}>
-      <div className={styles.top}></div>
       <div
         className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.closestBox_titlebox__marginBottom}`}
       >
@@ -119,13 +118,19 @@ function ClosestStopBox() {
                 <div
                   className={`${styles.ButtonBox_Button} ${styles.ButtonBox_openButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
                 >
-                  <FontAwesomeIcon icon={farBell} />
+                  <FontAwesomeIcon
+                    className={styles.ButtonBox_icon}
+                    icon={farBell}
+                  />
                   <div>開啟提醒</div>
                 </div>
                 {/* <div
                   className={`${styles.ButtonBox_Button} ${styles.ButtonBox_cancelButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
                 >
-                  <FontAwesomeIcon icon={faBell} />
+                  <FontAwesomeIcon
+                    className={styles.ButtonBox_icon}
+                    icon={faBell}
+                  />
                   <div>取消提醒</div>
                 </div> */}
               </div>
