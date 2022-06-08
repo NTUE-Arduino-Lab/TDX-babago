@@ -9,6 +9,7 @@ const initialState = {
   position: null,
   location: null,
   nearbyStops: null,
+  currentBuses: null,
   certainRoutes: null,
   selectStopIndex: 0,
   requestdata: { loading: false, error: null },
@@ -30,6 +31,11 @@ function reducer(state, action) {
       return {
         ...state,
         nearbyStops: action.payload,
+      };
+    case type.SET_CURRENTBUSES:
+      return {
+        ...state,
+        currentBuses: action.payload,
       };
     case type.SET_CERTAINROUTES:
       return {
