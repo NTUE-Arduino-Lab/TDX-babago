@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import useDynamicRefs from 'use-dynamic-refs';
 
 import path from '../../router/path';
 import styles from './styles.module.scss';
@@ -17,6 +18,9 @@ import { faArrowRight, faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 
 function ClosestStopBox() {
+  const [getRef, setRef] = useDynamicRefs();
+  const [OverSize, SetOverSize] = useState([]);
+
   const [closestStop, setClosestStop] = useState(null);
   const [frontCertainRoutes, SetFrontCertainRoutes] = useState([]);
   const [currentRoutesBuses, SetCurrentRoutesBuses] = useState([]);
@@ -81,7 +85,28 @@ function ClosestStopBox() {
     }
   }, [certainRoutes]);
 
-  useEffect(() => {}, [frontCertainRoutes]);
+  useEffect(() => {
+    if (frontCertainRoutes.length > 0) {
+      const array = [];
+      frontCertainRoutes.map((el) => {
+        var id1 = getRef(el.routeName);
+        if (id1 !== null && id1 !== undefined) {
+          if (id1.current !== null && id1.current.offsetWidth > 112) {
+            array.push(true);
+          } else {
+            array.push(false);
+          }
+        } else {
+          array.push(false);
+        }
+      });
+      SetOverSize(array);
+    }
+  }, [frontCertainRoutes]);
+
+  useEffect(() => {
+    console.log(OverSize);
+  }, [certainRoutes]);
 
   return (
     <div className={styles.sidebar_box}>
@@ -101,7 +126,7 @@ function ClosestStopBox() {
         </Link>
       </div>
       <div
-        className={`${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
+        className={`${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.box__FlexWrap}`}
       >
         {nearbyStops && nearbyStops[0] ? (
           <>
@@ -117,7 +142,7 @@ function ClosestStopBox() {
         )}
       </div>
       {currentRoutesBuses && frontCertainRoutes ? (
-        <>
+        <div className={styles.closestBox_BusInfo}>
           {currentRoutesBuses.map((currentRoutesBus, index) => (
             <div
               className={`${styles.closestBox_currentInfoBox} ${styles.box__alignItemsFlexStart}`}
@@ -126,7 +151,14 @@ function ClosestStopBox() {
               <div className={`${styles.closestBox_flexBox}`}>
                 <div className={styles.currentInfoBox_routeInfoBox}>
                   <div className={styles.routeInfoBox_routeName}>
-                    {currentRoutesBus.routeName}
+                    <p
+                      ref={setRef(currentRoutesBus.routeName)}
+                      className={
+                        OverSize[index] ? `${styles.routeName_animation}` : ''
+                      }
+                    >
+                      {currentRoutesBus.routeName}
+                    </p>
                   </div>
                   <div className={styles.routeInfoBox_routeDirection}>
                     {frontCertainRoutes[index] ||
@@ -175,7 +207,7 @@ function ClosestStopBox() {
               </div>
             </div>
           ))}
-        </>
+        </div>
       ) : (
         <></>
       )}

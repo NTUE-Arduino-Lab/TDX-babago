@@ -34,6 +34,10 @@
   display: flex;
   align-items: flex-start;
 }
+.box__FlexWrap{
+  display: flex;
+  flex-wrap: wrap;
+}
 
 .box_linkRow {
   width: 100%;
@@ -66,6 +70,11 @@
   color: $color-black;
 }
 
+.closestBox_BusInfo{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 .closestBox_currentInfoBox {
   display: flex;
   flex-wrap: wrap;
@@ -84,9 +93,33 @@
   margin-top: -5px;
   width: 112px;
   @include H1;
+  height: 32px;
+  white-space:nowrap;
+  overflow: hidden;
+}
+.routeInfoBox_routeName>p{
+  display: inline-block; 
+}
+.routeName_animation{
+  animation: marquee 3s linear infinite;
+}
+
+@keyframes marquee{
+  0%{
+    transform: translateX(-100%);
+  }
+
+  50%{
+    transform: translateX(0%);
+  }
+
+  100%{
+    transform: translateX(100%);
+  }
 }
 .routeInfoBox_routeDirection {
   // width: calc(100% - 204px);
+  white-space:nowrap;
   @include miniP;
   color: $color-black;
 }
