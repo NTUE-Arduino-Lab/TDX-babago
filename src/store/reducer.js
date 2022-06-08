@@ -11,6 +11,16 @@ const initialState = {
   nearbyStops: null,
   currentBuses: null,
   certainRoutes: null,
+  // selectRoute: {
+  //   routeUID: null,
+  //   routeName: null,
+  //   departureStopNameZh: null,
+  //   destinationStopNameZh: null,
+  //   fareBufferZoneDescriptionZh: null,
+  //   city: null,
+  //   stops: null,
+  // },
+  selectRouteStops: null,
   selectStopIndex: 0,
   requestdata: { loading: false, error: null },
 };
@@ -41,6 +51,11 @@ function reducer(state, action) {
       return {
         ...state,
         certainRoutes: action.payload,
+      };
+    case type.SET_SELECTROUTESTOPS:
+      return {
+        ...state,
+        selectRouteStops: action.payload,
       };
     case type.SET_SELECTSTOPINDEX:
       return {
