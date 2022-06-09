@@ -146,6 +146,7 @@ export const setCurrentBuses = async (dispatch, options) => {
         const response = await axios.get(url, config);
         const data = response.data;
 
+        // console.log(data);
         const currentBuses = [];
 
         data.map((bus) => {
@@ -177,6 +178,8 @@ export const setCurrentBuses = async (dispatch, options) => {
             stopStatus: stopStatus,
           });
         });
+
+        // console.log(currentBuses);
 
         dispatch({
           type: type.SET_CURRENTBUSES,
@@ -215,14 +218,64 @@ export const setCertainRoutes = async (dispatch, options) => {
                 routeName: currentBuses[j].routeName,
                 departureStopNameZh: data[k].DepartureStopNameZh,
                 destinationStopNameZh: data[k].DestinationStopNameZh,
+                fareBufferZoneDescriptionZh:
+                  data[k].FareBufferZoneDescriptionZh,
+                city: data[k].City,
               });
             }
           }
         }
 
+        // console.log(certainRoutes);
+
         dispatch({
           type: type.SET_CERTAINROUTES,
           payload: certainRoutes,
+        });
+
+        dispatch({ type: type.SUCCESS_DATA_REQUEST });
+      } catch (error) {
+        dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+      }
+    }
+  }
+};
+
+export const setSelectRouteStops = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { city, selectRoute } = options;
+
+  for (var i = 0; i < cityJson.length; i++) {
+    if (cityJson[i].city === city) {
+      const cityEn = cityJson[i].cityEn;
+
+      try {
+        const selectRouteStops = [];
+        const url = `${TDXBUS_URL}/DisplayStopOfRoute/City/${cityEn}/${selectRoute.routeName}`;
+
+        let config = {
+          headers: GetAuthorizationHeader(),
+        };
+        const response = await axios.get(url, config);
+        const data = response.data;
+        // console.log(data);
+
+        for (var j = 0; j < data.length; j++) {
+          if (selectRoute.routeUID == data[j].RouteUID) {
+            selectRouteStops.push({
+              direction: data[j].Direction,
+              routeUID: data[j].RouteUID,
+              routeName: selectRoute.routeName,
+              stops: data[j].Stops,
+            });
+          }
+        }
+
+        // console.log(selectRouteStops);
+
+        dispatch({
+          type: type.SET_SELECTROUTESTOPS,
+          payload: selectRouteStops,
         });
 
         dispatch({ type: type.SUCCESS_DATA_REQUEST });

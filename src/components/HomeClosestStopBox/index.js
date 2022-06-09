@@ -161,12 +161,14 @@ function ClosestStopBox() {
                     </p>
                   </div>
                   <div className={styles.routeInfoBox_routeDirection}>
-                    {frontCertainRoutes[index] ||
+                    {!frontCertainRoutes[index] ||
                     currentRoutesBus.direction == 225
-                      ? currentRoutesBus.direction == 1
-                        ? `往${frontCertainRoutes[index].departureStopNameZh}`
-                        : `往${frontCertainRoutes[index].destinationStopNameZh}`
-                      : ''}
+                      ? ''
+                      : currentRoutesBus.direction == 2
+                      ? '環形'
+                      : currentRoutesBus.direction == 1
+                      ? `往${frontCertainRoutes[index].departureStopNameZh}`
+                      : `往${frontCertainRoutes[index].destinationStopNameZh}`}
                   </div>
                 </div>
                 <div

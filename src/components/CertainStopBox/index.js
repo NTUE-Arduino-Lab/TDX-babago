@@ -120,7 +120,18 @@ function CertainStopBox() {
               <Link
                 to={path.certainRoute}
                 className={styles.certainRouteBox_linkSetting}
-                state={{ clickRouteName: currentRoutesBus.routeName }}
+                state={
+                  frontCertainRoutes[index]
+                    ? {
+                        currentRoutesBus: {
+                          direction: currentRoutesBus.direction,
+                          routeName: currentRoutesBus.routeName,
+                          routeUID: currentRoutesBus.routeUID,
+                        },
+                        frontCertainRoute: frontCertainRoutes[index],
+                      }
+                    : {}
+                }
               >
                 <div
                   className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}
@@ -130,12 +141,14 @@ function CertainStopBox() {
                     {currentRoutesBus.routeName}
                   </div>
                   <div className={styles.certainRouteBox_routeDirection}>
-                    {frontCertainRoutes[index] ||
+                    {!frontCertainRoutes[index] ||
                     currentRoutesBus.direction == 225
-                      ? currentRoutesBus.direction == 1
-                        ? `往${frontCertainRoutes[index].departureStopNameZh}`
-                        : `往${frontCertainRoutes[index].destinationStopNameZh}`
-                      : ''}
+                      ? ''
+                      : currentRoutesBus.direction == 2
+                      ? '環形'
+                      : currentRoutesBus.direction == 1
+                      ? `往${frontCertainRoutes[index].departureStopNameZh}`
+                      : `往${frontCertainRoutes[index].destinationStopNameZh}`}
                   </div>
                   <div
                     className={
