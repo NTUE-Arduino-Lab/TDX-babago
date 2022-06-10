@@ -12,7 +12,11 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 function NearbyStopsBox() {
   const {
-    state: { position, nearbyStops },
+    state: {
+      position,
+      nearbyStops,
+      // requestdata: { loading },
+    },
     dispatch,
   } = useContext(StoreContext);
 
@@ -25,6 +29,10 @@ function NearbyStopsBox() {
   useEffect(() => {}, [nearbyStops]);
 
   return (
+    // <>
+    //   {loading ? (
+    //     <></>
+    //   ) : (
     <div className={styles.sidebar_box}>
       <div
         className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.nearbyBox_titleBox}`}
@@ -80,6 +88,8 @@ function NearbyStopsBox() {
         <></>
       )}
     </div>
+    //   )}
+    // </>
   );
 }
 

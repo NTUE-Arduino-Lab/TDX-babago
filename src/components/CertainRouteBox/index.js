@@ -5,9 +5,8 @@ import * as QueryString from 'query-string';
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
-// import cityJson from '../../asset/json/city.json';
-
 import {
+  setCurrentBuses,
   setNearbyStops,
   setSelectRouteStopsSort,
   setSelectRouteStopsTime,
@@ -25,9 +24,22 @@ function CertainRouteBox() {
   const [directionStops, setDirectionStops] = useState([]);
   const [changeLocation, setChangeLocation] = useState(null);
   const {
-    state: { position, location, selectRouteStopsSort, selectRouteStopsTime },
+    state: {
+      position,
+      location,
+      selectRouteStopsSort,
+      selectRouteStopsTime,
+      // requestdata: { loading },
+    },
     dispatch,
   } = useContext(StoreContext);
+
+  useEffect(() => {
+    setCurrentBuses(dispatch, {
+      city: '',
+      stationID: '',
+    });
+  }, []);
 
   useEffect(() => {
     if (changeLocation === null) {
@@ -67,7 +79,6 @@ function CertainRouteBox() {
       let stopsBusesArr = [];
       for (var i = 0; i < selectRouteStopsSort.length; i++) {
         if (selectRouteStopsSort[i].direction == direction) {
-          // setDirectionStops(selectRouteStopsSort[i].stops);
           stopsArr = selectRouteStopsSort[i].stops;
           for (var j = 0; j < stopsArr.length; j++) {
             for (var k = 0; k < selectRouteStopsTime.length; k++) {
@@ -107,94 +118,104 @@ function CertainRouteBox() {
             }
           }
 
-          // console.log(stopsBusesArr);
           setDirectionStops(stopsBusesArr);
         }
       }
     }
   }, [selectRouteStopsSort, selectRouteStopsTime, direction]);
 
-  useEffect(() => {}, [directionStops]);
+  useEffect(() => {}, [
+    directionStops,
+    departureStopNameZh,
+    destinationStopNameZh,
+  ]);
 
   return (
+    // <>
+    //   {loading ? (
+    //     <></>
+    //   ) : (
     <div className={styles.sidebar_box}>
       {selectRouteStopsSort &&
-      directionStops &&
+      routeName &&
       departureStopNameZh &&
       destinationStopNameZh ? (
-        <>
-          <div className={styles.topBox_padding}>
-            <div
-              className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainRouteBox_titleBox}`}
-            >
-              {routeName}
-            </div>
-            <div
-              className={`${styles.certainRouteBox_buttonBox} ${styles.box__spaceBetween}`}
-            >
-              {selectRouteStopsSort.map((stop, index) => (
-                <Link
-                  to={`${path.certainRoute}?routeName=${routeName}&routeUID=${routeUID}&direction=${stop.direction}&departureStopNameZh=${departureStopNameZh}&destinationStopNameZh=${destinationStopNameZh}`}
-                  className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button}`}
-                  key={`${stop.routeUID}-${index}`}
-                >
-                  {stop.direction ? departureStopNameZh : destinationStopNameZh}
-                </Link>
-              ))}
-            </div>
+        <div className={styles.topBox_padding}>
+          <div
+            className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainRouteBox_titleBox}`}
+          >
+            {routeName}
           </div>
           <div
-            className={`${styles.bottomBox_padding} ${styles.box__spaceBetween}`}
+            className={`${styles.certainRouteBox_buttonBox} ${styles.box__spaceBetween}`}
           >
-            <div className={styles.certainRouteBox_routeStopBox}>
-              {directionStops.map((stop, index) => (
-                <div
-                  className={styles.routeStopBox_stopInfoBox}
-                  key={`${stop.stopUID}-1-${index}`}
-                  id={stop.stopUID}
-                >
-                  <div
-                    // className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus}`}
-                    className={
-                      stop.stopStatus === '進站中'
-                        ? `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textYellow}`
-                        : stop.stopStatus === '尚未發車' ||
-                          stop.stopStatus === '交管不停靠' ||
-                          stop.stopStatus === '末班車已過' ||
-                          stop.stopStatus === '今日未營運'
-                        ? `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textGray}`
-                        : `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textDark}`
-                    }
-                  >
-                    {stop.stopStatus}
-                  </div>
-                  <div
-                    className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_stopName}`}
-                  >
-                    {stop.stopName.Zh_tw}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className={styles.certainRouteBox_routeDotBox}>
-              <div className={styles.routeDotBox_routeLine}></div>
-              {directionStops.map((stop, index) => (
-                <div
-                  className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.routeDotBox_stopCircleBox}`}
-                  key={`${stop.stopUID}-2-${index}`}
-                >
-                  <div className={styles.stopCircleBox_stopCircle}>
-                    {/* {city.cityEn} */}
-                  </div>
-                </div>
-              ))}
-            </div>
+            {selectRouteStopsSort.map((stop, index) => (
+              <Link
+                to={`${path.certainRoute}?routeName=${routeName}&routeUID=${routeUID}&direction=${stop.direction}&departureStopNameZh=${departureStopNameZh}&destinationStopNameZh=${destinationStopNameZh}`}
+                className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button}`}
+                key={`${stop.routeUID}-${index}`}
+              >
+                {stop.direction ? departureStopNameZh : destinationStopNameZh}
+              </Link>
+            ))}
           </div>
-        </>
+        </div>
+      ) : (
+        <></>
+      )}
+      {directionStops ? (
+        <div
+          className={`${styles.bottomBox_padding} ${styles.box__spaceBetween}`}
+        >
+          <div className={styles.certainRouteBox_routeStopBox}>
+            {directionStops.map((stop, index) => (
+              <div
+                className={styles.routeStopBox_stopInfoBox}
+                key={`${stop.stopUID}-1-${index}`}
+                id={stop.stopUID}
+              >
+                <div
+                  className={
+                    stop.stopStatus === '進站中'
+                      ? `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textYellow}`
+                      : stop.stopStatus === '尚未發車' ||
+                        stop.stopStatus === '交管不停靠' ||
+                        stop.stopStatus === '末班車已過' ||
+                        stop.stopStatus === '今日未營運'
+                      ? `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textGray}`
+                      : `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textDark}`
+                  }
+                >
+                  {stop.stopStatus}
+                </div>
+                <div
+                  className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_stopName}`}
+                >
+                  {stop.stopName.Zh_tw}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className={styles.certainRouteBox_routeDotBox}>
+            <div className={styles.routeDotBox_routeLine}></div>
+            {directionStops.map((stop, index) => (
+              <div
+                className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.routeDotBox_stopCircleBox}`}
+                key={`${stop.stopUID}-2-${index}`}
+              >
+                <div className={styles.stopCircleBox_stopCircle}>
+                  {/* {city.cityEn} */}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       ) : (
         <></>
       )}
     </div>
+    //   )}
+    // </>
   );
 }
 

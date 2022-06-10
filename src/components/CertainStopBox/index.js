@@ -6,6 +6,8 @@ import path from '../../router/path';
 import styles from './styles.module.scss';
 
 import {
+  setSelectRouteStopsSort,
+  setSelectRouteStopsTime,
   setNearbyStops,
   setCurrentBuses,
   setCertainRoutes,
@@ -20,12 +22,28 @@ function CertainStopBox() {
   var { clickStopIndex } = QueryString.parse(reactlocation.search);
   const [certainStop, setCertainStop] = useState(null);
   const [changeLocation, setChangeLocation] = useState(null);
-  const [frontCertainRoutes, SetFrontCertainRoutes] = useState([]);
-  const [currentRoutesBuses, SetCurrentRoutesBuses] = useState([]);
   const {
-    state: { position, location, nearbyStops, currentBuses, certainRoutes },
+    state: {
+      position,
+      location,
+      nearbyStops,
+      currentBuses,
+      certainRoutes,
+      // requestdata: { loading },
+    },
     dispatch,
   } = useContext(StoreContext);
+
+  useEffect(() => {
+    setSelectRouteStopsSort(dispatch, {
+      city: '',
+      selectRoute: '',
+    });
+    setSelectRouteStopsTime(dispatch, {
+      city: '',
+      selectRoute: '',
+    });
+  }, []);
 
   useEffect(() => {
     if (changeLocation === null) {
@@ -56,71 +74,52 @@ function CertainStopBox() {
   }, [location, certainStop]);
 
   useEffect(() => {
-    if (currentBuses) {
-      SetCurrentRoutesBuses(currentBuses);
+    if (location && currentBuses) {
+      setCertainRoutes(dispatch, {
+        city: location.city,
+        currentBuses: currentBuses,
+      });
     }
   }, [currentBuses]);
 
   useEffect(() => {
-    // let currentRoutesBusArray = [];
-
-    // currentRoutesBus.map((bus) => {
-    //   currentRoutesBusArray.push({
-    //     routeName: bus.routeName,
-    //   });
-    // });
-    // console.log(currentRoutesBusArray);
-
-    // if (currentRoutesBusArray != frontCertainRoutes) {
-    if (location && currentRoutesBuses.length > 0) {
-      setCertainRoutes(dispatch, {
-        city: location.city,
-        currentBuses: currentRoutesBuses,
-      });
-    }
-    // }
-  }, [currentRoutesBuses]);
-
-  useEffect(() => {
-    if (certainRoutes) {
-      SetFrontCertainRoutes(certainRoutes);
-    }
+    // console.log(certainRoutes);
   }, [certainRoutes]);
 
-  useEffect(() => {}, [frontCertainRoutes]);
-
   return (
+    // <>
+    //   {loading ? (
+    //     <></>
+    //   ) : (
     <div className={styles.sidebar_box}>
-      <div className={styles.certainStopBox_titlebox__marginBottom}>
-        {nearbyStops && nearbyStops[clickStopIndex] && location ? (
-          <>
-            <div
-              className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopName}`}
-            >
-              {nearbyStops[clickStopIndex].stationName}
+      {nearbyStops && nearbyStops[clickStopIndex] && location ? (
+        <div className={styles.certainStopBox_titlebox__marginBottom}>
+          <div
+            className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopName}`}
+          >
+            {nearbyStops[clickStopIndex].stationName}
+          </div>
+          <div
+            className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopInfo}`}
+          >
+            <div className={styles.stopInfo_detailBox}>
+              <div>{location.city}</div>
+              <div>{location.town}</div>
+              <div>{nearbyStops[clickStopIndex].stationDistance} 公尺</div>
             </div>
-            <div
-              className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopInfo}`}
-            >
-              <div className={styles.stopInfo_detailBox}>
-                <div>{location.city}</div>
-                <div>{location.town}</div>
-                <div>{nearbyStops[clickStopIndex].stationDistance} 公尺</div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <></>
-        )}
-      </div>
-      {currentRoutesBuses && frontCertainRoutes ? (
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
+      {currentBuses && certainRoutes ? (
         <>
-          {currentRoutesBuses.map((currentRoutesBus, index) => (
+          {currentBuses.map((currentRoutesBus, index) => (
             <div className={styles.certainStopBox_certainRouteBox} key={index}>
               <Link
                 to={
-                  frontCertainRoutes[index]
-                    ? `${path.certainRoute}?routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${frontCertainRoutes[index].departureStopNameZh}&destinationStopNameZh=${frontCertainRoutes[index].destinationStopNameZh}`
+                  certainRoutes[index]
+                    ? `${path.certainRoute}?routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${certainRoutes[index].departureStopNameZh}&destinationStopNameZh=${certainRoutes[index].destinationStopNameZh}`
                     : ''
                 }
                 className={styles.certainRouteBox_linkSetting}
@@ -133,14 +132,13 @@ function CertainStopBox() {
                     {currentRoutesBus.routeName}
                   </div>
                   <div className={styles.certainRouteBox_routeDirection}>
-                    {!frontCertainRoutes[index] ||
-                    currentRoutesBus.direction == 225
+                    {!certainRoutes[index] || currentRoutesBus.direction == 225
                       ? ''
                       : currentRoutesBus.direction == 2
                       ? '環形'
                       : currentRoutesBus.direction == 1
-                      ? `往${frontCertainRoutes[index].departureStopNameZh}`
-                      : `往${frontCertainRoutes[index].destinationStopNameZh}`}
+                      ? `往${certainRoutes[index].departureStopNameZh}`
+                      : `往${certainRoutes[index].destinationStopNameZh}`}
                   </div>
                   <div
                     className={
@@ -170,6 +168,8 @@ function CertainStopBox() {
         <></>
       )}
     </div>
+    //   )}
+    // </>
   );
 }
 

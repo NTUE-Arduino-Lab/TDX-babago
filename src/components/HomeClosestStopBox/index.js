@@ -22,11 +22,15 @@ function ClosestStopBox() {
   const [OverSize, SetOverSize] = useState([]);
 
   const [closestStop, setClosestStop] = useState(null);
-  const [frontCertainRoutes, SetFrontCertainRoutes] = useState([]);
   const [currentRoutesBuses, SetCurrentRoutesBuses] = useState([]);
-  // const [certainRoutesInfo, SetCertainRoutesInfo] = useState([]);
   const {
-    state: { location, nearbyStops, currentBuses, certainRoutes },
+    state: {
+      location,
+      nearbyStops,
+      currentBuses,
+      certainRoutes,
+      // requestdata: { loading },
+    },
     dispatch,
   } = useContext(StoreContext);
 
@@ -60,35 +64,18 @@ function ClosestStopBox() {
   }, [currentBuses]);
 
   useEffect(() => {
-    // let currentRoutesBusArray = [];
-
-    // currentRoutesBus.map((bus) => {
-    //   currentRoutesBusArray.push({
-    //     routeName: bus.routeName,
-    //   });
-    // });
-    // console.log(currentRoutesBusArray);
-
-    // if (currentRoutesBusArray != frontCertainRoutes) {
     if (location && currentRoutesBuses.length > 0) {
       setCertainRoutes(dispatch, {
         city: location.city,
         currentBuses: currentRoutesBuses,
       });
     }
-    // }
   }, [currentRoutesBuses]);
 
   useEffect(() => {
     if (certainRoutes) {
-      SetFrontCertainRoutes(certainRoutes);
-    }
-  }, [certainRoutes]);
-
-  useEffect(() => {
-    if (frontCertainRoutes.length > 0) {
       const array = [];
-      frontCertainRoutes.map((el) => {
+      certainRoutes.map((el) => {
         var id1 = getRef(el.routeName);
         if (id1 !== null && id1 !== undefined) {
           if (id1.current !== null && id1.current.offsetWidth > 112) {
@@ -102,13 +89,17 @@ function ClosestStopBox() {
       });
       SetOverSize(array);
     }
-  }, [frontCertainRoutes]);
+  }, [certainRoutes]);
 
   useEffect(() => {
     // console.log(OverSize);
-  }, [certainRoutes]);
+  }, [OverSize]);
 
   return (
+    // <>
+    //   {loading ? (
+    //     <></>
+    //   ) : (
     <div className={styles.sidebar_box}>
       <div
         className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.closestBox_titlebox__marginBottom}`}
@@ -140,7 +131,7 @@ function ClosestStopBox() {
           <></>
         )}
       </div>
-      {currentRoutesBuses && frontCertainRoutes ? (
+      {currentRoutesBuses && certainRoutes ? (
         <div className={styles.closestBox_BusInfo}>
           {currentRoutesBuses.map((currentRoutesBus, index) => (
             <div
@@ -160,14 +151,13 @@ function ClosestStopBox() {
                     </p>
                   </div>
                   <div className={styles.routeInfoBox_routeDirection}>
-                    {!frontCertainRoutes[index] ||
-                    currentRoutesBus.direction == 225
+                    {!certainRoutes[index] || currentRoutesBus.direction == 225
                       ? ''
                       : currentRoutesBus.direction == 2
                       ? '環形'
                       : currentRoutesBus.direction == 1
-                      ? `往${frontCertainRoutes[index].departureStopNameZh}`
-                      : `往${frontCertainRoutes[index].destinationStopNameZh}`}
+                      ? `往${certainRoutes[index].departureStopNameZh}`
+                      : `往${certainRoutes[index].destinationStopNameZh}`}
                   </div>
                 </div>
                 <div
@@ -213,6 +203,8 @@ function ClosestStopBox() {
         <></>
       )}
     </div>
+    //   )}
+    // </>
   );
 }
 
