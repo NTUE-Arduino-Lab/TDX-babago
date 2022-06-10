@@ -105,7 +105,7 @@ function ClosestStopBox() {
   }, [frontCertainRoutes]);
 
   useEffect(() => {
-    console.log(OverSize);
+    // console.log(OverSize);
   }, [certainRoutes]);
 
   return (

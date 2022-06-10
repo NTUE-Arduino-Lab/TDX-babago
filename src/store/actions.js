@@ -241,7 +241,7 @@ export const setCertainRoutes = async (dispatch, options) => {
   }
 };
 
-export const setSelectRouteStops = async (dispatch, options) => {
+export const setSelectRouteStopsSort = async (dispatch, options) => {
   dispatch({ type: type.BEGIN_DATA_REQUEST });
   const { city, selectRoute } = options;
 
@@ -250,7 +250,7 @@ export const setSelectRouteStops = async (dispatch, options) => {
       const cityEn = cityJson[i].cityEn;
 
       try {
-        const selectRouteStops = [];
+        const selectRouteStopsSort = [];
         const url = `${TDXBUS_URL}/DisplayStopOfRoute/City/${cityEn}/${selectRoute.routeName}`;
 
         let config = {
@@ -262,7 +262,7 @@ export const setSelectRouteStops = async (dispatch, options) => {
 
         for (var j = 0; j < data.length; j++) {
           if (selectRoute.routeUID == data[j].RouteUID) {
-            selectRouteStops.push({
+            selectRouteStopsSort.push({
               direction: data[j].Direction,
               routeUID: data[j].RouteUID,
               routeName: selectRoute.routeName,
@@ -274,8 +274,53 @@ export const setSelectRouteStops = async (dispatch, options) => {
         // console.log(selectRouteStops);
 
         dispatch({
-          type: type.SET_SELECTROUTESTOPS,
-          payload: selectRouteStops,
+          type: type.SET_SELECTROUTESTOPSSORT,
+          payload: selectRouteStopsSort,
+        });
+
+        dispatch({ type: type.SUCCESS_DATA_REQUEST });
+      } catch (error) {
+        dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+      }
+    }
+  }
+};
+
+export const setSelectRouteStopsTime = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { city, selectRoute } = options;
+
+  for (var i = 0; i < cityJson.length; i++) {
+    if (cityJson[i].city === city) {
+      const cityEn = cityJson[i].cityEn;
+
+      try {
+        const selectRouteStopsTime = [];
+        const url = `${TDXBUS_URL}/EstimatedTimeOfArrival/City/${cityEn}/${selectRoute.routeName}`;
+
+        let config = {
+          headers: GetAuthorizationHeader(),
+        };
+        const response = await axios.get(url, config);
+        const data = response.data;
+        // console.log(data);
+
+        for (var j = 0; j < data.length; j++) {
+          if (selectRoute.routeUID == data[j].RouteUID) {
+            selectRouteStopsTime.push({
+              direction: data[j].Direction,
+              routeUID: data[j].RouteUID,
+              stopUID: data[j].StopUID,
+              stopStatus: data[j].StopStatus,
+              plateNumb: data[j].PlateNumb,
+              estimateTime: data[j].EstimateTime,
+            });
+          }
+        }
+
+        dispatch({
+          type: type.SET_SELECTROUTESTOPSTIME,
+          payload: selectRouteStopsTime,
         });
 
         dispatch({ type: type.SUCCESS_DATA_REQUEST });
