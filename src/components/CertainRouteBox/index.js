@@ -1,6 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import * as QueryString from 'query-string';
 
+import path from '../../router/path';
 import styles from './styles.module.scss';
 
 // import cityJson from '../../asset/json/city.json';
@@ -13,17 +15,21 @@ import {
 import { StoreContext } from '../../store/reducer';
 function CertainRouteBox() {
   const reactlocation = useLocation();
-  var { currentRoutesBus, frontCertainRoute } = reactlocation.state;
+  var {
+    routeName,
+    routeUID,
+    direction,
+    departureStopNameZh,
+    destinationStopNameZh,
+  } = QueryString.parse(reactlocation.search);
   const [directionStops, setDirectionStops] = useState([]);
   const [changeLocation, setChangeLocation] = useState(null);
-  const [selectRouteDirection, setSelectRouteDirection] = useState(null);
   const {
     state: { position, location, selectRouteStopsSort, selectRouteStopsTime },
     dispatch,
   } = useContext(StoreContext);
 
   useEffect(() => {
-    // console.log('certainPage: ' + clickStopIndex);
     if (changeLocation === null) {
       setChangeLocation(false);
     } else {
@@ -35,39 +41,38 @@ function CertainRouteBox() {
   }, [location]);
 
   useEffect(() => {
-    setSelectRouteDirection(currentRoutesBus.direction);
-  }, [currentRoutesBus]);
-
-  useEffect(() => {
-    if (location && currentRoutesBus) {
+    if (location && routeName && routeUID) {
       setSelectRouteStopsSort(dispatch, {
         city: location.city,
-        selectRoute: currentRoutesBus,
+        selectRoute: {
+          routeName,
+          routeUID,
+        },
       });
       setSelectRouteStopsTime(dispatch, {
         city: location.city,
-        selectRoute: currentRoutesBus,
+        selectRoute: {
+          routeName,
+          routeUID,
+        },
       });
     }
-  }, [location, currentRoutesBus]);
+  }, [location, routeName, routeUID]);
 
   useEffect(() => {
-    if (
-      selectRouteStopsSort &&
-      selectRouteStopsTime &&
-      selectRouteDirection != null
-    ) {
+    if (selectRouteStopsSort && selectRouteStopsTime && direction) {
+      // console.log(selectRouteStopsSort);
       // console.log(selectRouteStopsTime);
       let stopsArr = [];
       let stopsBusesArr = [];
       for (var i = 0; i < selectRouteStopsSort.length; i++) {
-        if (selectRouteStopsSort[i].direction == selectRouteDirection) {
+        if (selectRouteStopsSort[i].direction == direction) {
           // setDirectionStops(selectRouteStopsSort[i].stops);
           stopsArr = selectRouteStopsSort[i].stops;
           for (var j = 0; j < stopsArr.length; j++) {
             for (var k = 0; k < selectRouteStopsTime.length; k++) {
               if (
-                selectRouteStopsTime[k].direction == selectRouteDirection &&
+                selectRouteStopsTime[k].direction == direction &&
                 stopsArr[j].StopUID == selectRouteStopsTime[k].stopUID
               ) {
                 // console.log(stopsArr[j]);
@@ -107,35 +112,34 @@ function CertainRouteBox() {
         }
       }
     }
-  }, [selectRouteStopsSort, selectRouteStopsTime, selectRouteDirection]);
+  }, [selectRouteStopsSort, selectRouteStopsTime, direction]);
 
   useEffect(() => {}, [directionStops]);
 
   return (
     <div className={styles.sidebar_box}>
-      {selectRouteStopsSort && directionStops ? (
+      {selectRouteStopsSort &&
+      directionStops &&
+      departureStopNameZh &&
+      destinationStopNameZh ? (
         <>
           <div className={styles.topBox_padding}>
             <div
               className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainRouteBox_titleBox}`}
             >
-              {currentRoutesBus.routeName}
+              {routeName}
             </div>
             <div
               className={`${styles.certainRouteBox_buttonBox} ${styles.box__spaceBetween}`}
             >
               {selectRouteStopsSort.map((stop, index) => (
-                <button
+                <Link
+                  to={`${path.certainRoute}?routeName=${routeName}&routeUID=${routeUID}&direction=${stop.direction}&departureStopNameZh=${departureStopNameZh}&destinationStopNameZh=${destinationStopNameZh}`}
                   className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button}`}
-                  onClick={() => {
-                    setSelectRouteDirection(stop.direction);
-                  }}
                   key={`${stop.routeUID}-${index}`}
                 >
-                  {stop.direction
-                    ? frontCertainRoute.departureStopNameZh
-                    : frontCertainRoute.destinationStopNameZh}
-                </button>
+                  {stop.direction ? departureStopNameZh : destinationStopNameZh}
+                </Link>
               ))}
             </div>
           </div>

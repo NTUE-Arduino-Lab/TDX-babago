@@ -80,8 +80,7 @@ function HomeNearbyStopsBox() {
                   ))}
                 </div>
                 {/* <Link
-                  to={path.certainStop}
-                  state={{ clickStopIndex: index }}
+                  to={`${path.certainStop}?clickStopIndex=${index}`}
                   onClick={() => setSelectStopIndex(dispatch, { index: index })}
                 >
                   <FontAwesomeIcon

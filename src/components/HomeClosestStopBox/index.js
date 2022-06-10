@@ -115,8 +115,7 @@ function ClosestStopBox() {
       >
         <div className={styles.linkRow__fontSize}>最近站牌</div>
         <Link
-          to={path.certainStop}
-          state={{ clickStopIndex: 0 }}
+          to={`${path.certainStop}?clickStopIndex=0`}
           onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
         >
           <FontAwesomeIcon

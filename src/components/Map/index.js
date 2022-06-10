@@ -131,9 +131,7 @@ function LocationMarker() {
           eventHandlers={{
             click: () => {
               setSelectStopIndex(dispatch, { index: index });
-              navigate(path.certainStop, {
-                state: { clickStopIndex: index },
-              });
+              navigate(`${path.certainStop}?clickStopIndex=${index}`);
             },
           }}
         >

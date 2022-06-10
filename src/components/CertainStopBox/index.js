@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import * as QueryString from 'query-string';
 
 import path from '../../router/path';
 import styles from './styles.module.scss';
@@ -17,7 +17,7 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 function CertainStopBox() {
   const reactlocation = useLocation();
-  var { clickStopIndex } = reactlocation.state;
+  var { clickStopIndex } = QueryString.parse(reactlocation.search);
   const [certainStop, setCertainStop] = useState(null);
   const [changeLocation, setChangeLocation] = useState(null);
   const [frontCertainRoutes, SetFrontCertainRoutes] = useState([]);
@@ -28,7 +28,6 @@ function CertainStopBox() {
   } = useContext(StoreContext);
 
   useEffect(() => {
-    // console.log('certainPage: ' + clickStopIndex);
     if (changeLocation === null) {
       setChangeLocation(false);
     } else {
@@ -41,6 +40,7 @@ function CertainStopBox() {
   }, [location]);
 
   useEffect(() => {
+    // console.log('certainPage: ' + clickStopIndex);
     if (nearbyStops && nearbyStops.length > clickStopIndex) {
       setCertainStop(nearbyStops[clickStopIndex]);
     }
@@ -118,20 +118,12 @@ function CertainStopBox() {
           {currentRoutesBuses.map((currentRoutesBus, index) => (
             <div className={styles.certainStopBox_certainRouteBox} key={index}>
               <Link
-                to={path.certainRoute}
-                className={styles.certainRouteBox_linkSetting}
-                state={
+                to={
                   frontCertainRoutes[index]
-                    ? {
-                        currentRoutesBus: {
-                          direction: currentRoutesBus.direction,
-                          routeName: currentRoutesBus.routeName,
-                          routeUID: currentRoutesBus.routeUID,
-                        },
-                        frontCertainRoute: frontCertainRoutes[index],
-                      }
-                    : {}
+                    ? `${path.certainRoute}?routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${frontCertainRoutes[index].departureStopNameZh}&destinationStopNameZh=${frontCertainRoutes[index].destinationStopNameZh}`
+                    : ''
                 }
+                className={styles.certainRouteBox_linkSetting}
               >
                 <div
                   className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}

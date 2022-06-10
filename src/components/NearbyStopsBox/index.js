@@ -36,9 +36,8 @@ function NearbyStopsBox() {
           {nearbyStops.map((nearbyStop, index) => (
             <div className={styles.nearbyBox_certainStopBox} key={index}>
               <Link
-                to={path.certainStop}
+                to={`${path.certainStop}?clickStopIndex=${index}`}
                 className={styles.certainStopBox_linkSetting}
-                state={{ clickStopIndex: index }}
                 onClick={() => setSelectStopIndex(dispatch, { index: index })}
               >
                 <div className={styles.certainStopBox_frontBox}>
