@@ -10,6 +10,7 @@ import {
   setNearbyStops,
   setSelectRouteStopsSort,
   setSelectRouteStopsTime,
+  setSelectRouteBuses,
 } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 function CertainRouteBox() {
@@ -29,6 +30,7 @@ function CertainRouteBox() {
       location,
       selectRouteStopsSort,
       selectRouteStopsTime,
+      selectRouteBuses,
       // requestdata: { loading },
     },
     dispatch,
@@ -68,61 +70,99 @@ function CertainRouteBox() {
           routeUID,
         },
       });
+      setSelectRouteBuses(dispatch, {
+        city: location.city,
+        selectRoute: {
+          routeName,
+          routeUID,
+        },
+      });
     }
   }, [location, routeName, routeUID]);
 
   useEffect(() => {
-    if (selectRouteStopsSort && selectRouteStopsTime && direction) {
-      // console.log(selectRouteStopsSort);
-      // console.log(selectRouteStopsTime);
+    if (
+      selectRouteStopsSort &&
+      selectRouteStopsTime &&
+      selectRouteBuses &&
+      direction
+    ) {
+      let i = 0;
       let stopsArr = [];
-      let stopsBusesArr = [];
-      for (var i = 0; i < selectRouteStopsSort.length; i++) {
+      let stopsTimeArr = [];
+      let routeBusesArr = [];
+
+      for (i = 0; i < selectRouteStopsSort.length; i++) {
         if (selectRouteStopsSort[i].direction == direction) {
           stopsArr = selectRouteStopsSort[i].stops;
-          for (var j = 0; j < stopsArr.length; j++) {
-            for (var k = 0; k < selectRouteStopsTime.length; k++) {
-              if (
-                selectRouteStopsTime[k].direction == direction &&
-                stopsArr[j].StopUID == selectRouteStopsTime[k].stopUID
-              ) {
-                // console.log(stopsArr[j]);
-                // console.log(selectRouteStopsTime[k]);
-
-                stopsBusesArr.push({
-                  stopUID: stopsArr[j].StopUID,
-                  // stationID: stopsArr[j].StationID,
-                  stopPosition: stopsArr[j].StopPosition,
-                  stopName: stopsArr[j].StopName,
-                  stopBoarding: stopsArr[j].StopBoarding,
-                  stopStatus:
-                    selectRouteStopsTime[k].stopStatus == 4
-                      ? '今日未營運'
-                      : selectRouteStopsTime[k].stopStatus == 3
-                      ? '末班車已過'
-                      : selectRouteStopsTime[k].stopStatus == 2
-                      ? '交管不停靠'
-                      : selectRouteStopsTime[k].stopStatus == 0 &&
-                        Math.round(selectRouteStopsTime[k].estimateTime / 60) <=
-                          1
-                      ? '進站中'
-                      : selectRouteStopsTime[k].stopStatus == 0
-                      ? `${Math.round(
-                          selectRouteStopsTime[k].estimateTime / 60,
-                        )} 分`
-                      : '尚未發車',
-                  // busEstimateTime: selectRouteStopsTime[k].estimateTime,
-                  busPlateNumb: selectRouteStopsTime[k].plateNumb,
-                });
-              }
-            }
-          }
-
-          setDirectionStops(stopsBusesArr);
         }
       }
+
+      if (selectRouteBuses.length > 0) {
+        for (var j = 0; j < selectRouteBuses.length; j++) {
+          if (selectRouteBuses[j].direction == direction) {
+            routeBusesArr.push(selectRouteBuses[j]);
+          }
+        }
+      }
+
+      for (var x = 0; x < stopsArr.length; x++) {
+        for (var y = 0; y < selectRouteStopsTime.length; y++) {
+          if (
+            selectRouteStopsTime[y].direction == direction &&
+            stopsArr[x].StopUID == selectRouteStopsTime[y].stopUID
+          ) {
+            stopsTimeArr.push({
+              stopUID: stopsArr[x].StopUID,
+              // stationID: stopsArr[x].StationID,
+              stopPosition: stopsArr[x].StopPosition,
+              stopName: stopsArr[x].StopName,
+              stopBoarding: stopsArr[x].StopBoarding,
+              stopStatus:
+                selectRouteStopsTime[y].stopStatus == 4
+                  ? '今日未營運'
+                  : selectRouteStopsTime[y].stopStatus == 3
+                  ? '末班車已過'
+                  : selectRouteStopsTime[y].stopStatus == 2
+                  ? '交管不停靠'
+                  : selectRouteStopsTime[y].stopStatus == 0 &&
+                    Math.round(selectRouteStopsTime[y].estimateTime / 60) <= 1
+                  ? '進站中'
+                  : selectRouteStopsTime[y].stopStatus == 0
+                  ? `${Math.round(
+                      selectRouteStopsTime[y].estimateTime / 60,
+                    )} 分`
+                  : '尚未發車',
+              buses: [],
+              // busEstimateTime: selectRouteStopsTime[y].estimateTime,
+              // busPlateNumb: selectRouteStopsTime[y].plateNumb,
+            });
+          }
+        }
+      }
+
+      for (i = 0; i < stopsTimeArr.length; i++) {
+        for (var z = 0; z < routeBusesArr.length; z++) {
+          if (stopsTimeArr[i].stopUID == routeBusesArr[z].stopUID) {
+            let index = i;
+            if (!routeBusesArr[z].a2EventType) {
+              index = i + 1;
+            }
+
+            stopsTimeArr[index].buses.push({
+              plateNumb: routeBusesArr[z].plateNumb,
+              busStatus: routeBusesArr[z].busStatus,
+              dutyStatus: routeBusesArr[z].dutyStatus,
+              stopSequence: routeBusesArr[z].stopSequence,
+            });
+          }
+        }
+      }
+
+      // console.log(stopsTimeArr);
+      setDirectionStops(stopsTimeArr);
     }
-  }, [selectRouteStopsSort, selectRouteStopsTime, direction]);
+  }, [selectRouteStopsSort, selectRouteStopsTime, selectRouteBuses, direction]);
 
   useEffect(() => {}, [
     directionStops,
@@ -203,8 +243,22 @@ function CertainRouteBox() {
                 className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.routeDotBox_stopCircleBox}`}
                 key={`${stop.stopUID}-2-${index}`}
               >
-                <div className={styles.stopCircleBox_stopCircle}>
-                  {/* {city.cityEn} */}
+                <div
+                  className={
+                    stop.buses.length > 0
+                      ? `${styles.stopCircleBox_stopCircle} ${styles.backgroundColor_B}`
+                      : `${styles.stopCircleBox_stopCircle} ${styles.backgroundColor_W}`
+                  }
+                >
+                  {stop.buses.length > 0 ? (
+                    <div className={styles.stopCircle_plateNumb}>
+                      {stop.buses.map((bus) => (
+                        <div key={bus.plateNumb}>{bus.plateNumb}</div>
+                      ))}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             ))}

@@ -358,6 +358,64 @@ export const setSelectRouteStopsTime = async (dispatch, options) => {
   }
 };
 
+export const setSelectRouteBuses = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { city, selectRoute } = options;
+
+  if (!city || !selectRoute) {
+    dispatch({
+      type: type.SET_SELECTROUTEBUSES,
+      payload: null,
+    });
+
+    dispatch({ type: type.SUCCESS_DATA_REQUEST });
+  } else {
+    for (var i = 0; i < cityJson.length; i++) {
+      if (cityJson[i].city === city) {
+        const cityEn = cityJson[i].cityEn;
+
+        try {
+          const selectRouteBuses = [];
+          const url = `${TDXBUS_URL}/RealTimeNearStop/City/${cityEn}/${selectRoute.routeName}`;
+
+          let config = {
+            headers: GetAuthorizationHeader(),
+          };
+          const response = await axios.get(url, config);
+          const data = response.data;
+          // console.log(data);
+
+          for (var j = 0; j < data.length; j++) {
+            if (selectRoute.routeUID == data[j].RouteUID) {
+              selectRouteBuses.push({
+                routeUID: data[j].RouteUID,
+                direction: data[j].Direction,
+                plateNumb: data[j].PlateNumb,
+                a2EventType: data[j].A2EventType,
+                stopUID: data[j].StopUID,
+                stopSequence: data[j].StopSequence,
+                dutyStatus: data[j].DutyStatus,
+                busStatus: data[j].BusStatus,
+              });
+            }
+          }
+
+          // console.log(selectRouteBuses);
+
+          dispatch({
+            type: type.SET_SELECTROUTEBUSES,
+            payload: selectRouteBuses,
+          });
+
+          dispatch({ type: type.SUCCESS_DATA_REQUEST });
+        } catch (error) {
+          dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+        }
+      }
+    }
+  }
+};
+
 export const setSelectStopIndex = async (dispatch, options) => {
   dispatch({ type: type.BEGIN_DATA_REQUEST });
   const { index } = options;
