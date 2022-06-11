@@ -62,8 +62,19 @@
   margin-bottom: 16px;
 }
 .closestBox_stopName {
+  //跑馬燈
+  max-width: 208px;
+  height: 32px;
+  white-space:nowrap;
+  overflow: hidden;
+}
+.closestBox_stopName>p{
   @include H1_Bold;
   color: $color-black;
+  display: inline-block; 
+}
+.closestBox_stopName_marquee{
+  animation: marquee 5s linear infinite;
 }
 .closestBox_stopDistance__fontSize {
   @include P;
@@ -84,6 +95,7 @@
 }
 .closestBox_flexBox {
   display: flex;
+  flex-wrap: wrap;
 }
 .currentInfoBox_routeInfoBox{
   margin: 0;
@@ -92,21 +104,21 @@
 .routeInfoBox_routeName {
   margin-top: -5px;
   width: 112px;
-  @include H1;
   height: 32px;
   white-space:nowrap;
   overflow: hidden;
 }
 .routeInfoBox_routeName>p{
+  @include H1;
   display: inline-block; 
 }
-.routeName_animation{
+.marquee_animation{
   animation: marquee 3s linear infinite;
 }
 
 @keyframes marquee{
   0%{
-    transform: translateX(-100%);
+    transform: translateX(100%);
   }
 
   50%{
@@ -114,7 +126,7 @@
   }
 
   100%{
-    transform: translateX(100%);
+    transform: translateX(-100%);
   }
 }
 .routeInfoBox_routeDirection {

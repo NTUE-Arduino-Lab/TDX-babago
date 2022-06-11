@@ -1,9 +1,8 @@
+@import "../../styles/color.scss";
+@import "../../styles/font.scss";
+
 .sidebar_box {
   width: 100%;
-  border: 1px solid #160f29;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  padding: 32px 24px 16px 24px;
 }
 
 .box__alignItemsCenter {
@@ -14,98 +13,183 @@
   display: flex;
   justify-content: center;
 }
-
-.certainStopBox_titlebox__marginBottom {
-  margin-bottom: 32px;
+.box__start{
+  display: flex;
+  justify-content: flex-start;
 }
-.certainStopBox_stopName {
-  height: 36px;
-  font-weight: bold;
-  font-size: 24px;
-  color: #246a73;
-}
-.certainStopBox_stopInfo {
-  width: 100%;
-  height: 24px;
-  font-size: 16px;
-}
-
-.stopInfo_detailBox {
-  width: 66%;
+.box__spaceBetween{
   display: flex;
   justify-content: space-between;
 }
 
+.certainStopBox_titlebox__marginBottom {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: $color-main;
+  margin-top: -24px;
+  margin-left: -24px;
+  margin-right: -24px;
+}
+.certainStopBox_stopName {
+  @include H1_Bold;
+  color: #fff;
+}
+.certainStopBox_stopInfo {
+  width: 100%;
+  @include P;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stopInfo_detailBox {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  height: 24px;
+}
+
+.stopInfo_detailBox >div:nth-child(2){
+  border-right: 1px solid #fff;
+  padding-right: 8px;
+}
+
+.certainStopBox_ChangeRouteBox{
+  margin-right: -24px;
+  margin-left: -24px;
+  padding: 16px 24px 0px 24px;
+  width: 100vw;
+  background: $color-background;
+  box-shadow: 0px 4px 8px -3px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: flex-start;
+  gap: 16px;
+}
+.ChangeRouteBox_RouteBox{
+  width: 24px;
+  padding: 4px;
+  text-align: center;
+  @include P;
+  &:active{
+    @include P_Bold;
+    border-bottom: 2px solid $color-main;
+  }
+}
+
+
 // certainRouteBox
+.certainStopBox_AllRouteBox{
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: $color-background;
+}
+.certainStopBox_AllRouteBox>div:last-child{
+  border-bottom: 0px;
+}
 .certainRouteBox_linkSetting{
   text-decoration: none;
 }
 .certainStopBox_certainRouteBox {
-  position: relative;
   width: 100%;
-  height: 52px;
-  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid $color-gray;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 
   .certainRouteBox_frontBox {
-    position: absolute;
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
-    border: 1px solid #160f29;
-    border-radius: 5px;
-    background-color: #fcfcfc;
-    z-index: 2;
-    padding: 0 4%;
-  }
-
-  .certainRouteBox_shadow {
-    position: absolute;
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
-    top: 4px;
-    left: 4px;
-    border-radius: 5px;
-    background-color: #160f29;
-    opacity: 0;
-    transition: 0.2s;
-  }
-
-  &:hover {
-    .certainRouteBox_shadow {
-      opacity: 1;
-    }
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    justify-content: space-between;
   }
 }
 
+.certainRouteBox_routeInfo{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.certainRouteBox_routeNameBox{
+  width: calc(100% - 100px);
+  min-width: 200px;
+  white-space:nowrap;
+  overflow: hidden;
+}
 .certainRouteBox_routeName {
-  width: 40%;
-  font-size: 20px;
-  font-style: bold;
-  color: #160F29;
+  display: inline-block; 
+  @include H1_Bold;
+  color: $color-black;
 }
 .certainRouteBox_routeDirection {
-  width: calc(53% - 96px);
-  font-size: 16px;
-  text-align: center;
-  color: #ddbea8;
+  @include miniP;
+  color: $color-black;
 }
 .certainRouteBox_routeState {
-  width: calc(80px + 7%);
+  width: 88px;
   font-size: 16px;
   text-align: center;
-  color: #160F29;
+  color: $color-black;
 }
-.routeState__textGreen {
-  color: #246a73;
+.routeState__textGray {
+  color: $color-gray;
 }
-.routeState__textPink {
-  color: #ddbea8;
+.routeState__textYellow {
+  color: $color-yellow;
 }
 .routeState__textDark {
-  color: #160f29;
+  color: $color-black;
 }
 
 .certainRouteBox_arrowIcon {
   font-size: 16px;
   text-align: center;
   color: #160f29;
+}
+
+.certainRouteBox_ButtonBox{
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ButtonBox_Button{
+  padding: 4px 4px 4px 6px;
+  border-radius: 5px;
+  @include P;
+  gap: 6px;
+}
+.Button_White{
+  color: $color-main;
+  background-color: #fff;
+}
+.Button_Blue{
+  color: #fff;
+  background-color: $color-main;
+}
+.Button_icon{
+  padding-top: 1px;
+}
+
+.marquee_animation{
+  animation: marquee 5s linear infinite;
+}
+
+@keyframes marquee{
+  0%{
+    transform: translateX(100%);
+  }
+
+  50%{
+    transform: translateX(0%);
+  }
+
+  100%{
+    transform: translateX(-100%);
+  }
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import useDynamicRefs from 'use-dynamic-refs';
 
 import path from '../../router/path';
 import styles from './styles.module.scss';
@@ -12,6 +13,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 function HomeNearbyStopsBox() {
+  const [getRef, setRef] = useDynamicRefs();
+  const [OverSize, SetOverSize] = useState([]);
+
   const [frontNearbyStops, SetFrontNearbyStops] = useState([]);
   const {
     state: { position, nearbyStops },
@@ -38,6 +42,30 @@ function HomeNearbyStopsBox() {
     }
   }, [nearbyStops]);
 
+  useEffect(() => {
+    if (frontNearbyStops.length > 0) {
+      const array = [];
+      frontNearbyStops.map((el) => {
+        var p_ref = getRef(el.stationName + '_p');
+        var div_ref = getRef(el.stationName + '_div');
+        if (p_ref !== null && p_ref !== undefined) {
+          if (
+            div_ref.current !== null &&
+            p_ref.current !== null &&
+            p_ref.current.offsetWidth > div_ref.current.offsetWidth
+          ) {
+            array.push(true);
+          } else {
+            array.push(false);
+          }
+        } else {
+          array.push(false);
+        }
+      });
+      SetOverSize(array);
+    }
+  }, [frontNearbyStops]);
+
   return (
     <div className={styles.sidebar_box}>
       <div
@@ -58,8 +86,18 @@ function HomeNearbyStopsBox() {
               <div
                 className={`${styles.routeStopBox_stopInfoBox} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween}`}
               >
-                <div className={styles.stopInfoBox_stopName__fontSize}>
-                  {nearbyStop.stationName}
+                <div
+                  ref={setRef(nearbyStop.stationName + '_div')}
+                  className={styles.stopInfoBox_stopName}
+                >
+                  <p
+                    ref={setRef(nearbyStop.stationName + '_p')}
+                    className={
+                      OverSize[index] ? `${styles.marquee_animation}` : ''
+                    }
+                  >
+                    {nearbyStop.stationName}
+                  </p>
                 </div>
                 {/* <div className={styles.stopInfoBox_stopDistance__fontSize}>
                   {nearbyStop.stationDistance} 公尺
