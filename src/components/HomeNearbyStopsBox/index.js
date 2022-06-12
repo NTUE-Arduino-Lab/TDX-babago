@@ -17,7 +17,7 @@ function HomeNearbyStopsBox() {
   const [overSize, SetOverSize] = useState([]);
 
   const reactlocation = useLocation();
-  var { lng, lat } = QueryString.parse(reactlocation.search);
+  const { lng, lat } = QueryString.parse(reactlocation.search);
   const [frontNearbyStops, setFrontNearbyStops] = useState([]);
   const {
     state: {

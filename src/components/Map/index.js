@@ -24,7 +24,7 @@ import { StoreContext } from '../../store/reducer';
 
 function LocationMarker() {
   const reactlocation = useLocation();
-  var { lng, lat, stationID } = QueryString.parse(reactlocation.search);
+  const { lng, lat, stationID } = QueryString.parse(reactlocation.search);
   const navigate = useNavigate();
   const [markers, setMarkers] = useState([]);
   const {

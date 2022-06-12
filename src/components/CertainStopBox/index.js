@@ -28,9 +28,8 @@ function CertainStopBox() {
   // const [overSize, SetOverSize] = useState([]);
 
   const reactlocation = useLocation();
-  var { lng, lat, stationID, stationName, stationDistance } = QueryString.parse(
-    reactlocation.search,
-  );
+  const { lng, lat, stationID, stationName, stationDistance } =
+    QueryString.parse(reactlocation.search);
   const {
     state: {
       location,
@@ -67,33 +66,31 @@ function CertainStopBox() {
         }
       }
     }
-  }, [nearbyStops]);
+  }, [nearbyStops, stationName]);
 
   useEffect(() => {
-    // console.log(nearbyStopsName);
-  }, [nearbyStopsName]);
-
-  useEffect(() => {
-    if (location) {
-      setCurrentBuses(dispatch, {
-        city: location.city,
-        stationID: stationID,
-      });
+    if (nearbyStopsName && stationID) {
+      for (var i = 0; i < nearbyStopsName.length; i++) {
+        if (nearbyStopsName[i].stationID == stationID) {
+          setCurrentBuses(dispatch, {
+            authorityCodes: nearbyStopsName[i].authorityCodes,
+            stationID: stationID,
+          });
+          i = nearbyStopsName.length;
+        }
+      }
     }
-  }, [location, stationID]);
+  }, [nearbyStopsName, stationID]);
 
   useEffect(() => {
-    if (location && currentBuses) {
+    if (currentBuses) {
       setCertainRoutes(dispatch, {
-        city: location.city,
         currentBuses: currentBuses,
       });
     }
   }, [currentBuses]);
 
-  useEffect(() => {
-    // console.log(certainRoutes);
-  }, [certainRoutes]);
+  useEffect(() => {}, [certainRoutes]);
 
   return (
     // <>
@@ -136,7 +133,12 @@ function CertainStopBox() {
             {nearbyStopsName.map((stopName, index) => (
               <Link
                 to={`${path.certainStop}?lng=${lng}&lat=${lat}&stationName=${stopName.stationName}&stationID=${stopName.stationID}&stationDistance=${stopName.stationDistance}`}
-                className={styles.ChangeRouteBox_RouteBox}
+                className={
+                  stopName.stationID == stationID
+                    ? `${styles.ChangeRouteBox_RouteBox} ${styles.ChangeRouteBox_RouteBoxFocus}`
+                    : `${styles.ChangeRouteBox_RouteBox}`
+                }
+                // styles.ChangeRouteBox_RouteBox
                 key={index}
               >
                 {index + 1}

@@ -2,116 +2,139 @@
     {
         "city":"宜蘭縣",
         "cityEn":"YilanCounty",
-        "cityID":"F-D0047-001"
+        "cityID":"F-D0047-001",
+        "AuthorityCode": "ILA"
     },
     {
         "city":"桃園市",
         "cityEn":"Taoyuan",
-        "cityID":"F-D0047-005"
+        "cityID":"F-D0047-005",
+        "AuthorityCode": "TAO"
     },
     {
         "city":"新竹縣",
         "cityEn":"HsinchuCounty",
-        "cityID":"F-D0047-009"
+        "cityID":"F-D0047-009",
+        "AuthorityCode": "HSQ"
     },
     {
         "city":"苗栗縣",
         "cityEn":"MiaoliCounty",
-        "cityID":"F-D0047-013"
+        "cityID":"F-D0047-013",
+        "AuthorityCode": "MIA"
     },
     {
         "city":"彰化縣",
         "cityEn":"ChanghuaCounty",
-        "cityID":"F-D0047-017"
+        "cityID":"F-D0047-017",
+        "AuthorityCode": "CHA"
     },
     {
         "city":"南投縣",
         "cityEn":"NantouCounty",
-        "cityID":"F-D0047-021"
+        "cityID":"F-D0047-021",
+        "AuthorityCode": "NAN"
     },
     {
         "city":"雲林縣",
         "cityEn":"YunlinCounty",
-        "cityID":"F-D0047-025"
+        "cityID":"F-D0047-025",
+        "AuthorityCode": "YUN"
     },
     {
         "city":"嘉義縣",
         "cityEn":"ChiayiCounty",
-        "cityID":"F-D0047-029"
+        "cityID":"F-D0047-029",
+        "AuthorityCode": "CYQ"
     },
     {
         "city":"屏東縣",
         "cityEn":"PingtungCounty",
-        "cityID":"F-D0047-033"
+        "cityID":"F-D0047-033",
+        "AuthorityCode": "PIF"
     },
     {
         "city":"臺東縣",
         "cityEn":"TaitungCounty",
-        "cityID":"F-D0047-037"
+        "cityID":"F-D0047-037",
+        "AuthorityCode": "TTT"
     },
     {
         "city":"花蓮縣",
         "cityEn":"HualienCounty",
-        "cityID":"F-D0047-041"
+        "cityID":"F-D0047-041",
+        "AuthorityCode": "HUA"
     },
     {
         "city":"澎湖縣",
         "cityEn":"PenghuCounty",
-        "cityID":"F-D0047-045"
+        "cityID":"F-D0047-045",
+        "AuthorityCode": "PEN"
     },
     {
         "city":"基隆市",
         "cityEn":"Keelung",
-        "cityID":"F-D0047-049"
+        "cityID":"F-D0047-049",
+        "AuthorityCode": "KEE"
     },
     {
         "city":"基隆縣",
         "cityEn":"Keelung",
-        "cityID":"F-D0047-049"
+        "cityID":"F-D0047-049",
+        "AuthorityCode": "KEE"
     },
     {
         "city":"新竹市",
         "cityEn":"Hsinchu",
-        "cityID":"F-D0047-053"
+        "cityID":"F-D0047-053",
+        "AuthorityCode": "HSZ"
     },
     {
         "city":"嘉義市",
         "cityEn":"Chiayi",
-        "cityID":"F-D0047-057"
+        "cityID":"F-D0047-057",
+        "AuthorityCode": "CYI"
     },
     {
         "city":"臺北市",
         "cityEn":"Taipei",
-        "cityID":"F-D0047-061"
+        "cityID":"F-D0047-061",
+        "AuthorityCode": "TPE"
     },
     {
         "city":"高雄市",
         "cityEn":"Kaohsiung",
-        "cityID":"F-D0047-065"
+        "cityID":"F-D0047-065",
+        "AuthorityCode": "KHH"
     },
     {
         "city":"新北市",
         "cityEn":"NewTaipei",
-        "cityID":"F-D0047-069"
+        "cityID":"F-D0047-069",
+        "AuthorityCode": "NWT"
     },
     {
         "city":"臺中市",
         "cityEn":"Taichung",
-        "cityID":"F-D0047-073"
+        "cityID":"F-D0047-073",
+        "AuthorityCode": "TXG"
     },
     {
         "city":"臺南市",
         "cityEn":"Tainan",
-        "cityID":"F-D0047-077"
+        "cityID":"F-D0047-077",
+        "AuthorityCode": "TNN"
     },
     {
         "city":"連江縣",
         "cityEn":"LienchiangCounty",
-        "cityID":"F-D0047-081"
+        "cityID":"F-D0047-081",
+        "AuthorityCode": "LIE"
     },
     {
         "city":"金門縣",
         "cityEn":"KinmenCounty",
-        "cityID":"F-D0047-085"
+        "cityID":"F-D0047-085",
+        "AuthorityCode": "KIN"
     }
 ]

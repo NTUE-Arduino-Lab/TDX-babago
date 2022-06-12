@@ -1,5 +1,5 @@
 @import '../../styles/color.scss';
-@import "../../styles/font.scss";
+@import '../../styles/font.scss';
 
 .sidebar_box {
   width: 100%;
@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
 }
-.box__alignItemsStart{
+.box__alignItemsStart {
   display: flex;
   align-items: flex-start;
 }
@@ -32,7 +32,7 @@
   display: flex;
   justify-content: space-between;
 }
-.box__start{
+.box__start {
   display: flex;
   justify-content: flex-start;
 }
@@ -41,15 +41,15 @@
 .certainRouteBox_titleBox {
   height: 36px;
   @include H1_Bold;
-  color: #FCFCFC;
+  color: #fcfcfc;
   margin-bottom: 8px;
 }
-.certainRouteBox_routeInfo{
+.certainRouteBox_routeInfo {
   display: flex;
   margin-bottom: 24px;
-  color: #FCFCFC;
+  color: #fcfcfc;
   @include P;
-  .routeInfo_detailBox{
+  .routeInfo_detailBox {
     display: flex;
     gap: 4px;
   }
@@ -68,13 +68,13 @@
   padding: 4px 0;
   @include P;
   color: $color-black;
-  &:focus{
-    @include P_Bold;
-    border-bottom: 2px solid $color-main;
-  }
+}
+.buttonBox_buttonFocus {
+  @include P_Bold;
+  border-bottom: 2px solid $color-main;
 }
 
-.certainRouteBox_routeInfoBox{
+.certainRouteBox_routeInfoBox {
   display: flex;
   flex-direction: column;
   margin-bottom: 16px;
@@ -98,7 +98,7 @@
   color: $color-black;
   width: 75%;
 }
-.stopInfoBox_stopName_open{
+.stopInfoBox_stopName_open {
   @include P_Bold;
   color: $color-main;
 }
@@ -123,7 +123,7 @@
   margin-bottom: 16px;
   z-index: 2;
 }
-.routeDotBox_stopCircleBox_open{
+.routeDotBox_stopCircleBox_open {
   padding-top: 5px;
   height: 68px;
 }
@@ -155,7 +155,7 @@
   z-index: 2;
   @include P;
 }
-.stopCircle_plateNumb ::after{
+.stopCircle_plateNumb ::after {
   position: absolute;
   content: '';
   top: 50%;
@@ -165,7 +165,6 @@
   background-color: $color-main;
   transform: translateX(100%);
 }
-
 
 .routeState__textYellow {
   color: $color-yellow;
@@ -180,32 +179,32 @@
   @include P_Bold;
 }
 
-.stopInfoBox_ButtonBox{
+.stopInfoBox_ButtonBox {
   flex-wrap: wrap;
   padding-top: 12px;
 }
-.stopInfoBox_ButtonBox_close{
+.stopInfoBox_ButtonBox_close {
   display: none;
 }
-.ButtonBox_Button{
+.ButtonBox_Button {
   padding: 4px 4px 4px 6px;
   border-radius: 5px;
   @include P;
   gap: 6px;
 }
-.Button_White{
+.Button_White {
   color: $color-main;
-  background-color: #FCFCFC;
+  background-color: #fcfcfc;
 }
-.Button_White_outline{
-  color: #FCFCFC;
+.Button_White_outline {
+  color: #fcfcfc;
   background-color: $color-main;
-  border: 1px solid #FCFCFC;
+  border: 1px solid #fcfcfc;
 }
-.Button_Blue{
-  color: #FCFCFC;
+.Button_Blue {
+  color: #fcfcfc;
   background-color: $color-main;
 }
-.Button_icon{
+.Button_icon {
   padding-top: 1px;
 }

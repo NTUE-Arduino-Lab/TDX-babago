@@ -28,7 +28,6 @@ function ClosestStopBox() {
   const [currentRoutesBuses, setCurrentRoutesBuses] = useState([]);
   const {
     state: {
-      location,
       nearbyStops,
       currentBuses,
       certainRoutes,
@@ -38,20 +37,29 @@ function ClosestStopBox() {
   } = useContext(StoreContext);
 
   useEffect(() => {
-    // console.log(nearbyStops);
     if (nearbyStops) {
       setClosestStop(nearbyStops[0].stationIDs[0]);
     }
   }, [nearbyStops]);
 
   useEffect(() => {
-    if (location && closestStop) {
+    if (closestStop) {
       setCurrentBuses(dispatch, {
-        city: location.city,
+        authorityCodes: closestStop.authorityCodes,
         stationID: closestStop.stationID,
       });
+
+      if (
+        ClosestStop_ref.current &&
+        ClosestStop_ref.current.clientWidth &&
+        ClosestStop_d_ref.current &&
+        ClosestStop_d_ref.current.clientWidth
+      ) {
+        setClosestStopWidth(ClosestStop_ref.current.clientWidth);
+        setClosestStopDivWidth(ClosestStop_d_ref.current.clientWidth);
+      }
     }
-  }, [location, closestStop]);
+  }, [closestStop]);
 
   useEffect(() => {
     if (currentBuses) {
@@ -68,9 +76,8 @@ function ClosestStopBox() {
   }, [currentBuses]);
 
   useEffect(() => {
-    if (location && currentRoutesBuses.length > 0) {
+    if (currentRoutesBuses.length > 0) {
       setCertainRoutes(dispatch, {
-        city: location.city,
         currentBuses: currentRoutesBuses,
       });
     }
@@ -94,18 +101,6 @@ function ClosestStopBox() {
       setOverSize(array);
     }
   }, [certainRoutes]);
-
-  useEffect(() => {
-    if (
-      ClosestStop_ref.current &&
-      ClosestStop_ref.current.clientWidth &&
-      ClosestStop_d_ref.current &&
-      ClosestStop_d_ref.current.clientWidth
-    ) {
-      setClosestStopWidth(ClosestStop_ref.current.clientWidth);
-      setClosestStopDivWidth(ClosestStop_d_ref.current.clientWidth);
-    }
-  }, [closestStop]);
 
   return (
     // <>
