@@ -23,7 +23,6 @@ const initialState = {
   selectRouteStopsSort: null,
   selectRouteStopsTime: null,
   selectRouteBuses: null,
-  selectStopIndex: 0,
   requestdata: { loading: false, error: null },
 };
 
@@ -68,11 +67,6 @@ function reducer(state, action) {
       return {
         ...state,
         selectRouteBuses: action.payload,
-      };
-    case type.SET_SELECTSTOPINDEX:
-      return {
-        ...state,
-        selectStopIndex: action.payload,
       };
     case type.BEGIN_DATA_REQUEST:
       return {

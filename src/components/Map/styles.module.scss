@@ -8,10 +8,10 @@
 }
 
 .selectIcon {
-  z-index: 1000 !important;
+  z-index: 1001 !important;
 }
 .currentIcon {
-  z-index: 1001 !important;
+  z-index: 1000 !important;
 }
 .tooltip {
   z-index: 1003 !important;
@@ -34,7 +34,7 @@
 }
 .rowBox_titleText {
   font-size: 16px;
-  color: #246a73;
+  color: #2B3240;
 }
 .rowBox_stopDistance {
   font-size: 12px;

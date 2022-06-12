@@ -1,15 +1,12 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import * as QueryString from 'query-string';
 import useDynamicRefs from 'use-dynamic-refs';
 
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
-import {
-  setCurrentBuses,
-  setCertainRoutes,
-  setSelectStopIndex,
-} from '../../store/actions';
+import { setCurrentBuses, setCertainRoutes } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,11 +15,13 @@ import { faArrowRight, faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 
 function ClosestStopBox() {
+  const reactlocation = useLocation();
+  const { lng, lat } = QueryString.parse(reactlocation.search);
   const [getRef, setRef] = useDynamicRefs();
-  const [OverSize, SetOverSize] = useState([]);
+  const [overSize, setOverSize] = useState([]);
 
   const [closestStop, setClosestStop] = useState(null);
-  const [currentRoutesBuses, SetCurrentRoutesBuses] = useState([]);
+  const [currentRoutesBuses, setCurrentRoutesBuses] = useState([]);
   const {
     state: {
       location,
@@ -36,7 +35,7 @@ function ClosestStopBox() {
 
   useEffect(() => {
     if (nearbyStops && nearbyStops.length > 0) {
-      setClosestStop(nearbyStops[0]);
+      setClosestStop(nearbyStops[0].stationStops[0]);
     }
   }, [nearbyStops]);
 
@@ -56,9 +55,9 @@ function ClosestStopBox() {
         for (var i = 0; i < 5; i++) {
           array.push(currentBuses[i]);
         }
-        SetCurrentRoutesBuses(array);
+        setCurrentRoutesBuses(array);
       } else {
-        SetCurrentRoutesBuses(currentBuses);
+        setCurrentRoutesBuses(currentBuses);
       }
     }
   }, [currentBuses]);
@@ -87,13 +86,13 @@ function ClosestStopBox() {
           array.push(false);
         }
       });
-      SetOverSize(array);
+      setOverSize(array);
     }
   }, [certainRoutes]);
 
   useEffect(() => {
-    // console.log(OverSize);
-  }, [OverSize]);
+    // console.log(overSize);
+  }, [overSize]);
 
   return (
     // <>
@@ -101,36 +100,35 @@ function ClosestStopBox() {
     //     <></>
     //   ) : (
     <div className={styles.sidebar_box}>
-      <div
-        className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.closestBox_titlebox__marginBottom}`}
-      >
-        <div className={styles.linkRow__fontSize}>最近站牌</div>
-        <Link
-          to={`${path.certainStop}?clickStopIndex=0`}
-          onClick={() => setSelectStopIndex(dispatch, { index: 0 })}
-        >
-          <FontAwesomeIcon
-            className={styles.linkRow_arrowIcon}
-            icon={faArrowRight}
-          />
-        </Link>
-      </div>
-      <div
-        className={`${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.box__FlexWrap}`}
-      >
-        {nearbyStops && nearbyStops[0] ? (
-          <>
+      {nearbyStops && nearbyStops[0] && nearbyStops[0].stationStops[0] ? (
+        <>
+          <div
+            className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.closestBox_titlebox__marginBottom}`}
+          >
+            <div className={styles.linkRow__fontSize}>最近站牌</div>
+            <Link
+              to={`${path.certainStop}?lng=${lng}&lat=${lat}&stationUID=${nearbyStops[0].stationStops[0].stationUID}&stationID=${nearbyStops[0].stationStops[0].stationID}&stationName=${nearbyStops[0].stationStops[0].stationName}&stationDistance=${nearbyStops[0].stationStops[0].stationDistance}`}
+            >
+              <FontAwesomeIcon
+                className={styles.linkRow_arrowIcon}
+                icon={faArrowRight}
+              />
+            </Link>
+          </div>
+          <div
+            className={`${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.box__FlexWrap}`}
+          >
             <div className={styles.closestBox_stopName}>
-              {nearbyStops[0].stationName}
+              {nearbyStops[0].stationStops[0].stationName}
             </div>
             <div className={styles.closestBox_stopDistance__fontSize}>
-              {nearbyStops[0].stationDistance} 公尺
+              {nearbyStops[0].stationStops[0].stationDistance} 公尺
             </div>
-          </>
-        ) : (
-          <></>
-        )}
-      </div>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
       {currentRoutesBuses && certainRoutes ? (
         <div className={styles.closestBox_BusInfo}>
           {currentRoutesBuses.map((currentRoutesBus, index) => (
@@ -144,7 +142,7 @@ function ClosestStopBox() {
                     <p
                       ref={setRef(currentRoutesBus.routeName)}
                       className={
-                        OverSize[index] ? `${styles.routeName_animation}` : ''
+                        overSize[index] ? `${styles.routeName_animation}` : ''
                       }
                     >
                       {currentRoutesBus.routeName}

@@ -76,7 +76,7 @@ export const setNearbyStops = async (dispatch, options) => {
   const { lng, lat } = options;
 
   try {
-    const url = `${TDXBUS_URL}/Station/NearBy?$spatialFilter=nearby(${lat},${lng},500)&$format=JSON'/${lng}/${lat}`;
+    const url = `${TDXBUS_URL}/Station/NearBy?$spatialFilter=nearby(${lat},${lng},200)&$format=JSON'/${lng}/${lat}`;
     let config = {
       headers: GetAuthorizationHeader(),
     };
@@ -86,6 +86,7 @@ export const setNearbyStops = async (dispatch, options) => {
     const nearbyStops = [];
 
     data.map((station) => {
+      const stationUID = station.StationUID;
       const stationID = station.StationID;
       const stationName = station.StationName.Zh_tw;
       const stationLon = station.StationPosition.PositionLon;
@@ -100,6 +101,7 @@ export const setNearbyStops = async (dispatch, options) => {
       station.Stops.map((stops) => routes.push(stops.RouteName.Zh_tw));
 
       nearbyStops.push({
+        stationUID: stationUID,
         stationID: stationID,
         stationName: stationName,
         stationLon: stationLon,
@@ -120,9 +122,37 @@ export const setNearbyStops = async (dispatch, options) => {
       return 0;
     });
 
+    let i = 0;
+    let j = 0;
+    let flag = true;
+    let nearbyStopsName = [];
+    for (i = 0; i < nearbyStops.length; i++) {
+      flag = true;
+      for (j = 0; j < nearbyStopsName.length; j++) {
+        if (nearbyStops[i].stationName == nearbyStopsName[j].stationName) {
+          flag = false;
+          j = nearbyStopsName.length;
+        }
+      }
+      if (flag) {
+        nearbyStopsName.push({
+          stationName: nearbyStops[i].stationName,
+          stationStops: [],
+        });
+      }
+    }
+
+    for (i = 0; i < nearbyStops.length; i++) {
+      for (j = 0; j < nearbyStopsName.length; j++) {
+        if (nearbyStops[i].stationName == nearbyStopsName[j].stationName) {
+          nearbyStopsName[j].stationStops.push(nearbyStops[i]);
+        }
+      }
+    }
+
     dispatch({
       type: type.SET_NEARBYSTOPS,
-      payload: nearbyStops,
+      payload: nearbyStopsName,
     });
     dispatch({ type: type.SUCCESS_DATA_REQUEST });
   } catch (error) {
@@ -413,21 +443,5 @@ export const setSelectRouteBuses = async (dispatch, options) => {
         }
       }
     }
-  }
-};
-
-export const setSelectStopIndex = async (dispatch, options) => {
-  dispatch({ type: type.BEGIN_DATA_REQUEST });
-  const { index } = options;
-
-  try {
-    dispatch({
-      type: type.SET_SELECTSTOPINDEX,
-      payload: index,
-    });
-
-    dispatch({ type: type.SUCCESS_DATA_REQUEST });
-  } catch (error) {
-    dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
   }
 };

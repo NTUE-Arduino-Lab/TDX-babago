@@ -7,7 +7,6 @@ import styles from './styles.module.scss';
 
 import {
   setCurrentBuses,
-  setNearbyStops,
   setSelectRouteStopsSort,
   setSelectRouteStopsTime,
   setSelectRouteBuses,
@@ -16,6 +15,9 @@ import { StoreContext } from '../../store/reducer';
 function CertainRouteBox() {
   const reactlocation = useLocation();
   var {
+    lng,
+    lat,
+    stationUID,
     routeName,
     routeUID,
     direction,
@@ -23,10 +25,8 @@ function CertainRouteBox() {
     destinationStopNameZh,
   } = QueryString.parse(reactlocation.search);
   const [directionStops, setDirectionStops] = useState([]);
-  const [changeLocation, setChangeLocation] = useState(null);
   const {
     state: {
-      position,
       location,
       selectRouteStopsSort,
       selectRouteStopsTime,
@@ -42,17 +42,6 @@ function CertainRouteBox() {
       stationID: '',
     });
   }, []);
-
-  useEffect(() => {
-    if (changeLocation === null) {
-      setChangeLocation(false);
-    } else {
-      setChangeLocation(true);
-      if (position) {
-        setNearbyStops(dispatch, { lng: position.lng, lat: position.lat });
-      }
-    }
-  }, [location]);
 
   useEffect(() => {
     if (location && routeName && routeUID) {
@@ -191,7 +180,7 @@ function CertainRouteBox() {
           >
             {selectRouteStopsSort.map((stop, index) => (
               <Link
-                to={`${path.certainRoute}?routeName=${routeName}&routeUID=${routeUID}&direction=${stop.direction}&departureStopNameZh=${departureStopNameZh}&destinationStopNameZh=${destinationStopNameZh}`}
+                to={`${path.certainRoute}?lng=${lng}&lat=${lat}&stationUID=${stationUID}&routeName=${routeName}&routeUID=${routeUID}&direction=${stop.direction}&departureStopNameZh=${departureStopNameZh}&destinationStopNameZh=${destinationStopNameZh}`}
                 className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button}`}
                 key={`${stop.routeUID}-${index}`}
               >
