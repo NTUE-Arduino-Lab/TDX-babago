@@ -1,3 +1,5 @@
+@import '../../styles/color.scss';
+
 .sidebar_box {
   width: 100%;
   border: 1px solid #160f29;
@@ -89,10 +91,40 @@
   z-index: 2;
 }
 .stopCircleBox_stopCircle {
+  position: relative;
   width: 16px;
   height: 16px;
   border-radius: 50%;
   background-color: #fcfcfc;
   border: 1px solid #160f29;
   z-index: 1;
+}
+.backgroundColor_W {
+  background-color: #fcfcfc;
+}
+.backgroundColor_B {
+  background-color: #160f29;
+}
+
+.stopCircle_plateNumb {
+  position: absolute;
+  left: 22px;
+  width: 48px;
+  background-color: #fcfcfc;
+  border: 1px solid #160f29;
+  z-index: 2;
+  font-size: 6px;
+}
+
+.routeState__textYellow {
+  color: $color-yellow;
+  font-weight: 700;
+}
+.routeState__textGray {
+  color: $color-gray;
+  font-weight: 400;
+}
+.routeState__textDark {
+  color: $color-black;
+  font-weight: 700;
 }

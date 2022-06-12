@@ -20,8 +20,9 @@ const initialState = {
   //   city: null,
   //   stops: null,
   // },
-  selectRouteStops: null,
-  selectStopIndex: 0,
+  selectRouteStopsSort: null,
+  selectRouteStopsTime: null,
+  selectRouteBuses: null,
   requestdata: { loading: false, error: null },
 };
 
@@ -52,15 +53,20 @@ function reducer(state, action) {
         ...state,
         certainRoutes: action.payload,
       };
-    case type.SET_SELECTROUTESTOPS:
+    case type.SET_SELECTROUTESTOPSSORT:
       return {
         ...state,
-        selectRouteStops: action.payload,
+        selectRouteStopsSort: action.payload,
       };
-    case type.SET_SELECTSTOPINDEX:
+    case type.SET_SELECTROUTESTOPSTIME:
       return {
         ...state,
-        selectStopIndex: action.payload,
+        selectRouteStopsTime: action.payload,
+      };
+    case type.SET_SELECTROUTEBUSES:
+      return {
+        ...state,
+        selectRouteBuses: action.payload,
       };
     case type.BEGIN_DATA_REQUEST:
       return {

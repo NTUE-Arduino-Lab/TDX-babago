@@ -1,13 +1,14 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import useDynamicRefs from 'use-dynamic-refs';
+import React, { useEffect, useContext } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import * as QueryString from 'query-string';
 
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
 import {
-  setNearbyStops,
+  setSelectRouteStopsSort,
+  setSelectRouteStopsTime,
+  setSelectRouteBuses,
   setCurrentBuses,
   setCertainRoutes,
 } from '../../store/actions';
@@ -16,205 +17,118 @@ import { StoreContext } from '../../store/reducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBus,
-  faArrowAltCircleRight,
+  // faArrowAltCircleRight,
   faRoute,
 } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 
 function CertainStopBox() {
-  const [getRef, setRef] = useDynamicRefs();
-  const [OverSize, SetOverSize] = useState([]);
+  // const [getRef, setRef] = useDynamicRefs();
+  // const [OverSize, SetOverSize] = useState([]);
 
   const reactlocation = useLocation();
-  var { clickStopIndex } = reactlocation.state;
-  const [certainStop, setCertainStop] = useState(null);
-  const [changeLocation, setChangeLocation] = useState(null);
-  const [frontCertainRoutes, SetFrontCertainRoutes] = useState([]);
-  const [currentRoutesBuses, SetCurrentRoutesBuses] = useState([]);
+  var { lng, lat, stationUID, stationID, stationName, stationDistance } =
+    QueryString.parse(reactlocation.search);
   const {
-    state: { position, location, nearbyStops, currentBuses, certainRoutes },
+    state: {
+      location,
+      currentBuses,
+      certainRoutes,
+      // requestdata: { loading },
+    },
     dispatch,
   } = useContext(StoreContext);
 
   useEffect(() => {
-    // console.log('certainPage: ' + clickStopIndex);
-    if (changeLocation === null) {
-      setChangeLocation(false);
-    } else {
-      clickStopIndex = 0;
-      setChangeLocation(true);
-      if (position) {
-        setNearbyStops(dispatch, { lng: position.lng, lat: position.lat });
-      }
-    }
-  }, [location]);
+    setSelectRouteStopsSort(dispatch, {
+      city: '',
+      selectRoute: '',
+    });
+    setSelectRouteStopsTime(dispatch, {
+      city: '',
+      selectRoute: '',
+    });
+    setSelectRouteBuses(dispatch, {
+      city: '',
+      selectRoute: '',
+    });
+  }, []);
 
   useEffect(() => {
-    if (nearbyStops && nearbyStops.length > clickStopIndex) {
-      setCertainStop(nearbyStops[clickStopIndex]);
-    }
-  }, [nearbyStops, clickStopIndex]);
-
-  useEffect(() => {
-    if (location && certainStop) {
+    if (location) {
       setCurrentBuses(dispatch, {
         city: location.city,
-        stationID: certainStop.stationID,
+        stationID: stationID,
       });
     }
-  }, [location, certainStop]);
+  }, [location, stationID]);
 
   useEffect(() => {
-    if (currentBuses) {
-      SetCurrentRoutesBuses(currentBuses);
+    if (location && currentBuses) {
+      setCertainRoutes(dispatch, {
+        city: location.city,
+        currentBuses: currentBuses,
+      });
     }
   }, [currentBuses]);
 
   useEffect(() => {
-    // let currentRoutesBusArray = [];
-
-    // currentRoutesBus.map((bus) => {
-    //   currentRoutesBusArray.push({
-    //     routeName: bus.routeName,
-    //   });
-    // });
-    // console.log(currentRoutesBusArray);
-
-    // if (currentRoutesBusArray != frontCertainRoutes) {
-    if (location && currentRoutesBuses.length > 0) {
-      setCertainRoutes(dispatch, {
-        city: location.city,
-        currentBuses: currentRoutesBuses,
-      });
-    }
-    // }
-
-    //跑馬燈
-    if (currentRoutesBuses.length > 0) {
-      const array = [];
-      currentRoutesBuses.map((el) => {
-        var p_ref = getRef(el.routeName + '_p');
-        var div_ref = getRef(el.routeName + '_div');
-        if (p_ref !== null && p_ref !== undefined) {
-          if (
-            div_ref.current !== null &&
-            p_ref.current !== null &&
-            p_ref.current.offsetWidth > div_ref.current.offsetWidth
-          ) {
-            console.log(p_ref.current.offsetWidth);
-            console.log(div_ref.current.offsetWidth);
-            array.push(true);
-          } else {
-            array.push(false);
-          }
-        } else {
-          array.push(false);
-        }
-      });
-      SetOverSize(array);
-    }
-  }, [currentRoutesBuses]);
-
-  useEffect(() => {
-    if (certainRoutes) {
-      SetFrontCertainRoutes(certainRoutes);
-    }
+    // console.log(certainRoutes);
   }, [certainRoutes]);
 
-  useEffect(() => {}, [frontCertainRoutes]);
-
-  useEffect(() => {
-    console.log(OverSize);
-  }, [OverSize]);
-
   return (
+    // <>
+    //   {loading ? (
+    //     <></>
+    //   ) : (
     <div className={styles.sidebar_box}>
-      <div className={styles.certainStopBox_titlebox__marginBottom}>
-        {nearbyStops && nearbyStops[clickStopIndex] && location ? (
-          <>
-            <div
-              className={`${styles.box__alignItemsCenter} ${styles.box__start} ${styles.certainStopBox_stopName}`}
-            >
-              {nearbyStops[clickStopIndex].stationName}
+      {stationName && stationDistance && location ? (
+        <div className={styles.certainStopBox_titlebox__marginBottom}>
+          <div
+            className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopName}`}
+          >
+            {stationName}
+          </div>
+          <div
+            className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopInfo}`}
+          >
+            <div className={styles.stopInfo_detailBox}>
+              <div>{location.city}</div>
+              <div>{location.town}</div>
+              <div>{stationDistance} 公尺</div>
             </div>
-            <div
-              className={`${styles.box__alignItemsCenter} ${styles.certainStopBox_stopInfo}`}
-            >
-              <div className={styles.stopInfo_detailBox}>
-                <div>{location.city}</div>
-                <div>{location.town}</div>
-                <div>{nearbyStops[clickStopIndex].stationDistance} 公尺</div>
-              </div>
-              <div
-                className={`${styles.ButtonBox_Button} ${styles.Button_White} ${styles.box__alignItemsCenter}`}
-              >
-                <FontAwesomeIcon
-                  className={styles.Button_icon}
-                  icon={faArrowAltCircleRight}
-                />
-                <div>路線規劃</div>
-              </div>
-            </div>
-          </>
-        ) : (
-          <></>
-        )}
-      </div>
-      <div className={styles.certainStopBox_ChangeRouteBox}>
-        <div className={styles.ChangeRouteBox_RouteBox}>1</div>
-        <div className={styles.ChangeRouteBox_RouteBox}>2</div>
-        <div className={styles.ChangeRouteBox_RouteBox}>3</div>
-      </div>
-      {currentRoutesBuses && frontCertainRoutes ? (
-        <div className={styles.certainStopBox_AllRouteBox}>
-          {currentRoutesBuses.map((currentRoutesBus, index) => (
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
+      {currentBuses && certainRoutes ? (
+        <>
+          {currentBuses.map((currentRoutesBus, index) => (
             <div className={styles.certainStopBox_certainRouteBox} key={index}>
               <Link
-                to={path.certainRoute}
-                className={styles.certainRouteBox_linkSetting}
-                state={
-                  frontCertainRoutes[index]
-                    ? {
-                        currentRoutesBus: {
-                          direction: currentRoutesBus.direction,
-                          routeName: currentRoutesBus.routeName,
-                          routeUID: currentRoutesBus.routeUID,
-                        },
-                        frontCertainRoute: frontCertainRoutes[index],
-                      }
-                    : {}
+                to={
+                  certainRoutes[index]
+                    ? `${path.certainRoute}?lng=${lng}&lat=${lat}&stationUID=${stationUID}&routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${certainRoutes[index].departureStopNameZh}&destinationStopNameZh=${certainRoutes[index].destinationStopNameZh}`
+                    : ''
                 }
+                className={styles.certainRouteBox_linkSetting}
               >
                 <div
                   className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}
                   key={index}
                 >
-                  <div className={styles.certainRouteBox_routeInfo}>
-                    <div
-                      ref={setRef(currentRoutesBus.routeName + '_div')}
-                      className={styles.certainRouteBox_routeNameBox}
-                    >
-                      <p
-                        ref={setRef(currentRoutesBus.routeName + '_p')}
-                        className={
-                          OverSize[index]
-                            ? `${styles.marquee_animation} ${styles.certainRouteBox_routeName}`
-                            : `${styles.certainRouteBox_routeName}`
-                        }
-                      >
-                        {currentRoutesBus.routeName}
-                      </p>
-                    </div>
-                    <div className={styles.certainRouteBox_routeDirection}>
-                      {!frontCertainRoutes[index] ||
-                      currentRoutesBus.direction == 225
-                        ? ''
-                        : currentRoutesBus.direction == 2
-                        ? '環形'
-                        : currentRoutesBus.direction == 1
-                        ? `往${frontCertainRoutes[index].departureStopNameZh}`
-                        : `往${frontCertainRoutes[index].destinationStopNameZh}`}
-                    </div>
+                  <div className={styles.certainRouteBox_routeName}>
+                    {currentRoutesBus.routeName}
+                  </div>
+                  <div className={styles.certainRouteBox_routeDirection}>
+                    {!certainRoutes[index] || currentRoutesBus.direction == 225
+                      ? ''
+                      : currentRoutesBus.direction == 2
+                      ? '環形'
+                      : currentRoutesBus.direction == 1
+                      ? `往${certainRoutes[index].departureStopNameZh}`
+                      : `往${certainRoutes[index].destinationStopNameZh}`}
                   </div>
                   <div
                     className={
@@ -265,11 +179,13 @@ function CertainStopBox() {
               </div>
             </div>
           ))}
-        </div>
+        </>
       ) : (
         <></>
       )}
     </div>
+    //   )}
+    // </>
   );
 }
 

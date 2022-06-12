@@ -76,7 +76,7 @@ export const setNearbyStops = async (dispatch, options) => {
   const { lng, lat } = options;
 
   try {
-    const url = `${TDXBUS_URL}/Station/NearBy?$spatialFilter=nearby(${lat},${lng},500)&$format=JSON'/${lng}/${lat}`;
+    const url = `${TDXBUS_URL}/Station/NearBy?$spatialFilter=nearby(${lat},${lng},200)&$format=JSON'/${lng}/${lat}`;
     let config = {
       headers: GetAuthorizationHeader(),
     };
@@ -86,6 +86,7 @@ export const setNearbyStops = async (dispatch, options) => {
     const nearbyStops = [];
 
     data.map((station) => {
+      const stationUID = station.StationUID;
       const stationID = station.StationID;
       const stationName = station.StationName.Zh_tw;
       const stationLon = station.StationPosition.PositionLon;
@@ -100,6 +101,7 @@ export const setNearbyStops = async (dispatch, options) => {
       station.Stops.map((stops) => routes.push(stops.RouteName.Zh_tw));
 
       nearbyStops.push({
+        stationUID: stationUID,
         stationID: stationID,
         stationName: stationName,
         stationLon: stationLon,
@@ -120,9 +122,37 @@ export const setNearbyStops = async (dispatch, options) => {
       return 0;
     });
 
+    let i = 0;
+    let j = 0;
+    let flag = true;
+    let nearbyStopsName = [];
+    for (i = 0; i < nearbyStops.length; i++) {
+      flag = true;
+      for (j = 0; j < nearbyStopsName.length; j++) {
+        if (nearbyStops[i].stationName == nearbyStopsName[j].stationName) {
+          flag = false;
+          j = nearbyStopsName.length;
+        }
+      }
+      if (flag) {
+        nearbyStopsName.push({
+          stationName: nearbyStops[i].stationName,
+          stationStops: [],
+        });
+      }
+    }
+
+    for (i = 0; i < nearbyStops.length; i++) {
+      for (j = 0; j < nearbyStopsName.length; j++) {
+        if (nearbyStops[i].stationName == nearbyStopsName[j].stationName) {
+          nearbyStopsName[j].stationStops.push(nearbyStops[i]);
+        }
+      }
+    }
+
     dispatch({
       type: type.SET_NEARBYSTOPS,
-      payload: nearbyStops,
+      payload: nearbyStopsName,
     });
     dispatch({ type: type.SUCCESS_DATA_REQUEST });
   } catch (error) {
@@ -134,60 +164,69 @@ export const setCurrentBuses = async (dispatch, options) => {
   dispatch({ type: type.BEGIN_DATA_REQUEST });
   const { stationID, city } = options;
 
-  for (var i = 0; i < cityJson.length; i++) {
-    if (cityJson[i].city === city) {
-      const cityEn = cityJson[i].cityEn;
+  if (!stationID || !city) {
+    dispatch({
+      type: type.SET_CURRENTBUSES,
+      payload: null,
+    });
 
-      try {
-        const url = `${TDXBUS_URL}/EstimatedTimeOfArrival/City/${cityEn}/PassThrough/Station/${stationID}`;
-        let config = {
-          headers: GetAuthorizationHeader(),
-        };
-        const response = await axios.get(url, config);
-        const data = response.data;
+    dispatch({ type: type.SUCCESS_DATA_REQUEST });
+  } else {
+    for (var i = 0; i < cityJson.length; i++) {
+      if (cityJson[i].city === city) {
+        const cityEn = cityJson[i].cityEn;
 
-        // console.log(data);
-        const currentBuses = [];
+        try {
+          const url = `${TDXBUS_URL}/EstimatedTimeOfArrival/City/${cityEn}/PassThrough/Station/${stationID}`;
+          let config = {
+            headers: GetAuthorizationHeader(),
+          };
+          const response = await axios.get(url, config);
+          const data = response.data;
 
-        data.map((bus) => {
-          const direction = bus.Direction;
-          const routeUID = bus.RouteUID;
-          const routeName = bus.RouteName.Zh_tw;
-          const stopStatusArray = [
-            `${Math.round(bus.EstimateTime / 60)} 分`,
-            '尚未發車',
-            '交管不停靠',
-            '末班車已過',
-            '今日未營運',
-            '進站中',
-          ];
+          // console.log(data);
+          const currentBuses = [];
 
-          var stopStatus = null;
-          if (Math.round(bus.EstimateTime / 60) <= 1) {
-            stopStatus = stopStatusArray[5];
-          } else if (bus.StopStatus >= 0) {
-            stopStatus = stopStatusArray[bus.StopStatus];
-          } else {
-            stopStatus = null;
-          }
+          data.map((bus) => {
+            const direction = bus.Direction;
+            const routeUID = bus.RouteUID;
+            const routeName = bus.RouteName.Zh_tw;
+            const stopStatusArray = [
+              `${Math.round(bus.EstimateTime / 60)} 分`,
+              '尚未發車',
+              '交管不停靠',
+              '末班車已過',
+              '今日未營運',
+              '進站中',
+            ];
 
-          currentBuses.push({
-            direction: direction,
-            routeUID: routeUID,
-            routeName: routeName,
-            stopStatus: stopStatus,
+            var stopStatus = null;
+            if (Math.round(bus.EstimateTime / 60) <= 1) {
+              stopStatus = stopStatusArray[5];
+            } else if (bus.StopStatus >= 0) {
+              stopStatus = stopStatusArray[bus.StopStatus];
+            } else {
+              stopStatus = null;
+            }
+
+            currentBuses.push({
+              direction: direction,
+              routeUID: routeUID,
+              routeName: routeName,
+              stopStatus: stopStatus,
+            });
           });
-        });
 
-        // console.log(currentBuses);
+          // console.log(currentBuses);
 
-        dispatch({
-          type: type.SET_CURRENTBUSES,
-          payload: currentBuses,
-        });
-        dispatch({ type: type.SUCCESS_DATA_REQUEST });
-      } catch (error) {
-        dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+          dispatch({
+            type: type.SET_CURRENTBUSES,
+            payload: currentBuses,
+          });
+          dispatch({ type: type.SUCCESS_DATA_REQUEST });
+        } catch (error) {
+          dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+        }
       }
     }
   }
@@ -241,63 +280,168 @@ export const setCertainRoutes = async (dispatch, options) => {
   }
 };
 
-export const setSelectRouteStops = async (dispatch, options) => {
+export const setSelectRouteStopsSort = async (dispatch, options) => {
   dispatch({ type: type.BEGIN_DATA_REQUEST });
   const { city, selectRoute } = options;
 
-  for (var i = 0; i < cityJson.length; i++) {
-    if (cityJson[i].city === city) {
-      const cityEn = cityJson[i].cityEn;
+  if (!city || !selectRoute) {
+    dispatch({
+      type: type.SET_SELECTROUTESTOPSSORT,
+      payload: null,
+    });
 
-      try {
-        const selectRouteStops = [];
-        const url = `${TDXBUS_URL}/DisplayStopOfRoute/City/${cityEn}/${selectRoute.routeName}`;
+    dispatch({ type: type.SUCCESS_DATA_REQUEST });
+  } else {
+    for (var i = 0; i < cityJson.length; i++) {
+      if (cityJson[i].city === city) {
+        const cityEn = cityJson[i].cityEn;
 
-        let config = {
-          headers: GetAuthorizationHeader(),
-        };
-        const response = await axios.get(url, config);
-        const data = response.data;
-        // console.log(data);
+        try {
+          const selectRouteStopsSort = [];
+          const url = `${TDXBUS_URL}/DisplayStopOfRoute/City/${cityEn}/${selectRoute.routeName}`;
 
-        for (var j = 0; j < data.length; j++) {
-          if (selectRoute.routeUID == data[j].RouteUID) {
-            selectRouteStops.push({
-              direction: data[j].Direction,
-              routeUID: data[j].RouteUID,
-              routeName: selectRoute.routeName,
-              stops: data[j].Stops,
-            });
+          let config = {
+            headers: GetAuthorizationHeader(),
+          };
+          const response = await axios.get(url, config);
+          const data = response.data;
+          // console.log(data);
+
+          for (var j = 0; j < data.length; j++) {
+            if (selectRoute.routeUID == data[j].RouteUID) {
+              selectRouteStopsSort.push({
+                direction: data[j].Direction,
+                routeUID: data[j].RouteUID,
+                routeName: selectRoute.routeName,
+                stops: data[j].Stops,
+              });
+            }
           }
+
+          // console.log(selectRouteStops);
+
+          dispatch({
+            type: type.SET_SELECTROUTESTOPSSORT,
+            payload: selectRouteStopsSort,
+          });
+
+          dispatch({ type: type.SUCCESS_DATA_REQUEST });
+        } catch (error) {
+          dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
         }
-
-        // console.log(selectRouteStops);
-
-        dispatch({
-          type: type.SET_SELECTROUTESTOPS,
-          payload: selectRouteStops,
-        });
-
-        dispatch({ type: type.SUCCESS_DATA_REQUEST });
-      } catch (error) {
-        dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
       }
     }
   }
 };
 
-export const setSelectStopIndex = async (dispatch, options) => {
+export const setSelectRouteStopsTime = async (dispatch, options) => {
   dispatch({ type: type.BEGIN_DATA_REQUEST });
-  const { index } = options;
+  const { city, selectRoute } = options;
 
-  try {
+  if (!city || !selectRoute) {
     dispatch({
-      type: type.SET_SELECTSTOPINDEX,
-      payload: index,
+      type: type.SET_SELECTROUTESTOPSTIME,
+      payload: null,
     });
 
     dispatch({ type: type.SUCCESS_DATA_REQUEST });
-  } catch (error) {
-    dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+  } else {
+    for (var i = 0; i < cityJson.length; i++) {
+      if (cityJson[i].city === city) {
+        const cityEn = cityJson[i].cityEn;
+
+        try {
+          const selectRouteStopsTime = [];
+          const url = `${TDXBUS_URL}/EstimatedTimeOfArrival/City/${cityEn}/${selectRoute.routeName}`;
+
+          let config = {
+            headers: GetAuthorizationHeader(),
+          };
+          const response = await axios.get(url, config);
+          const data = response.data;
+          // console.log(data);
+
+          for (var j = 0; j < data.length; j++) {
+            if (selectRoute.routeUID == data[j].RouteUID) {
+              selectRouteStopsTime.push({
+                direction: data[j].Direction,
+                routeUID: data[j].RouteUID,
+                stopUID: data[j].StopUID,
+                stopStatus: data[j].StopStatus,
+                plateNumb: data[j].PlateNumb,
+                estimateTime: data[j].EstimateTime,
+              });
+            }
+          }
+
+          dispatch({
+            type: type.SET_SELECTROUTESTOPSTIME,
+            payload: selectRouteStopsTime,
+          });
+
+          dispatch({ type: type.SUCCESS_DATA_REQUEST });
+        } catch (error) {
+          dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+        }
+      }
+    }
+  }
+};
+
+export const setSelectRouteBuses = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { city, selectRoute } = options;
+
+  if (!city || !selectRoute) {
+    dispatch({
+      type: type.SET_SELECTROUTEBUSES,
+      payload: null,
+    });
+
+    dispatch({ type: type.SUCCESS_DATA_REQUEST });
+  } else {
+    for (var i = 0; i < cityJson.length; i++) {
+      if (cityJson[i].city === city) {
+        const cityEn = cityJson[i].cityEn;
+
+        try {
+          const selectRouteBuses = [];
+          const url = `${TDXBUS_URL}/RealTimeNearStop/City/${cityEn}/${selectRoute.routeName}`;
+
+          let config = {
+            headers: GetAuthorizationHeader(),
+          };
+          const response = await axios.get(url, config);
+          const data = response.data;
+          // console.log(data);
+
+          for (var j = 0; j < data.length; j++) {
+            if (selectRoute.routeUID == data[j].RouteUID) {
+              selectRouteBuses.push({
+                routeUID: data[j].RouteUID,
+                direction: data[j].Direction,
+                plateNumb: data[j].PlateNumb,
+                a2EventType: data[j].A2EventType,
+                stopUID: data[j].StopUID,
+                stopSequence: data[j].StopSequence,
+                dutyStatus: data[j].DutyStatus,
+                busStatus: data[j].BusStatus,
+              });
+            }
+          }
+
+          // console.log(selectRouteBuses);
+
+          dispatch({
+            type: type.SET_SELECTROUTEBUSES,
+            payload: selectRouteBuses,
+          });
+
+          dispatch({ type: type.SUCCESS_DATA_REQUEST });
+        } catch (error) {
+          dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+        }
+      }
+    }
   }
 };

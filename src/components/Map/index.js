@@ -1,11 +1,13 @@
 import React, { useEffect, useContext, useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import * as QueryString from 'query-string';
 
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
 import currentMarker from '../../asset/imgs/currentMarker.svg';
 import stopMarker from '../../asset/imgs/stopMarker.svg';
+import selectStopMarker from '../../asset/imgs/selectStopMarker.svg';
 
 import L from 'leaflet';
 import {
@@ -17,18 +19,16 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 
-import {
-  setPosition,
-  setLocation,
-  setSelectStopIndex,
-} from '../../store/actions';
+import { setPosition, setLocation, setNearbyStops } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 function LocationMarker() {
+  const reactlocation = useLocation();
+  var { lng, lat, stationUID } = QueryString.parse(reactlocation.search);
   const navigate = useNavigate();
   const [markers, setMarkers] = useState([]);
   const {
-    state: { position, location, nearbyStops, selectStopIndex },
+    state: { position, location, nearbyStops },
     dispatch,
   } = useContext(StoreContext);
 
@@ -41,14 +41,14 @@ function LocationMarker() {
     className: styles.currentIcon,
   });
 
-  const largeBlueIcon = new L.Icon({
-    iconUrl: stopMarker,
-    iconSize: [37, 61],
-    iconAnchor: [19, 61],
-    popupAnchor: [1, -34],
-    shadowSize: [61, 61],
-    className: styles.selectIcon,
-  });
+  // const largeBlueIcon = new L.Icon({
+  //   iconUrl: stopMarker,
+  //   iconSize: [37, 61],
+  //   iconAnchor: [19, 61],
+  //   popupAnchor: [1, -34],
+  //   shadowSize: [61, 61],
+  //   className: styles.selectIcon,
+  // });
 
   const blueIcon = new L.Icon({
     iconUrl: stopMarker,
@@ -58,30 +58,43 @@ function LocationMarker() {
     shadowSize: [41, 41],
   });
 
+  const selectIcon = new L.Icon({
+    iconUrl: selectStopMarker,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+    className: styles.selectIcon,
+  });
+
   const initMap = useMap();
 
   useEffect(() => {
-    initMap.locate().on('locationfound', function (e) {
-      // console.log(e.latlng);
-      // console.log(e.bounds._northEast);
-      setPosition(dispatch, { position: e.latlng });
-      setSelectStopIndex(dispatch, { index: 0 });
-      // setPosition(dispatch, { position: e.bounds._northEast });
-      initMap.flyTo(e.latlng, initMap.getZoom());
-    });
+    if ((lng, lat)) {
+      setPosition(dispatch, { position: { lng, lat } });
+      initMap.flyTo({ lng, lat }, initMap.getZoom());
+    } else {
+      initMap.locate().on('locationfound', function (e) {
+        console.log(e.latlng);
+        setPosition(dispatch, { position: e.latlng });
+        initMap.flyTo(e.latlng, initMap.getZoom());
+        navigate(`${path.home}?lng=${e.latlng.lng}&lat=${e.latlng.lat}`);
+      });
+    }
   }, [initMap]);
 
   const clickMap = useMapEvents({
     click(e) {
       setPosition(dispatch, { position: e.latlng });
-      setSelectStopIndex(dispatch, { index: 0 });
       clickMap.flyTo(e.latlng, clickMap.getZoom());
+      navigate(`${path.nearbyStops}?lng=${e.latlng.lng}&lat=${e.latlng.lat}`);
     },
   });
 
   useEffect(() => {
     if (position) {
       setLocation(dispatch, { lng: position.lng, lat: position.lat });
+      setNearbyStops(dispatch, { lng: position.lng, lat: position.lat });
       setMarkers([]);
     }
   }, [position]);
@@ -89,14 +102,18 @@ function LocationMarker() {
   useEffect(() => {
     if (nearbyStops) {
       var stopsArray = [];
-      nearbyStops.map((nearbyStop) => {
-        stopsArray.push({
-          position: {
-            lat: nearbyStop.stationLat,
-            lng: nearbyStop.stationLon,
-          },
-          stationName: nearbyStop.stationName,
-          stationDistance: nearbyStop.stationDistance,
+      nearbyStops.map((nearbyStopsName) => {
+        nearbyStopsName.stationStops.map((nearbyStop) => {
+          stopsArray.push({
+            position: {
+              lat: nearbyStop.stationLat,
+              lng: nearbyStop.stationLon,
+            },
+            stationName: nearbyStop.stationName,
+            stationUID: nearbyStop.stationUID,
+            stationID: nearbyStop.stationID,
+            stationDistance: nearbyStop.stationDistance,
+          });
         });
       });
       setMarkers(stopsArray);
@@ -122,18 +139,18 @@ function LocationMarker() {
           </div>
         </Tooltip>
       </Marker>
-      {markers.map((marker, index) => (
+      {markers.map((marker) => (
         <Marker
-          key={index}
+          key={marker.stationUID}
           position={marker.position}
-          icon={index === selectStopIndex ? largeBlueIcon : blueIcon}
-          className={styles.allIcon}
+          icon={stationUID == marker.stationUID ? selectIcon : blueIcon}
           eventHandlers={{
             click: () => {
-              setSelectStopIndex(dispatch, { index: index });
-              navigate(path.certainStop, {
-                state: { clickStopIndex: index },
-              });
+              if (stationUID != marker.stationUID) {
+                navigate(
+                  `${path.certainStop}?lng=${position.lng}&lat=${position.lat}&stationUID=${marker.stationUID}&stationID=${marker.stationID}&stationName=${marker.stationName}&stationDistance=${marker.stationDistance}`,
+                );
+              }
             },
           }}
         >
