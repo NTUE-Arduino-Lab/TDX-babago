@@ -12,7 +12,15 @@ import {
   setSelectRouteBuses,
 } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBus,
+  faArrowAltCircleRight,
+  faInfoCircle,
+} from '@fortawesome/free-solid-svg-icons';
+import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 function CertainRouteBox() {
+  const [openStops, setOpenStops] = useState('0');
   const reactlocation = useLocation();
   var {
     lng,
@@ -171,9 +179,29 @@ function CertainRouteBox() {
       destinationStopNameZh ? (
         <div className={styles.topBox_padding}>
           <div
-            className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainRouteBox_titleBox}`}
+            className={`${styles.box__alignItemsCenter} ${styles.box__start} ${styles.certainRouteBox_titleBox}`}
           >
             {routeName}
+          </div>
+          <div
+            className={`${styles.box__alignItemsCenter} ${styles.certainRouteBox_routeInfo} ${styles.box__spaceBetween}`}
+          >
+            <div className={styles.routeInfo_detailBox}>
+              <div>新莊</div>
+              <div>－</div>
+              <div>國父紀念館</div>
+              <div>｜</div>
+              <div>63站</div>
+            </div>
+            <div
+              className={`${styles.ButtonBox_Button} ${styles.Button_White_outline} ${styles.box__alignItemsCenter}`}
+            >
+              <FontAwesomeIcon
+                className={styles.Button_icon}
+                icon={faInfoCircle}
+              />
+              <div>路線規劃</div>
+            </div>
           </div>
           <div
             className={`${styles.certainRouteBox_buttonBox} ${styles.box__spaceBetween}`}
@@ -199,28 +227,75 @@ function CertainRouteBox() {
           <div className={styles.certainRouteBox_routeStopBox}>
             {directionStops.map((stop, index) => (
               <div
-                className={styles.routeStopBox_stopInfoBox}
+                className={styles.certainRouteBox_routeInfoBox}
                 key={`${stop.stopUID}-1-${index}`}
-                id={stop.stopUID}
               >
                 <div
-                  className={
-                    stop.stopStatus === '進站中'
-                      ? `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textYellow}`
-                      : stop.stopStatus === '尚未發車' ||
-                        stop.stopStatus === '交管不停靠' ||
-                        stop.stopStatus === '末班車已過' ||
-                        stop.stopStatus === '今日未營運'
-                      ? `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textGray}`
-                      : `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textDark}`
-                  }
+                  className={styles.routeStopBox_stopInfoBox}
+                  id={stop.stopUID}
+                  onClick={() => {
+                    setOpenStops(stop.stopUID);
+                  }}
                 >
-                  {stop.stopStatus}
+                  <div
+                    className={
+                      stop.stopStatus === '進站中'
+                        ? `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textYellow}`
+                        : stop.stopStatus === '尚未發車' ||
+                          stop.stopStatus === '交管不停靠' ||
+                          stop.stopStatus === '末班車已過' ||
+                          stop.stopStatus === '今日未營運'
+                        ? `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textGray}`
+                        : `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_busStatus} ${styles.routeState__textDark}`
+                    }
+                  >
+                    {stop.stopStatus}
+                  </div>
+                  <div
+                    className={
+                      openStops === stop.stopUID
+                        ? `${styles.stopInfoBox_stopName_open}`
+                        : '' +
+                          `${styles.box__alignItemsCenter} ${styles.box__start} ${styles.stopInfoBox_stopName}`
+                    }
+                  >
+                    {stop.stopName.Zh_tw}
+                  </div>
                 </div>
                 <div
-                  className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.stopInfoBox_stopName}`}
+                  className={
+                    openStops === stop.stopUID
+                      ? `${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.stopInfoBox_ButtonBox}`
+                      : `${styles.stopInfoBox_ButtonBox_close}`
+                  }
                 >
-                  {stop.stopName.Zh_tw}
+                  <div
+                    className={`${styles.ButtonBox_Button} ${styles.Button_Blue} ${styles.box__alignItemsCenter}`}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.Button_icon}
+                      icon={faBus}
+                    />
+                    <div>預約下車</div>
+                  </div>
+                  <div
+                    className={`${styles.ButtonBox_Button} ${styles.Button_Blue} ${styles.box__alignItemsCenter}`}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.Button_icon}
+                      icon={farBell}
+                    />
+                    <div>開啟提醒</div>
+                  </div>
+                  <div
+                    className={`${styles.ButtonBox_Button} ${styles.Button_Blue} ${styles.box__alignItemsCenter}`}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.Button_icon}
+                      icon={faArrowAltCircleRight}
+                    />
+                    <div>路線規劃</div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -229,7 +304,11 @@ function CertainRouteBox() {
             <div className={styles.routeDotBox_routeLine}></div>
             {directionStops.map((stop, index) => (
               <div
-                className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.routeDotBox_stopCircleBox}`}
+                className={
+                  openStops === stop.stopUID
+                    ? `${styles.box__alignItemsStart} ${styles.box__center} ${styles.routeDotBox_stopCircleBox} ${styles.routeDotBox_stopCircleBox_open}`
+                    : `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.routeDotBox_stopCircleBox}`
+                }
                 key={`${stop.stopUID}-2-${index}`}
               >
                 <div

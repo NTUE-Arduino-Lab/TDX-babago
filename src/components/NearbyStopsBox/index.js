@@ -78,13 +78,17 @@ function NearbyStopsBox() {
     //     <></>
     //   ) : (
     <div className={styles.sidebar_box}>
-      <div
-        className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.nearbyBox_titleBox}`}
-      >
-        附近站牌
+      <div className={styles.nearbyBox_titleBox}>
+        <div>附近站牌</div>
+        <div className={styles.titleBox_stopsInfo}>
+          <div>台北市</div>
+          <div>大安區</div>
+          <div>｜</div>
+          <div>6站</div>
+        </div>
       </div>
       {nearbyStopsName.length > 0 ? (
-        <>
+        <div className={styles.nearbyBox_AllStopBox}>
           {nearbyStopsName.map((nearbyStop, index) => (
             <div className={styles.nearbyBox_certainStopBox} key={index}>
               <Link
@@ -98,6 +102,10 @@ function NearbyStopsBox() {
                     <div className={styles.stopInfoBox_stopName__fontSize}>
                       {nearbyStop.stationName}
                     </div>
+                    <FontAwesomeIcon
+                      className={styles.linkRow_arrowIcon}
+                      icon={faArrowRight}
+                    />
                     {/* <div className={styles.stopInfoBox_stopDistance__fontSize}>
                       {nearbyStop.stationDistance} 公尺
                     </div> */}
@@ -116,17 +124,12 @@ function NearbyStopsBox() {
                         </div>
                       ))}
                     </div>
-                    <FontAwesomeIcon
-                      className={styles.linkRow_arrowIcon}
-                      icon={faArrowRight}
-                    />
                   </div>
                 </div>
-                <div className={styles.certainStopBox_shadow}></div>
               </Link>
             </div>
           ))}
-        </>
+        </div>
       ) : (
         <></>
       )}

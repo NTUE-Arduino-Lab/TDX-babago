@@ -34,12 +34,12 @@
 }
 .certainStopBox_stopName {
   @include H1_Bold;
-  color: #fff;
+  color: #FCFCFC;
 }
 .certainStopBox_stopInfo {
   width: 100%;
   @include P;
-  color: #fff;
+  color: #FCFCFC;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -54,7 +54,7 @@
 }
 
 .stopInfo_detailBox >div:nth-child(2){
-  border-right: 1px solid #fff;
+  border-right: 1px solid #FCFCFC;
   padding-right: 8px;
 }
 
@@ -134,7 +134,7 @@
 }
 .certainRouteBox_routeState {
   width: 88px;
-  font-size: 16px;
+  @include P_Bold;
   text-align: center;
   color: $color-black;
 }
@@ -166,10 +166,10 @@
 }
 .Button_White{
   color: $color-main;
-  background-color: #fff;
+  background-color: #FCFCFC;
 }
 .Button_Blue{
-  color: #fff;
+  color: #FCFCFC;
   background-color: $color-main;
 }
 .Button_icon{

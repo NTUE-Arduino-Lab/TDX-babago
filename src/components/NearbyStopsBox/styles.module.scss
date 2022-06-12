@@ -1,9 +1,8 @@
+@import '../../styles/color.scss';
+@import "../../styles/font.scss";
+
 .sidebar_box {
   width: 100%;
-  border: 1px solid #160f29;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  padding: 32px 24px 16px 24px;
 }
 
 .box__alignItemsCenter {
@@ -20,9 +19,8 @@
 }
 
 .box_linkRow {
-  padding-top: 6px;
+  padding-top: 8px;
   width: 100%;
-  height: 28px;
 }
 .linkRow__fontSize {
   font-size: 16px;
@@ -31,7 +29,7 @@
   // width: 16px;
   // height: 16px;
   font-size: 16px;
-  color: #160f29;
+  color: $color-main;
 }
 
 // nearbyBox
@@ -39,73 +37,66 @@
   text-decoration: none;
 }
 .nearbyBox_titleBox {
-  height: 36px;
-  font-weight: bold;
-  font-size: 24px;
-  color: #246a73;
+  @include H1_Bold;
+  color: #fcfcfc;
   margin-bottom: 32px;
+  background-color: $color-main;
+  margin: -24px;
+  margin-bottom: 0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  .titleBox_stopsInfo{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    @include P;
+  }
+}
+
+.nearbyBox_AllStopBox{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px 0px;
 }
 .nearbyBox_certainStopBox {
-  position: relative;
-  height: 84px;
+  min-height: 84px;
   width: 100%;
-  margin-bottom: 12px;
-
+  border-bottom: 1px solid $color-gray;
   .certainStopBox_frontBox {
-    position: absolute;
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
-    border: 1px solid #160f29;
+    width: 100%;
+    height: 100%;
     border-radius: 5px;
     background-color: #fcfcfc;
     z-index: 2;
-    padding: 4px 4% 8px 4%;
-  }
-
-  .certainStopBox_shadow {
-    position: absolute;
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
-    top: 4px;
-    left: 4px;
-    border-radius: 5px;
-    background-color: #160f29;
-    opacity: 0;
-    transition: 0.2s;
-  }
-
-  &:hover {
-    .certainStopBox_shadow {
-      opacity: 1;
-    }
+    padding: 0;
+    padding-bottom: 16px;
   }
 }
 
 .routeStopBox_stopInfoBox {
   width: 100%;
-  height: 30px;
 }
 .stopInfoBox_stopName__fontSize {
-  font-size: 20px;
-  color: #160F29;
+  @include H2_Bold;
+  color: $color-black;
 }
-.stopInfoBox_stopDistance__fontSize {
-  font-size: 14px;
-  color: #160F29;
-}
+// .stopInfoBox_stopDistance__fontSize {
+//   font-size: 14px;
+//   color: $color-black;
+// }
 .routeStopBox_routeNameBox {
-  width: calc(98% - 16px);
-  height: 28px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  // overflow-y: hidden;
+  gap: 4px;
 }
 .routeNameBox_routeName {
-  height: 28px;
-  padding: 0 8px;
+  height: 24px;
   margin: 0 2px;
-  background-color: #eae0d5;
-  border-radius: 2px;
-  color: #160F29;
+  color: $color-black;
 }

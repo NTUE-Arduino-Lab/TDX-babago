@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import * as QueryString from 'query-string';
+// import useDynamicRefs from 'use-dynamic-refs';
 
 import path from '../../router/path';
 import styles from './styles.module.scss';
@@ -17,14 +18,14 @@ import { StoreContext } from '../../store/reducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBus,
-  // faArrowAltCircleRight,
+  faArrowAltCircleRight,
   faRoute,
 } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 
 function CertainStopBox() {
   // const [getRef, setRef] = useDynamicRefs();
-  // const [OverSize, SetOverSize] = useState([]);
+  // const [overSize, SetOverSize] = useState([]);
 
   const reactlocation = useLocation();
   var { lng, lat, stationUID, stationID, stationName, stationDistance } =
@@ -85,25 +86,39 @@ function CertainStopBox() {
       {stationName && stationDistance && location ? (
         <div className={styles.certainStopBox_titlebox__marginBottom}>
           <div
-            className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopName}`}
+            className={`${styles.box__alignItemsCenter} ${styles.box__start} ${styles.certainStopBox_stopName}`}
           >
             {stationName}
           </div>
           <div
-            className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.certainStopBox_stopInfo}`}
+            className={`${styles.box__alignItemsCenter} ${styles.certainStopBox_stopInfo}`}
           >
             <div className={styles.stopInfo_detailBox}>
               <div>{location.city}</div>
               <div>{location.town}</div>
               <div>{stationDistance} 公尺</div>
             </div>
+            <div
+              className={`${styles.ButtonBox_Button} ${styles.Button_White} ${styles.box__alignItemsCenter}`}
+            >
+              <FontAwesomeIcon
+                className={styles.Button_icon}
+                icon={faArrowAltCircleRight}
+              />
+              <div>路線規劃</div>
+            </div>
           </div>
         </div>
       ) : (
         <></>
       )}
+      <div className={styles.certainStopBox_ChangeRouteBox}>
+        <div className={styles.ChangeRouteBox_RouteBox}>1</div>
+        <div className={styles.ChangeRouteBox_RouteBox}>2</div>
+        <div className={styles.ChangeRouteBox_RouteBox}>3</div>
+      </div>
       {currentBuses && certainRoutes ? (
-        <>
+        <div className={styles.certainStopBox_AllRouteBox}>
           {currentBuses.map((currentRoutesBus, index) => (
             <div className={styles.certainStopBox_certainRouteBox} key={index}>
               <Link
@@ -118,17 +133,33 @@ function CertainStopBox() {
                   className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}
                   key={index}
                 >
-                  <div className={styles.certainRouteBox_routeName}>
-                    {currentRoutesBus.routeName}
-                  </div>
-                  <div className={styles.certainRouteBox_routeDirection}>
-                    {!certainRoutes[index] || currentRoutesBus.direction == 225
-                      ? ''
-                      : currentRoutesBus.direction == 2
-                      ? '環形'
-                      : currentRoutesBus.direction == 1
-                      ? `往${certainRoutes[index].departureStopNameZh}`
-                      : `往${certainRoutes[index].destinationStopNameZh}`}
+                  <div className={styles.certainRouteBox_routeInfo}>
+                    <div
+                      // ref={setRef(currentRoutesBus.routeName + '_div')}
+                      className={styles.certainRouteBox_routeNameBox}
+                    >
+                      <p
+                        // ref={setRef(currentRoutesBus.routeName + '_p')}
+                        // className={
+                        //   overSize[index]
+                        //     ? `${styles.marquee_animation} ${styles.certainRouteBox_routeName}`
+                        //     : `${styles.certainRouteBox_routeName}`
+                        // }
+                        className={styles.certainRouteBox_routeName}
+                      >
+                        {currentRoutesBus.routeName}
+                      </p>
+                    </div>
+                    <div className={styles.certainRouteBox_routeDirection}>
+                      {!certainRoutes[index] ||
+                      currentRoutesBus.direction == 225
+                        ? ''
+                        : currentRoutesBus.direction == 2
+                        ? '環形'
+                        : currentRoutesBus.direction == 1
+                        ? `往${certainRoutes[index].departureStopNameZh}`
+                        : `往${certainRoutes[index].destinationStopNameZh}`}
+                    </div>
                   </div>
                   <div
                     className={
@@ -179,7 +210,7 @@ function CertainStopBox() {
               </div>
             </div>
           ))}
-        </>
+        </div>
       ) : (
         <></>
       )}

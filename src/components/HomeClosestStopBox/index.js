@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import useDynamicRefs from 'use-dynamic-refs';
@@ -19,6 +19,10 @@ function ClosestStopBox() {
   const { lng, lat } = QueryString.parse(reactlocation.search);
   const [getRef, setRef] = useDynamicRefs();
   const [overSize, setOverSize] = useState([]);
+  const ClosestStop_ref = useRef(null);
+  const ClosestStop_d_ref = useRef(null);
+  const [ClosestStopWidth, setClosestStopWidth] = useState(0);
+  const [ClosestStopDivWidth, setClosestStopDivWidth] = useState(0);
 
   const [closestStop, setClosestStop] = useState(null);
   const [currentRoutesBuses, setCurrentRoutesBuses] = useState([]);
@@ -91,8 +95,16 @@ function ClosestStopBox() {
   }, [certainRoutes]);
 
   useEffect(() => {
-    // console.log(overSize);
-  }, [overSize]);
+    if (
+      ClosestStop_ref.current &&
+      ClosestStop_ref.current.clientWidth &&
+      ClosestStop_d_ref.current &&
+      ClosestStop_d_ref.current.clientWidth
+    ) {
+      setClosestStopWidth(ClosestStop_ref.current.clientWidth);
+      setClosestStopDivWidth(ClosestStop_d_ref.current.clientWidth);
+    }
+  }, [closestStop]);
 
   return (
     // <>
@@ -118,8 +130,17 @@ function ClosestStopBox() {
           <div
             className={`${styles.closestBox_box__marginBottom} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.box__FlexWrap}`}
           >
-            <div className={styles.closestBox_stopName}>
-              {nearbyStops[0].stationStops[0].stationName}
+            <div ref={ClosestStop_d_ref} className={styles.closestBox_stopName}>
+              <p
+                ref={ClosestStop_ref}
+                className={
+                  ClosestStopWidth > ClosestStopDivWidth
+                    ? `${styles.closestBox_stopName_marquee}`
+                    : ''
+                }
+              >
+                {nearbyStops[0].stationStops[0].stationName}
+              </p>
             </div>
             <div className={styles.closestBox_stopDistance__fontSize}>
               {nearbyStops[0].stationStops[0].stationDistance} 公尺
@@ -142,7 +163,7 @@ function ClosestStopBox() {
                     <p
                       ref={setRef(currentRoutesBus.routeName)}
                       className={
-                        overSize[index] ? `${styles.routeName_animation}` : ''
+                        overSize[index] ? `${styles.marquee_animation}` : ''
                       }
                     >
                       {currentRoutesBus.routeName}
