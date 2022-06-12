@@ -25,7 +25,7 @@ function CertainRouteBox() {
   var {
     lng,
     lat,
-    stationUID,
+    stationID,
     routeName,
     routeUID,
     direction,
@@ -208,7 +208,7 @@ function CertainRouteBox() {
           >
             {selectRouteStopsSort.map((stop, index) => (
               <Link
-                to={`${path.certainRoute}?lng=${lng}&lat=${lat}&stationUID=${stationUID}&routeName=${routeName}&routeUID=${routeUID}&direction=${stop.direction}&departureStopNameZh=${departureStopNameZh}&destinationStopNameZh=${destinationStopNameZh}`}
+                to={`${path.certainRoute}?lng=${lng}&lat=${lat}&stationID=${stationID}&routeName=${routeName}&routeUID=${routeUID}&direction=${stop.direction}&departureStopNameZh=${departureStopNameZh}&destinationStopNameZh=${destinationStopNameZh}`}
                 className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button}`}
                 key={`${stop.routeUID}-${index}`}
               >

@@ -38,8 +38,9 @@ function ClosestStopBox() {
   } = useContext(StoreContext);
 
   useEffect(() => {
-    if (nearbyStops && nearbyStops.length > 0) {
-      setClosestStop(nearbyStops[0].stationStops[0]);
+    // console.log(nearbyStops);
+    if (nearbyStops) {
+      setClosestStop(nearbyStops[0].stationIDs[0]);
     }
   }, [nearbyStops]);
 
@@ -112,14 +113,14 @@ function ClosestStopBox() {
     //     <></>
     //   ) : (
     <div className={styles.sidebar_box}>
-      {nearbyStops && nearbyStops[0] && nearbyStops[0].stationStops[0] ? (
+      {nearbyStops && nearbyStops[0] && nearbyStops[0].stationIDs[0] ? (
         <>
           <div
             className={`${styles.box_linkRow} ${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.closestBox_titlebox__marginBottom}`}
           >
             <div className={styles.linkRow__fontSize}>最近站牌</div>
             <Link
-              to={`${path.certainStop}?lng=${lng}&lat=${lat}&stationUID=${nearbyStops[0].stationStops[0].stationUID}&stationID=${nearbyStops[0].stationStops[0].stationID}&stationName=${nearbyStops[0].stationStops[0].stationName}&stationDistance=${nearbyStops[0].stationStops[0].stationDistance}`}
+              to={`${path.certainStop}?lng=${lng}&lat=${lat}&stationName=${nearbyStops[0].stationIDs[0].stationName}&stationID=${nearbyStops[0].stationIDs[0].stationID}&stationDistance=${nearbyStops[0].stationIDs[0].stationDistance}`}
             >
               <FontAwesomeIcon
                 className={styles.linkRow_arrowIcon}
@@ -139,11 +140,11 @@ function ClosestStopBox() {
                     : ''
                 }
               >
-                {nearbyStops[0].stationStops[0].stationName}
+                {nearbyStops[0].stationIDs[0].stationName}
               </p>
             </div>
             <div className={styles.closestBox_stopDistance__fontSize}>
-              {nearbyStops[0].stationStops[0].stationDistance} 公尺
+              {nearbyStops[0].stationIDs[0].stationDistance} 公尺
             </div>
           </div>
         </>

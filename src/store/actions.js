@@ -76,7 +76,7 @@ export const setNearbyStops = async (dispatch, options) => {
   const { lng, lat } = options;
 
   try {
-    const url = `${TDXBUS_URL}/Station/NearBy?$spatialFilter=nearby(${lat},${lng},200)&$format=JSON'/${lng}/${lat}`;
+    const url = `${TDXBUS_URL}/Station/NearBy?$spatialFilter=nearby(${lat},${lng},220)&$format=JSON'/${lng}/${lat}`;
     let config = {
       headers: GetAuthorizationHeader(),
     };
@@ -124,28 +124,61 @@ export const setNearbyStops = async (dispatch, options) => {
 
     let i = 0;
     let j = 0;
-    let flag = true;
+    let nameFlag = true;
+    let IDFlag = true;
     let nearbyStopsName = [];
+    let nearbyStopsID = [];
+
     for (i = 0; i < nearbyStops.length; i++) {
-      flag = true;
-      for (j = 0; j < nearbyStopsName.length; j++) {
-        if (nearbyStops[i].stationName == nearbyStopsName[j].stationName) {
-          flag = false;
-          j = nearbyStopsName.length;
+      IDFlag = true;
+      for (j = 0; j < nearbyStopsID.length; j++) {
+        if (nearbyStops[i].stationID == nearbyStopsID[j].stationID) {
+          IDFlag = false;
+          j = nearbyStopsID.length;
         }
       }
-      if (flag) {
-        nearbyStopsName.push({
+      if (IDFlag) {
+        nearbyStopsID.push({
           stationName: nearbyStops[i].stationName,
+          stationID: nearbyStops[i].stationID,
+          stationDistance: nearbyStops[i].stationDistance,
+          position: {
+            lat: nearbyStops[i].stationLat,
+            lng: nearbyStops[i].stationLon,
+          },
           stationStops: [],
         });
       }
     }
 
     for (i = 0; i < nearbyStops.length; i++) {
+      for (j = 0; j < nearbyStopsID.length; j++) {
+        if (nearbyStops[i].stationID == nearbyStopsID[j].stationID) {
+          nearbyStopsID[j].stationStops.push(nearbyStops[i]);
+        }
+      }
+    }
+
+    for (i = 0; i < nearbyStopsID.length; i++) {
+      nameFlag = true;
       for (j = 0; j < nearbyStopsName.length; j++) {
-        if (nearbyStops[i].stationName == nearbyStopsName[j].stationName) {
-          nearbyStopsName[j].stationStops.push(nearbyStops[i]);
+        if (nearbyStopsID[i].stationName == nearbyStopsName[j].stationName) {
+          nameFlag = false;
+          j = nearbyStopsName.length;
+        }
+      }
+      if (nameFlag) {
+        nearbyStopsName.push({
+          stationName: nearbyStopsID[i].stationName,
+          stationIDs: [],
+        });
+      }
+    }
+
+    for (i = 0; i < nearbyStopsID.length; i++) {
+      for (j = 0; j < nearbyStopsName.length; j++) {
+        if (nearbyStopsID[i].stationName == nearbyStopsName[j].stationName) {
+          nearbyStopsName[j].stationIDs.push(nearbyStopsID[i]);
         }
       }
     }
