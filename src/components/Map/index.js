@@ -26,11 +26,12 @@ function LocationMarker() {
   const reactlocation = useLocation();
   const { lng, lat, stationID } = QueryString.parse(reactlocation.search);
   const navigate = useNavigate();
-  const [markers, setMarkers] = useState([]);
+
   const {
     state: { position, location, nearbyStops },
     dispatch,
   } = useContext(StoreContext);
+  const [markers, setMarkers] = useState([]);
 
   const redIcon = new L.Icon({
     iconUrl: currentMarker,
@@ -75,7 +76,7 @@ function LocationMarker() {
       initMap.flyTo({ lng, lat }, initMap.getZoom());
     } else {
       initMap.locate().on('locationfound', function (e) {
-        console.log(e.latlng);
+        // console.log(e.latlng);
         setPosition(dispatch, { position: e.latlng });
         initMap.flyTo(e.latlng, initMap.getZoom());
         navigate(`${path.home}?lng=${e.latlng.lng}&lat=${e.latlng.lat}`);
@@ -101,8 +102,10 @@ function LocationMarker() {
 
   useEffect(() => {
     if (nearbyStops) {
-      var stopsArray = [];
-      nearbyStops.map((nearbyStopsName) => {
+      const stopsArray = [];
+      const nearbyStops2 = [...nearbyStops];
+
+      nearbyStops2.map((nearbyStopsName) => {
         nearbyStopsName.stationIDs.map((nearbyStop) => {
           stopsArray.push({
             position: nearbyStop.position,

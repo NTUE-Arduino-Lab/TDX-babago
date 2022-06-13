@@ -168,13 +168,19 @@
   @include P;
   gap: 6px;
 }
+
 .Button_White {
   color: $color-main;
   background-color: #fcfcfc;
 }
-.Button_Blue {
+.Button_openButton {
   color: #fcfcfc;
   background-color: $color-main;
+}
+.Button_cancelButton{
+  background: #fcfcfc;
+  color: $color-main;
+  border: $color-main 1px solid;
 }
 .Button_icon {
   padding-top: 1px;

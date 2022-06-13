@@ -12,6 +12,7 @@ import {
   setSelectRouteBuses,
   setCurrentBuses,
   setCertainRoutes,
+  setRemindBuses,
 } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
@@ -21,61 +22,73 @@ import {
   faArrowAltCircleRight,
   faRoute,
 } from '@fortawesome/free-solid-svg-icons';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 
 function CertainStopBox() {
   // const [getRef, setRef] = useDynamicRefs();
   // const [overSize, SetOverSize] = useState([]);
-  const [openRoutes, setOpenRoutes] = useState('0');
 
   const reactlocation = useLocation();
   const { lng, lat, stationID, stationName, stationDistance } =
     QueryString.parse(reactlocation.search);
+
   const {
     state: {
       location,
       nearbyStops,
       currentBuses,
       certainRoutes,
+      remindBuses,
       // requestdata: { loading },
     },
     dispatch,
   } = useContext(StoreContext);
-  const [nearbyStopsName, setNearbyStopsName] = useState([]);
+  const [nearbyStopsName, setNearbyStopsName] = useState(null);
+  const [currentRoutesBuses, setCurrentRoutesBuses] = useState(null);
+  const [openRoutes, setOpenRoutes] = useState('0');
 
   useEffect(() => {
     setSelectRouteStopsSort(dispatch, {
-      city: '',
-      selectRoute: '',
+      city: null,
+      selectRoute: null,
     });
     setSelectRouteStopsTime(dispatch, {
-      city: '',
-      selectRoute: '',
+      city: null,
+      selectRoute: null,
     });
     setSelectRouteBuses(dispatch, {
-      city: '',
-      selectRoute: '',
+      city: null,
+      selectRoute: null,
     });
   }, []);
 
   useEffect(() => {
     if (nearbyStops && stationName) {
-      for (var i = 0; i < nearbyStops.length; i++) {
-        if (stationName == nearbyStops[i].stationName) {
-          setNearbyStopsName(nearbyStops[i].stationIDs);
-          i = nearbyStops.length;
+      const nearbyStops2 = [...nearbyStops];
+      for (let i = 0; i < nearbyStops2.length; i++) {
+        if (stationName == nearbyStops2[i].stationName) {
+          setNearbyStopsName(nearbyStops2[i].stationIDs);
+          i = nearbyStops2.length;
         }
       }
+      setCurrentBuses(dispatch, {
+        authorityCodes: null,
+        stationID: null,
+      });
     }
   }, [nearbyStops, stationName]);
 
   useEffect(() => {
     if (nearbyStopsName && stationID) {
-      for (var i = 0; i < nearbyStopsName.length; i++) {
+      for (let i = 0; i < nearbyStopsName.length; i++) {
         if (nearbyStopsName[i].stationID == stationID) {
           setCurrentBuses(dispatch, {
             authorityCodes: nearbyStopsName[i].authorityCodes,
             stationID: stationID,
+          });
+          setCertainRoutes(dispatch, {
+            currentBuses: null,
           });
           i = nearbyStopsName.length;
         }
@@ -88,10 +101,37 @@ function CertainStopBox() {
       setCertainRoutes(dispatch, {
         currentBuses: currentBuses,
       });
-    }
-  }, [currentBuses]);
 
-  useEffect(() => {}, [location, certainRoutes]);
+      let currentBuses2 = [...currentBuses];
+      if (remindBuses.length > 0) {
+        let remindBusesArray = new Array(currentBuses2.length).fill(false);
+        for (let i = 0; i < remindBuses.length; i++) {
+          if (remindBuses[i].stationID.stationID == stationID) {
+            for (let j = 0; j < currentBuses2.length; j++) {
+              if (
+                remindBuses[i].currentRoutesBus.routeUID ==
+                  currentBuses2[j].routeUID &&
+                remindBuses[i].currentRoutesBus.direction ==
+                  currentBuses2[j].direction
+              ) {
+                remindBusesArray[j] = true;
+              }
+            }
+          }
+        }
+        for (let i = 0; i < currentBuses2.length; i++) {
+          currentBuses2[i].remindState = remindBusesArray[i];
+        }
+      } else {
+        for (let i = 0; i < currentBuses2.length; i++) {
+          currentBuses2[i].remindState = false;
+        }
+      }
+      setCurrentRoutesBuses(currentBuses2);
+    }
+  }, [currentBuses, remindBuses.length]);
+
+  useEffect(() => {}, [certainRoutes, currentRoutesBuses]);
 
   return (
     // <>
@@ -150,9 +190,9 @@ function CertainStopBox() {
           <></>
         )}
       </div>
-      {currentBuses && certainRoutes ? (
+      {currentRoutesBuses && certainRoutes ? (
         <div className={styles.certainStopBox_AllRouteBox}>
-          {currentBuses.map((currentRoutesBus, index) => (
+          {currentRoutesBuses.map((currentRoutesBus, index) => (
             <div className={styles.certainStopBox_certainRouteBox} key={index}>
               <div
                 className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}
@@ -212,7 +252,7 @@ function CertainStopBox() {
                 }
               >
                 <div
-                  className={`${styles.ButtonBox_Button} ${styles.Button_Blue} ${styles.box__alignItemsCenter}`}
+                  className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
                 >
                   <FontAwesomeIcon
                     className={styles.Button_icon}
@@ -220,22 +260,67 @@ function CertainStopBox() {
                   />
                   <div>預約上車</div>
                 </div>
-                <div
-                  className={`${styles.ButtonBox_Button} ${styles.Button_Blue} ${styles.box__alignItemsCenter}`}
-                >
-                  <FontAwesomeIcon
-                    className={styles.Button_icon}
-                    icon={farBell}
-                  />
-                  <div>開啟提醒</div>
-                </div>
+                {!currentRoutesBus.remindState ? (
+                  <button
+                    className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                    onClick={() => {
+                      let busesArr = remindBuses;
+                      busesArr.push({
+                        currentRoutesBus,
+                        certainRoute: certainRoutes[index],
+                        stationID: {
+                          stationName,
+                          stationID,
+                          stationDistance,
+                        },
+                      });
+                      setRemindBuses(dispatch, {
+                        buses: busesArr,
+                      });
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.Button_icon}
+                      icon={farBell}
+                    />
+                    <div>開啟提醒</div>
+                  </button>
+                ) : (
+                  <button
+                    className={`${styles.ButtonBox_Button} ${styles.Button_cancelButton} ${styles.box__alignItemsCenter}`}
+                    onClick={() => {
+                      let busesArr = [...remindBuses];
+                      for (let i = 0; i < busesArr.length; i++) {
+                        if (
+                          busesArr[i].stationID.stationID == stationID &&
+                          busesArr[i].currentRoutesBus.direction ==
+                            currentRoutesBus.direction &&
+                          busesArr[i].currentRoutesBus.routeUID ==
+                            currentRoutesBus.routeUID
+                        ) {
+                          busesArr.splice(i, 1);
+                          i = busesArr.length - 1;
+                          setRemindBuses(dispatch, {
+                            buses: busesArr,
+                          });
+                        }
+                      }
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.ButtonBox_icon}
+                      icon={faBell}
+                    />
+                    <div>取消提醒</div>
+                  </button>
+                )}
                 <Link
                   to={
                     certainRoutes[index]
                       ? `${path.certainRoute}?lng=${lng}&lat=${lat}&stationID=${stationID}&routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${certainRoutes[index].departureStopNameZh}&destinationStopNameZh=${certainRoutes[index].destinationStopNameZh}`
                       : ''
                   }
-                  className={`${styles.ButtonBox_Button} ${styles.Button_Blue} ${styles.box__alignItemsCenter} ${styles.certainRouteBox_linkSetting}`}
+                  className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter} ${styles.certainRouteBox_linkSetting}`}
                 >
                   <FontAwesomeIcon
                     className={styles.Button_icon}

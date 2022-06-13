@@ -5,6 +5,7 @@ import * as QueryString from 'query-string';
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
+import { setCurrentBuses } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,57 +14,51 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 function NearbyStopsBox() {
   const reactlocation = useLocation();
   const { lng, lat } = QueryString.parse(reactlocation.search);
-  const [nearbyStopsName, setNearbyStopsName] = useState([]);
-  const [stationCount, setStationCount] = useState(0);
+
   const {
     state: {
       location,
       nearbyStops,
       // requestdata: { loading },
     },
+    dispatch,
   } = useContext(StoreContext);
 
-  // useEffect(() => {
-  //   // console.log('certainPage: ' + stationID);
-  //   if (nearbyStops && stationID && stationName) {
-  //     for (var i = 0; i < nearbyStops.length; i++) {
-  //       if (stationName == nearbyStops[i].stationName) {
-  //         for (var j = 0; j < nearbyStops[i].stationStops.length; j++) {
-  //           if (stationID == nearbyStops[i].stationStops[j].stationID) {
-  //             setCertainStop(nearbyStops[i].stationStops[j]);
-  //             j = nearbyStops[i].stationStops.length;
-  //           }
-  //         }
-  //         i = nearbyStops.length;
-  //       }
-  //     }
-  //   }
-  // }, [nearbyStops, stationID, stationName]);
+  const [nearbyStopsName, setNearbyStopsName] = useState(null);
+  const [stationCount, setStationCount] = useState(0);
+
+  useEffect(() => {
+    setCurrentBuses(dispatch, {
+      city: null,
+      stationID: null,
+    });
+  }, []);
 
   useEffect(() => {
     if (nearbyStops) {
-      let array = [];
-      let count = [];
+      const nearbyStops2 = [...nearbyStops];
+      const array = [];
+      let count = 0;
 
-      for (var i = 0; i < nearbyStops.length; i++) {
-        let routes = [];
-        for (var j = 0; j < nearbyStops[i].stationIDs.length; j++) {
+      for (let i = 0; i < nearbyStops2.length; i++) {
+        const routes = [];
+        for (let j = 0; j < nearbyStops2[i].stationIDs.length; j++) {
           count++;
           for (
-            var k = 0;
-            k < nearbyStops[i].stationIDs[j].stationStops.length;
+            let k = 0;
+            k < nearbyStops2[i].stationIDs[j].stationStops.length;
             k++
           ) {
             for (
-              var l = 0;
-              l < nearbyStops[i].stationIDs[j].stationStops[k].routes.length;
+              let l = 0;
+              l < nearbyStops2[i].stationIDs[j].stationStops[k].routes.length;
               l++
             ) {
               let flag = true;
-              for (var m = 0; m < routes.length; m++) {
+              for (let m = 0; m < routes.length; m++) {
                 if (
                   routes[m] ==
-                  nearbyStops[i].stationIDs[j].stationStops[k].routes[l]
+                  nearbyStops2[i].stationIDs[j].stationStops[k].routes[l]
                 ) {
                   flag = false;
                   m = routes.length;
@@ -71,7 +66,7 @@ function NearbyStopsBox() {
               }
               if (flag) {
                 routes.push(
-                  nearbyStops[i].stationIDs[j].stationStops[k].routes[l],
+                  nearbyStops2[i].stationIDs[j].stationStops[k].routes[l],
                 );
               }
             }
@@ -79,9 +74,9 @@ function NearbyStopsBox() {
         }
 
         array.push({
-          stationName: nearbyStops[i].stationName,
-          stationID: nearbyStops[i].stationIDs[0].stationID,
-          stationDistance: nearbyStops[i].stationIDs[0].stationDistance,
+          stationName: nearbyStops2[i].stationName,
+          stationID: nearbyStops2[i].stationIDs[0].stationID,
+          stationDistance: nearbyStops2[i].stationIDs[0].stationDistance,
           stationRoutes: routes,
         });
       }
@@ -93,7 +88,7 @@ function NearbyStopsBox() {
 
   useEffect(() => {
     // console.log(nearbyStopsName);
-  }, [location, nearbyStopsName, stationCount]);
+  }, [location, stationCount, nearbyStopsName]);
 
   return (
     // <>
@@ -114,7 +109,7 @@ function NearbyStopsBox() {
           <></>
         )}
       </div>
-      {nearbyStopsName.length > 0 ? (
+      {nearbyStopsName && nearbyStopsName.length > 0 ? (
         <div className={styles.nearbyBox_AllStopBox}>
           {nearbyStopsName.map((nearbyStop, index) => (
             <div className={styles.nearbyBox_certainStopBox} key={index}>

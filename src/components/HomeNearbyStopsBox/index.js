@@ -18,42 +18,44 @@ function HomeNearbyStopsBox() {
 
   const reactlocation = useLocation();
   const { lng, lat } = QueryString.parse(reactlocation.search);
-  const [frontNearbyStops, setFrontNearbyStops] = useState([]);
+
   const {
     state: {
       nearbyStops,
       // requestdata: { loading },
     },
   } = useContext(StoreContext);
+  const [frontNearbyStops, setFrontNearbyStops] = useState([]);
 
   useEffect(() => {
     if (nearbyStops) {
       // console.log(nearbyStops);
 
+      const nearbyStops2 = [...nearbyStops];
       let frontNearbyStopsLength = 5;
-      if (nearbyStops.length < 5) {
-        frontNearbyStopsLength = nearbyStops.length;
+      if (nearbyStops2.length < 5) {
+        frontNearbyStopsLength = nearbyStops2.length;
       }
-      let array = [];
+      const array = [];
 
-      for (var i = 0; i < frontNearbyStopsLength; i++) {
-        let routes = [];
-        for (var j = 0; j < nearbyStops[i].stationIDs.length; j++) {
+      for (let i = 0; i < frontNearbyStopsLength; i++) {
+        const routes = [];
+        for (let j = 0; j < nearbyStops2[i].stationIDs.length; j++) {
           for (
-            var k = 0;
-            k < nearbyStops[i].stationIDs[j].stationStops.length;
+            let k = 0;
+            k < nearbyStops2[i].stationIDs[j].stationStops.length;
             k++
           ) {
             for (
-              var l = 0;
-              l < nearbyStops[i].stationIDs[j].stationStops[k].routes.length;
+              let l = 0;
+              l < nearbyStops2[i].stationIDs[j].stationStops[k].routes.length;
               l++
             ) {
               let flag = true;
-              for (var m = 0; m < routes.length; m++) {
+              for (let m = 0; m < routes.length; m++) {
                 if (
                   routes[m] ==
-                  nearbyStops[i].stationIDs[j].stationStops[k].routes[l]
+                  nearbyStops2[i].stationIDs[j].stationStops[k].routes[l]
                 ) {
                   flag = false;
                   m = routes.length;
@@ -61,14 +63,14 @@ function HomeNearbyStopsBox() {
               }
               if (flag) {
                 routes.push(
-                  nearbyStops[i].stationIDs[j].stationStops[k].routes[l],
+                  nearbyStops2[i].stationIDs[j].stationStops[k].routes[l],
                 );
               }
             }
           }
         }
         array.push({
-          stationName: nearbyStops[i].stationName,
+          stationName: nearbyStops2[i].stationName,
           stationRoutes: routes,
         });
       }
@@ -80,8 +82,8 @@ function HomeNearbyStopsBox() {
     if (frontNearbyStops.length > 0) {
       const array = [];
       frontNearbyStops.map((el) => {
-        var p_ref = getRef(el.stationName + '_p');
-        var div_ref = getRef(el.stationName + '_div');
+        const p_ref = getRef(el.stationName + '_p');
+        const div_ref = getRef(el.stationName + '_div');
         if (p_ref !== null && p_ref !== undefined) {
           if (
             div_ref.current !== null &&

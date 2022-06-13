@@ -11,18 +11,10 @@ const initialState = {
   nearbyStops: null,
   currentBuses: null,
   certainRoutes: null,
-  // selectRoute: {
-  //   routeUID: null,
-  //   routeName: null,
-  //   departureStopNameZh: null,
-  //   destinationStopNameZh: null,
-  //   fareBufferZoneDescriptionZh: null,
-  //   city: null,
-  //   stops: null,
-  // },
   selectRouteStopsSort: null,
   selectRouteStopsTime: null,
   selectRouteBuses: null,
+  remindBuses: [],
   requestdata: { loading: false, error: null },
 };
 
@@ -67,6 +59,11 @@ function reducer(state, action) {
       return {
         ...state,
         selectRouteBuses: action.payload,
+      };
+    case type.SET_REMINDBUSES:
+      return {
+        ...state,
+        remindBuses: action.payload,
       };
     case type.BEGIN_DATA_REQUEST:
       return {
