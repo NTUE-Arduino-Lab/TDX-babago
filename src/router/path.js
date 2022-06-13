@@ -3,4 +3,5 @@ export default {
   certainStop: '/certainStop',
   nearbyStops: '/nearbyStops',
   certainRoute: '/certainRoute',
+  scanQrcode: '/scanQrcode',
 };

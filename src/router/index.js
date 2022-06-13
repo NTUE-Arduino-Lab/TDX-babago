@@ -13,6 +13,7 @@ import HomePage from '../sidebar/Home';
 import NearbyStopsPage from '../sidebar/NearbyStops';
 import CertainStopPage from '../sidebar/CertainStop';
 import CertainRoutePage from '../sidebar/CertainRoute';
+import ScanQrcodePage from '../sidebar/ScanQrcode';
 
 const Router = () => {
   return (
@@ -37,6 +38,7 @@ const Router = () => {
               path={path.nearbyStops}
               element={<NearbyStopsPage />}
             />
+            <Route exact path={path.scanQrcode} element={<ScanQrcodePage />} />
           </Routes>
           <Map></Map>
         </div>
