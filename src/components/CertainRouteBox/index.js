@@ -22,20 +22,18 @@ import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 function CertainRouteBox() {
   const [openStops, setOpenStops] = useState('0');
   const reactlocation = useLocation();
-  var {
+  const {
     lng,
     lat,
-    stationUID,
+    stationID,
     routeName,
     routeUID,
     direction,
     departureStopNameZh,
     destinationStopNameZh,
   } = QueryString.parse(reactlocation.search);
-  const [directionStops, setDirectionStops] = useState([]);
   const {
     state: {
-      location,
       selectRouteStopsSort,
       selectRouteStopsTime,
       selectRouteBuses,
@@ -43,6 +41,10 @@ function CertainRouteBox() {
     },
     dispatch,
   } = useContext(StoreContext);
+  const [stopsArr, setStopsArr] = useState([]);
+  const [stopsTimeArr, setStopsTimeArr] = useState([]);
+  const [routeBusesArr, setRouteBusesArr] = useState([]);
+  const [directionStops, setDirectionStops] = useState([]);
 
   useEffect(() => {
     setCurrentBuses(dispatch, {
@@ -52,64 +54,49 @@ function CertainRouteBox() {
   }, []);
 
   useEffect(() => {
-    if (location && routeName && routeUID) {
+    if (routeName && routeUID) {
       setSelectRouteStopsSort(dispatch, {
-        city: location.city,
         selectRoute: {
           routeName,
           routeUID,
         },
       });
       setSelectRouteStopsTime(dispatch, {
-        city: location.city,
         selectRoute: {
           routeName,
           routeUID,
         },
       });
       setSelectRouteBuses(dispatch, {
-        city: location.city,
         selectRoute: {
           routeName,
           routeUID,
         },
       });
     }
-  }, [location, routeName, routeUID]);
+  }, [routeName, routeUID]);
 
   useEffect(() => {
-    if (
-      selectRouteStopsSort &&
-      selectRouteStopsTime &&
-      selectRouteBuses &&
-      direction
-    ) {
-      let i = 0;
-      let stopsArr = [];
-      let stopsTimeArr = [];
-      let routeBusesArr = [];
-
-      for (i = 0; i < selectRouteStopsSort.length; i++) {
+    if (selectRouteStopsSort) {
+      for (var i = 0; i < selectRouteStopsSort.length; i++) {
         if (selectRouteStopsSort[i].direction == direction) {
-          stopsArr = selectRouteStopsSort[i].stops;
+          setStopsArr(selectRouteStopsSort[i].stops);
+          i = selectRouteStopsSort.length;
         }
       }
+    }
+  }, [selectRouteStopsSort, direction]);
 
-      if (selectRouteBuses.length > 0) {
-        for (var j = 0; j < selectRouteBuses.length; j++) {
-          if (selectRouteBuses[j].direction == direction) {
-            routeBusesArr.push(selectRouteBuses[j]);
-          }
-        }
-      }
-
+  useEffect(() => {
+    if (selectRouteStopsTime && stopsArr.length > 0) {
+      let stopsTimeArr2 = [];
       for (var x = 0; x < stopsArr.length; x++) {
         for (var y = 0; y < selectRouteStopsTime.length; y++) {
           if (
             selectRouteStopsTime[y].direction == direction &&
             stopsArr[x].StopUID == selectRouteStopsTime[y].stopUID
           ) {
-            stopsTimeArr.push({
+            stopsTimeArr2.push({
               stopUID: stopsArr[x].StopUID,
               // stationID: stopsArr[x].StationID,
               stopPosition: stopsArr[x].StopPosition,
@@ -134,38 +121,75 @@ function CertainRouteBox() {
               // busEstimateTime: selectRouteStopsTime[y].estimateTime,
               // busPlateNumb: selectRouteStopsTime[y].plateNumb,
             });
+            y = selectRouteStopsTime.length - 1;
+          }
+          if (
+            x == stopsArr.length - 1 &&
+            y == selectRouteStopsTime.length - 1
+          ) {
+            setStopsTimeArr(stopsTimeArr2);
           }
         }
       }
-
-      for (i = 0; i < stopsTimeArr.length; i++) {
-        for (var z = 0; z < routeBusesArr.length; z++) {
-          if (stopsTimeArr[i].stopUID == routeBusesArr[z].stopUID) {
-            let index = i;
-            if (!routeBusesArr[z].a2EventType) {
-              index = i + 1;
-            }
-
-            stopsTimeArr[index].buses.push({
-              plateNumb: routeBusesArr[z].plateNumb,
-              busStatus: routeBusesArr[z].busStatus,
-              dutyStatus: routeBusesArr[z].dutyStatus,
-              stopSequence: routeBusesArr[z].stopSequence,
-            });
-          }
-        }
-      }
-
-      // console.log(stopsTimeArr);
-      setDirectionStops(stopsTimeArr);
     }
-  }, [selectRouteStopsSort, selectRouteStopsTime, selectRouteBuses, direction]);
+  }, [selectRouteStopsTime, stopsArr, direction]);
 
-  useEffect(() => {}, [
-    directionStops,
-    departureStopNameZh,
-    destinationStopNameZh,
-  ]);
+  useEffect(() => {
+    if (selectRouteBuses) {
+      if (selectRouteBuses.length > 0) {
+        let routeBusesArr2 = [];
+        for (var j = 0; j < selectRouteBuses.length; j++) {
+          if (selectRouteBuses[j].direction == direction) {
+            routeBusesArr2.push(selectRouteBuses[j]);
+          }
+          if (j == selectRouteBuses.length - 1) {
+            if (routeBusesArr2.length > 0) {
+              setRouteBusesArr(routeBusesArr2);
+            } else {
+              setRouteBusesArr(-1);
+            }
+          }
+        }
+      } else {
+        setRouteBusesArr(-1);
+      }
+    }
+  }, [selectRouteBuses, direction]);
+
+  useEffect(() => {
+    if (stopsTimeArr.length > 0) {
+      if (routeBusesArr == -1) {
+        setDirectionStops(stopsTimeArr);
+      } else if (routeBusesArr.length > 0) {
+        let directionStops2 = stopsTimeArr;
+
+        for (var m = 0; m < stopsTimeArr.length; m++) {
+          for (var n = 0; n < routeBusesArr.length; n++) {
+            if (stopsTimeArr[m].stopUID == routeBusesArr[n].stopUID) {
+              let index = m;
+              if (!routeBusesArr[n].a2EventType && m < stopsTimeArr.length) {
+                index = m + 1;
+              }
+
+              directionStops2[index].buses.push({
+                plateNumb: routeBusesArr[n].plateNumb,
+                busStatus: routeBusesArr[n].busStatus,
+                dutyStatus: routeBusesArr[n].dutyStatus,
+                stopSequence: routeBusesArr[n].stopSequence,
+              });
+            }
+            if (m == stopsTimeArr.length - 1 && n == routeBusesArr.length - 1) {
+              setDirectionStops(directionStops2);
+            }
+          }
+        }
+      }
+    }
+  }, [stopsTimeArr, routeBusesArr]);
+
+  useEffect(() => {
+    // console.log(directionStops);
+  }, [directionStops, departureStopNameZh, destinationStopNameZh]);
 
   return (
     // <>
@@ -187,11 +211,11 @@ function CertainRouteBox() {
             className={`${styles.box__alignItemsCenter} ${styles.certainRouteBox_routeInfo} ${styles.box__spaceBetween}`}
           >
             <div className={styles.routeInfo_detailBox}>
-              <div>新莊</div>
+              <div>{departureStopNameZh}</div>
               <div>－</div>
-              <div>國父紀念館</div>
+              <div>{destinationStopNameZh}</div>
               <div>｜</div>
-              <div>63站</div>
+              <div>{directionStops.length}站</div>
             </div>
             <div
               className={`${styles.ButtonBox_Button} ${styles.Button_White_outline} ${styles.box__alignItemsCenter}`}
@@ -208,19 +232,32 @@ function CertainRouteBox() {
           >
             {selectRouteStopsSort.map((stop, index) => (
               <Link
-                to={`${path.certainRoute}?lng=${lng}&lat=${lat}&stationUID=${stationUID}&routeName=${routeName}&routeUID=${routeUID}&direction=${stop.direction}&departureStopNameZh=${departureStopNameZh}&destinationStopNameZh=${destinationStopNameZh}`}
-                className={`${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button}`}
+                to={`${path.certainRoute}?lng=${lng}&lat=${lat}&stationID=${stationID}&routeName=${routeName}&routeUID=${routeUID}&direction=${stop.direction}&departureStopNameZh=${departureStopNameZh}&destinationStopNameZh=${destinationStopNameZh}`}
+                className={
+                  stop.direction == direction
+                    ? `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button} ${styles.buttonBox_buttonFocus}`
+                    : `${styles.box__alignItemsCenter} ${styles.box__center} ${styles.buttonBox_button}`
+                }
                 key={`${stop.routeUID}-${index}`}
               >
-                {stop.direction ? departureStopNameZh : destinationStopNameZh}
+                {stop.direction
+                  ? `往${departureStopNameZh}`
+                  : `往${destinationStopNameZh}`}
               </Link>
             ))}
           </div>
         </div>
       ) : (
-        <></>
+        <div className={styles.topBox_padding}>
+          <div
+            className={`${styles.box__alignItemsCenter} ${styles.box__start} ${styles.certainRouteBox_titleBox}`}
+          ></div>
+          <div
+            className={`${styles.box__alignItemsCenter} ${styles.certainRouteBox_routeInfo} ${styles.box__spaceBetween}`}
+          ></div>
+        </div>
       )}
-      {directionStops ? (
+      {directionStops && directionStops.length > 0 ? (
         <div
           className={`${styles.bottomBox_padding} ${styles.box__spaceBetween}`}
         >
@@ -321,7 +358,9 @@ function CertainRouteBox() {
                   {stop.buses.length > 0 ? (
                     <div className={styles.stopCircle_plateNumb}>
                       {stop.buses.map((bus) => (
-                        <div key={bus.plateNumb}>{bus.plateNumb}</div>
+                        <div key={`${bus.plateNumb}-${direction}`}>
+                          {bus.plateNumb}
+                        </div>
                       ))}
                     </div>
                   ) : (

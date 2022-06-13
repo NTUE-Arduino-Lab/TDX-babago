@@ -24,7 +24,7 @@ import { StoreContext } from '../../store/reducer';
 
 function LocationMarker() {
   const reactlocation = useLocation();
-  var { lng, lat, stationUID } = QueryString.parse(reactlocation.search);
+  const { lng, lat, stationID } = QueryString.parse(reactlocation.search);
   const navigate = useNavigate();
   const [markers, setMarkers] = useState([]);
   const {
@@ -103,14 +103,10 @@ function LocationMarker() {
     if (nearbyStops) {
       var stopsArray = [];
       nearbyStops.map((nearbyStopsName) => {
-        nearbyStopsName.stationStops.map((nearbyStop) => {
+        nearbyStopsName.stationIDs.map((nearbyStop) => {
           stopsArray.push({
-            position: {
-              lat: nearbyStop.stationLat,
-              lng: nearbyStop.stationLon,
-            },
+            position: nearbyStop.position,
             stationName: nearbyStop.stationName,
-            stationUID: nearbyStop.stationUID,
             stationID: nearbyStop.stationID,
             stationDistance: nearbyStop.stationDistance,
           });
@@ -119,6 +115,12 @@ function LocationMarker() {
       setMarkers(stopsArray);
     }
   }, [nearbyStops]);
+
+  useEffect(() => {
+    // if (markers) {
+    //   console.log(markers);
+    // }
+  }, [markers]);
 
   return location === null ? null : (
     <Fragment>
@@ -141,14 +143,14 @@ function LocationMarker() {
       </Marker>
       {markers.map((marker) => (
         <Marker
-          key={marker.stationUID}
+          key={marker.stationID}
           position={marker.position}
-          icon={stationUID == marker.stationUID ? selectIcon : blueIcon}
+          icon={stationID == marker.stationID ? selectIcon : blueIcon}
           eventHandlers={{
             click: () => {
-              if (stationUID != marker.stationUID) {
+              if (stationID != marker.stationID) {
                 navigate(
-                  `${path.certainStop}?lng=${position.lng}&lat=${position.lat}&stationUID=${marker.stationUID}&stationID=${marker.stationID}&stationName=${marker.stationName}&stationDistance=${marker.stationDistance}`,
+                  `${path.certainStop}?lng=${position.lng}&lat=${position.lat}&stationName=${marker.stationName}&stationID=${marker.stationID}&stationDistance=${marker.stationDistance}`,
                 );
               }
             },

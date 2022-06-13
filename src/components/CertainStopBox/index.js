@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import * as QueryString from 'query-string';
 // import useDynamicRefs from 'use-dynamic-refs';
@@ -28,17 +28,19 @@ function CertainStopBox() {
   // const [overSize, SetOverSize] = useState([]);
 
   const reactlocation = useLocation();
-  var { lng, lat, stationUID, stationID, stationName, stationDistance } =
+  const { lng, lat, stationID, stationName, stationDistance } =
     QueryString.parse(reactlocation.search);
   const {
     state: {
       location,
+      nearbyStops,
       currentBuses,
       certainRoutes,
       // requestdata: { loading },
     },
     dispatch,
   } = useContext(StoreContext);
+  const [nearbyStopsName, setNearbyStopsName] = useState([]);
 
   useEffect(() => {
     setSelectRouteStopsSort(dispatch, {
@@ -56,26 +58,39 @@ function CertainStopBox() {
   }, []);
 
   useEffect(() => {
-    if (location) {
-      setCurrentBuses(dispatch, {
-        city: location.city,
-        stationID: stationID,
-      });
+    if (nearbyStops && stationName) {
+      for (var i = 0; i < nearbyStops.length; i++) {
+        if (stationName == nearbyStops[i].stationName) {
+          setNearbyStopsName(nearbyStops[i].stationIDs);
+          i = nearbyStops.length;
+        }
+      }
     }
-  }, [location, stationID]);
+  }, [nearbyStops, stationName]);
 
   useEffect(() => {
-    if (location && currentBuses) {
+    if (nearbyStopsName && stationID) {
+      for (var i = 0; i < nearbyStopsName.length; i++) {
+        if (nearbyStopsName[i].stationID == stationID) {
+          setCurrentBuses(dispatch, {
+            authorityCodes: nearbyStopsName[i].authorityCodes,
+            stationID: stationID,
+          });
+          i = nearbyStopsName.length;
+        }
+      }
+    }
+  }, [nearbyStopsName, stationID]);
+
+  useEffect(() => {
+    if (currentBuses) {
       setCertainRoutes(dispatch, {
-        city: location.city,
         currentBuses: currentBuses,
       });
     }
   }, [currentBuses]);
 
-  useEffect(() => {
-    // console.log(certainRoutes);
-  }, [certainRoutes]);
+  useEffect(() => {}, [certainRoutes]);
 
   return (
     // <>
@@ -113,9 +128,26 @@ function CertainStopBox() {
         <></>
       )}
       <div className={styles.certainStopBox_ChangeRouteBox}>
-        <div className={styles.ChangeRouteBox_RouteBox}>1</div>
-        <div className={styles.ChangeRouteBox_RouteBox}>2</div>
-        <div className={styles.ChangeRouteBox_RouteBox}>3</div>
+        {nearbyStopsName && nearbyStopsName.length > 0 ? (
+          <>
+            {nearbyStopsName.map((stopName, index) => (
+              <Link
+                to={`${path.certainStop}?lng=${lng}&lat=${lat}&stationName=${stopName.stationName}&stationID=${stopName.stationID}&stationDistance=${stopName.stationDistance}`}
+                className={
+                  stopName.stationID == stationID
+                    ? `${styles.ChangeRouteBox_RouteBox} ${styles.ChangeRouteBox_RouteBoxFocus}`
+                    : `${styles.ChangeRouteBox_RouteBox}`
+                }
+                // styles.ChangeRouteBox_RouteBox
+                key={index}
+              >
+                {index + 1}
+              </Link>
+            ))}
+          </>
+        ) : (
+          <></>
+        )}
       </div>
       {currentBuses && certainRoutes ? (
         <div className={styles.certainStopBox_AllRouteBox}>
@@ -124,7 +156,7 @@ function CertainStopBox() {
               <Link
                 to={
                   certainRoutes[index]
-                    ? `${path.certainRoute}?lng=${lng}&lat=${lat}&stationUID=${stationUID}&routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${certainRoutes[index].departureStopNameZh}&destinationStopNameZh=${certainRoutes[index].destinationStopNameZh}`
+                    ? `${path.certainRoute}?lng=${lng}&lat=${lat}&stationID=${stationID}&routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${certainRoutes[index].departureStopNameZh}&destinationStopNameZh=${certainRoutes[index].destinationStopNameZh}`
                     : ''
                 }
                 className={styles.certainRouteBox_linkSetting}

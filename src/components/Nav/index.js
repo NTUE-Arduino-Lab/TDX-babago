@@ -10,7 +10,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 function Nav() {
   const reactlocation = useLocation();
-  var { lng, lat } = QueryString.parse(reactlocation.search);
+  const { lng, lat } = QueryString.parse(reactlocation.search);
 
   return (
     <div className={`${styles.nav} ${styles.box__spaceBetween}`}>

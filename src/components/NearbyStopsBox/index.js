@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import * as QueryString from 'query-string';
 
 import path from '../../router/path';
 import styles from './styles.module.scss';
@@ -10,6 +11,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 function NearbyStopsBox() {
+  const reactlocation = useLocation();
+  const { lng, lat } = QueryString.parse(reactlocation.search);
   const [nearbyStopsName, setNearbyStopsName] = useState([]);
   const {
     state: {
@@ -41,35 +44,50 @@ function NearbyStopsBox() {
 
       for (var i = 0; i < nearbyStops.length; i++) {
         let routes = [];
-        for (var j = 0; j < nearbyStops[i].stationStops.length; j++) {
+        for (var j = 0; j < nearbyStops[i].stationIDs.length; j++) {
           for (
             var k = 0;
-            k < nearbyStops[i].stationStops[j].routes.length;
+            k < nearbyStops[i].stationIDs[j].stationStops.length;
             k++
           ) {
-            let flag = true;
-            for (var l = 0; l < routes.length; l++) {
-              if (routes[l] == nearbyStops[i].stationStops[j].routes[k]) {
-                flag = false;
-                l = routes.length;
+            for (
+              var l = 0;
+              l < nearbyStops[i].stationIDs[j].stationStops[k].routes.length;
+              l++
+            ) {
+              let flag = true;
+              for (var m = 0; m < routes.length; m++) {
+                if (
+                  routes[m] ==
+                  nearbyStops[i].stationIDs[j].stationStops[k].routes[l]
+                ) {
+                  flag = false;
+                  m = routes.length;
+                }
               }
-            }
-            if (flag) {
-              routes.push(nearbyStops[i].stationStops[j].routes[k]);
+              if (flag) {
+                routes.push(
+                  nearbyStops[i].stationIDs[j].stationStops[k].routes[l],
+                );
+              }
             }
           }
         }
+
         array.push({
           stationName: nearbyStops[i].stationName,
+          stationID: nearbyStops[i].stationIDs[0].stationID,
+          stationDistance: nearbyStops[i].stationIDs[0].stationDistance,
           stationRoutes: routes,
         });
       }
+
       setNearbyStopsName(array);
     }
   }, [nearbyStops]);
 
   useEffect(() => {
-    console.log(nearbyStopsName);
+    // console.log(nearbyStopsName);
   }, [nearbyStopsName]);
 
   return (
@@ -92,7 +110,7 @@ function NearbyStopsBox() {
           {nearbyStopsName.map((nearbyStop, index) => (
             <div className={styles.nearbyBox_certainStopBox} key={index}>
               <Link
-                to={`${path.certainStop}?clickStopIndex=${index}`}
+                to={`${path.certainStop}?lng=${lng}&lat=${lat}&stationName=${nearbyStop.stationName}&stationID=${nearbyStop.stationID}&stationDistance=${nearbyStop.stationDistance}`}
                 className={styles.certainStopBox_linkSetting}
               >
                 <div className={styles.certainStopBox_frontBox}>
