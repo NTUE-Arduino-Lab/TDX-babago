@@ -14,8 +14,10 @@ function NearbyStopsBox() {
   const reactlocation = useLocation();
   const { lng, lat } = QueryString.parse(reactlocation.search);
   const [nearbyStopsName, setNearbyStopsName] = useState([]);
+  const [stationCount, setStationCount] = useState(0);
   const {
     state: {
+      location,
       nearbyStops,
       // requestdata: { loading },
     },
@@ -41,10 +43,12 @@ function NearbyStopsBox() {
   useEffect(() => {
     if (nearbyStops) {
       let array = [];
+      let count = [];
 
       for (var i = 0; i < nearbyStops.length; i++) {
         let routes = [];
         for (var j = 0; j < nearbyStops[i].stationIDs.length; j++) {
+          count++;
           for (
             var k = 0;
             k < nearbyStops[i].stationIDs[j].stationStops.length;
@@ -82,13 +86,14 @@ function NearbyStopsBox() {
         });
       }
 
+      setStationCount(count);
       setNearbyStopsName(array);
     }
   }, [nearbyStops]);
 
   useEffect(() => {
     // console.log(nearbyStopsName);
-  }, [nearbyStopsName]);
+  }, [location, nearbyStopsName, stationCount]);
 
   return (
     // <>
@@ -98,12 +103,16 @@ function NearbyStopsBox() {
     <div className={styles.sidebar_box}>
       <div className={styles.nearbyBox_titleBox}>
         <div>附近站牌</div>
-        <div className={styles.titleBox_stopsInfo}>
-          <div>台北市</div>
-          <div>大安區</div>
-          <div>｜</div>
-          <div>6站</div>
-        </div>
+        {location && stationCount ? (
+          <div className={styles.titleBox_stopsInfo}>
+            <div>{location.city}</div>
+            <div>{location.town}</div>
+            <div>｜</div>
+            <div>{stationCount}站</div>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       {nearbyStopsName.length > 0 ? (
         <div className={styles.nearbyBox_AllStopBox}>
