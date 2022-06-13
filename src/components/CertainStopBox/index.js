@@ -26,6 +26,7 @@ import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 function CertainStopBox() {
   // const [getRef, setRef] = useDynamicRefs();
   // const [overSize, SetOverSize] = useState([]);
+  const [openRoutes, setOpenRoutes] = useState('0');
 
   const reactlocation = useLocation();
   const { lng, lat, stationID, stationName, stationDistance } =
@@ -153,64 +154,62 @@ function CertainStopBox() {
         <div className={styles.certainStopBox_AllRouteBox}>
           {currentBuses.map((currentRoutesBus, index) => (
             <div className={styles.certainStopBox_certainRouteBox} key={index}>
-              <Link
-                to={
-                  certainRoutes[index]
-                    ? `${path.certainRoute}?lng=${lng}&lat=${lat}&stationID=${stationID}&routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${certainRoutes[index].departureStopNameZh}&destinationStopNameZh=${certainRoutes[index].destinationStopNameZh}`
-                    : ''
-                }
-                className={styles.certainRouteBox_linkSetting}
+              <div
+                className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}
+                key={index}
+                onClick={() => {
+                  setOpenRoutes(currentRoutesBus.routeName + index);
+                }}
               >
-                <div
-                  className={`${styles.certainRouteBox_frontBox} ${styles.box__alignItemsCenter}`}
-                  key={index}
-                >
-                  <div className={styles.certainRouteBox_routeInfo}>
-                    <div
-                      // ref={setRef(currentRoutesBus.routeName + '_div')}
-                      className={styles.certainRouteBox_routeNameBox}
-                    >
-                      <p
-                        // ref={setRef(currentRoutesBus.routeName + '_p')}
-                        // className={
-                        //   overSize[index]
-                        //     ? `${styles.marquee_animation} ${styles.certainRouteBox_routeName}`
-                        //     : `${styles.certainRouteBox_routeName}`
-                        // }
-                        className={styles.certainRouteBox_routeName}
-                      >
-                        {currentRoutesBus.routeName}
-                      </p>
-                    </div>
-                    <div className={styles.certainRouteBox_routeDirection}>
-                      {!certainRoutes[index] ||
-                      currentRoutesBus.direction == 225
-                        ? ''
-                        : currentRoutesBus.direction == 2
-                        ? '環形'
-                        : currentRoutesBus.direction == 1
-                        ? `往${certainRoutes[index].departureStopNameZh}`
-                        : `往${certainRoutes[index].destinationStopNameZh}`}
-                    </div>
-                  </div>
+                <div className={styles.certainRouteBox_routeInfo}>
                   <div
-                    className={
-                      currentRoutesBus.stopStatus === '進站中'
-                        ? `${styles.certainRouteBox_routeState} ${styles.routeState__textYellow}`
-                        : currentRoutesBus.stopStatus === '尚未發車' ||
-                          currentRoutesBus.stopStatus === '交管不停靠' ||
-                          currentRoutesBus.stopStatus === '末班車已過' ||
-                          currentRoutesBus.stopStatus === '今日未營運'
-                        ? `${styles.certainRouteBox_routeState} ${styles.routeState__textGray}`
-                        : `${styles.certainRouteBox_routeState} ${styles.routeState__textDark}`
-                    }
+                    // ref={setRef(currentRoutesBus.routeName + '_div')}
+                    className={styles.certainRouteBox_routeNameBox}
                   >
-                    {currentRoutesBus.stopStatus}
+                    <p
+                      // ref={setRef(currentRoutesBus.routeName + '_p')}
+                      // className={
+                      //   overSize[index]
+                      //     ? `${styles.marquee_animation} ${styles.certainRouteBox_routeName}`
+                      //     : `${styles.certainRouteBox_routeName}`
+                      // }
+                      className={styles.certainRouteBox_routeName}
+                    >
+                      {currentRoutesBus.routeName}
+                    </p>
+                  </div>
+                  <div className={styles.certainRouteBox_routeDirection}>
+                    {!certainRoutes[index] || currentRoutesBus.direction == 225
+                      ? ''
+                      : currentRoutesBus.direction == 2
+                      ? '環形'
+                      : currentRoutesBus.direction == 1
+                      ? `往${certainRoutes[index].departureStopNameZh}`
+                      : `往${certainRoutes[index].destinationStopNameZh}`}
                   </div>
                 </div>
-              </Link>
+                <div
+                  className={
+                    currentRoutesBus.stopStatus === '進站中'
+                      ? `${styles.certainRouteBox_routeState} ${styles.routeState__textYellow}`
+                      : currentRoutesBus.stopStatus === '尚未發車' ||
+                        currentRoutesBus.stopStatus === '交管不停靠' ||
+                        currentRoutesBus.stopStatus === '末班車已過' ||
+                        currentRoutesBus.stopStatus === '今日未營運'
+                      ? `${styles.certainRouteBox_routeState} ${styles.routeState__textGray}`
+                      : `${styles.certainRouteBox_routeState} ${styles.routeState__textDark}`
+                  }
+                >
+                  {currentRoutesBus.stopStatus}
+                </div>
+              </div>
+
               <div
-                className={`${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.certainRouteBox_ButtonBox}`}
+                className={
+                  openRoutes == currentRoutesBus.routeName + index
+                    ? `${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.certainRouteBox_ButtonBox}`
+                    : `${styles.box_displayNone}`
+                }
               >
                 <div
                   className={`${styles.ButtonBox_Button} ${styles.Button_Blue} ${styles.box__alignItemsCenter}`}
@@ -230,15 +229,20 @@ function CertainStopBox() {
                   />
                   <div>開啟提醒</div>
                 </div>
-                <div
-                  className={`${styles.ButtonBox_Button} ${styles.Button_Blue} ${styles.box__alignItemsCenter}`}
+                <Link
+                  to={
+                    certainRoutes[index]
+                      ? `${path.certainRoute}?lng=${lng}&lat=${lat}&stationID=${stationID}&routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${certainRoutes[index].departureStopNameZh}&destinationStopNameZh=${certainRoutes[index].destinationStopNameZh}`
+                      : ''
+                  }
+                  className={`${styles.ButtonBox_Button} ${styles.Button_Blue} ${styles.box__alignItemsCenter} ${styles.certainRouteBox_linkSetting}`}
                 >
                   <FontAwesomeIcon
                     className={styles.Button_icon}
                     icon={faRoute}
                   />
                   <div>查看路線</div>
-                </div>
+                </Link>
               </div>
             </div>
           ))}

@@ -3,17 +3,23 @@
 
 .sidebar_box {
   width: 100%;
+  height: 45vh;
 }
 .topBox_padding {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   padding: 24px;
   padding-bottom: 0;
   background-color: $color-main;
   margin: -24px;
   margin-bottom: 0;
+  min-height: 108px;
 }
 .bottomBox_padding {
   width: 100%;
   padding: 16px 0px;
+  height: 100%;
+  overflow-y: scroll;
 }
 
 .box__alignItemsCenter {
@@ -106,6 +112,7 @@
 .certainRouteBox_routeDotBox {
   position: relative;
   width: 10%;
+  height: fit-content;
 }
 .routeDotBox_routeLine {
   position: absolute;
