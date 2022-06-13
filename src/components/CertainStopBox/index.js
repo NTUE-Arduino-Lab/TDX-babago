@@ -91,7 +91,7 @@ function CertainStopBox() {
     }
   }, [currentBuses]);
 
-  useEffect(() => {}, [certainRoutes]);
+  useEffect(() => {}, [location, certainRoutes]);
 
   return (
     // <>
