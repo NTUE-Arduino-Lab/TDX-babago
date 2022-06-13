@@ -126,7 +126,7 @@ function CertainStopBox() {
           </div>
         </div>
       ) : (
-        <></>
+        <div className={styles.certainStopBox_titlebox__marginBottom}></div>
       )}
       <div className={styles.certainStopBox_ChangeRouteBox}>
         {nearbyStopsName && nearbyStopsName.length > 0 ? (

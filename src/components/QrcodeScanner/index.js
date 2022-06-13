@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './styles.module.scss';
 import { QrReader } from 'react-qr-reader';
+
+import path from '../../router/path';
+import styles from './styles.module.scss';
 
 function QrcodeScanner() {
   const navigate = useNavigate();
@@ -12,7 +14,7 @@ function QrcodeScanner() {
         onResult={(result, error) => {
           if (result !== undefined) {
             setData(result?.text);
-            navigate(result?.text);
+            navigate(path.certainStop);
           }
 
           if (error) {
