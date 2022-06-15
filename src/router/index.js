@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { StoreProvider } from '../store/reducer';
@@ -15,7 +15,35 @@ import CertainStopPage from '../sidebar/CertainStop';
 import CertainRoutePage from '../sidebar/CertainRoute';
 import ScanQrcodePage from '../sidebar/ScanQrcode';
 
+//firebase
+import { fetchToken, onMessageListener } from '../store/firebase';
+
 const Router = () => {
+  //firebase
+  const [isTokenFound, setTokenFound] = useState(false);
+  const [notification, setNotification] = useState({ title: '', body: '' });
+  fetchToken(setTokenFound);
+
+  onMessageListener()
+    .then((payload) => {
+      setNotification({
+        title: payload.notification.title,
+        body: payload.notification.body,
+      });
+      console.log(payload);
+    })
+    .catch((err) => console.log('failed: ', err));
+
+  useEffect(() => {
+    setNotification({
+      title: '潘佑萱',
+      body: '陳穎融',
+    });
+  }, [isTokenFound]);
+
+  useEffect(() => {
+    console.log(notification);
+  }, [notification]);
   return (
     <StoreProvider>
       <BrowserRouter>

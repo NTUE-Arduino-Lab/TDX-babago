@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import * as QueryString from 'query-string';
-// import useDynamicRefs from 'use-dynamic-refs';
+import useDynamicRefs from 'use-dynamic-refs';
 
 import path from '../../router/path';
 import styles from './styles.module.scss';
@@ -27,8 +27,8 @@ import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 
 function CertainStopBox() {
-  // const [getRef, setRef] = useDynamicRefs();
-  // const [overSize, SetOverSize] = useState([]);
+  const [getRef, setRef] = useDynamicRefs();
+  const [overSize, SetOverSize] = useState([]);
 
   const reactlocation = useLocation();
   const { lng, lat, stationID, stationName, stationDistance } =
@@ -151,7 +151,31 @@ function CertainStopBox() {
     }
   }, [currentBuses, remindBuses.length, reserveBus]);
 
-  useEffect(() => {}, [certainRoutes, currentRoutesBuses]);
+  useEffect(() => {
+    if (currentRoutesBuses && certainRoutes && currentRoutesBuses.length > 0) {
+      const array = [];
+      currentRoutesBuses.map((el) => {
+        let p_ref = getRef(el.routeName + '_p');
+        let div_ref = getRef(el.routeName + '_div');
+        if (p_ref !== null && p_ref !== undefined) {
+          if (
+            div_ref.current !== null &&
+            p_ref.current !== null &&
+            p_ref.current.offsetWidth > div_ref.current.offsetWidth
+          ) {
+            console.log(p_ref.current.offsetWidth);
+            console.log(div_ref.current.offsetWidth);
+            array.push(true);
+          } else {
+            array.push(false);
+          }
+        } else {
+          array.push(false);
+        }
+      });
+      SetOverSize(array);
+    }
+  }, [certainRoutes, currentRoutesBuses]);
 
   return (
     // <>
@@ -222,17 +246,16 @@ function CertainStopBox() {
               >
                 <div className={styles.certainRouteBox_routeInfo}>
                   <div
-                    // ref={setRef(currentRoutesBus.routeName + '_div')}
+                    ref={setRef(currentRoutesBus.routeName + 'div')}
                     className={styles.certainRouteBox_routeNameBox}
                   >
                     <p
-                      // ref={setRef(currentRoutesBus.routeName + '_p')}
-                      // className={
-                      //   overSize[index]
-                      //     ? `${styles.marquee_animation} ${styles.certainRouteBox_routeName}`
-                      //     : `${styles.certainRouteBox_routeName}`
-                      // }
-                      className={styles.certainRouteBox_routeName}
+                      ref={setRef(currentRoutesBus.routeName + 'p')}
+                      className={
+                        overSize[index]
+                          ? `${styles.marquee_animation} ${styles.certainRouteBox_routeName}`
+                          : `${styles.certainRouteBox_routeName}`
+                      }
                     >
                       {currentRoutesBus.routeName}
                     </p>
