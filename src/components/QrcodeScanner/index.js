@@ -1,29 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { QrReader } from 'react-qr-reader';
+import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 
-import path from '../../router/path';
+// import path from '../../router/path';
 import styles from './styles.module.scss';
 
 function QrcodeScanner() {
   const navigate = useNavigate();
-  const [data, setData] = useState('No result');
+  const [qrdata, setQrData] = useState('No result');
   return (
     <div className={styles.sidebar_box}>
-      <QrReader
-        onResult={(result, error) => {
-          if (result !== undefined) {
-            setData(result?.text);
-            navigate(path.certainStop);
-          }
-
-          if (error) {
-            console.info(error);
+      <BarcodeScannerComponent
+        width={'100%'}
+        height={'100%'}
+        onUpdate={(err, result) => {
+          if (result) {
+            setQrData(result.text);
+            navigate(result.text);
+          } else {
+            setQrData('Not Found');
           }
         }}
-        style={{ width: '100%' }}
       />
-      <p>{data}</p>
+      <p>{qrdata}</p>
     </div>
   );
 }
