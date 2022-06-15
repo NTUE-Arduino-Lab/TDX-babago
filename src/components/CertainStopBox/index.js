@@ -125,6 +125,7 @@ function CertainStopBox() {
           currentBuses2[i].remindState = remindBusesArray[i];
           if (
             reserveBus &&
+            reserveBus.stationID.stationID == stationID &&
             reserveBus.currentRoutesBus.routeUID == currentBuses2[i].routeUID &&
             reserveBus.currentRoutesBus.direction == currentBuses2[i].direction
           ) {
@@ -138,6 +139,7 @@ function CertainStopBox() {
           currentBuses2[i].remindState = false;
           if (
             reserveBus &&
+            reserveBus.stationID.stationID == stationID &&
             reserveBus.currentRoutesBus.routeUID == currentBuses2[i].routeUID &&
             reserveBus.currentRoutesBus.direction == currentBuses2[i].direction
           ) {

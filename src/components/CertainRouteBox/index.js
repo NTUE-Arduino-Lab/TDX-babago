@@ -11,6 +11,7 @@ import {
   setSelectRouteStopsTime,
   setSelectRouteBuses,
   setRemindBuses,
+  setReserveBus,
 } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -41,6 +42,7 @@ function CertainRouteBox() {
       selectRouteStopsTime,
       selectRouteBuses,
       remindBuses,
+      reserveBus,
       // requestdata: { loading },
     },
     dispatch,
@@ -155,6 +157,33 @@ function CertainRouteBox() {
               }
               for (let i = 0; i < stopsTimeArr2.length; i++) {
                 stopsTimeArr2[i].remindState = remindBusesArray[i];
+                if (
+                  reserveBus &&
+                  !reserveBus.stationID.stationID &&
+                  reserveBus.currentRoutesBus.routeUID == routeUID &&
+                  reserveBus.currentRoutesBus.direction == direction &&
+                  reserveBus.stationID.stationName ==
+                    stopsTimeArr2[i].stopName.Zh_tw
+                ) {
+                  stopsTimeArr2[i].reverseState = true;
+                } else {
+                  stopsTimeArr2[i].reverseState = false;
+                }
+              }
+            } else {
+              for (let i = 0; i < stopsTimeArr2.length; i++) {
+                if (
+                  reserveBus &&
+                  !reserveBus.stationID.stationID &&
+                  reserveBus.currentRoutesBus.routeUID == routeUID &&
+                  reserveBus.currentRoutesBus.direction == direction &&
+                  reserveBus.stationID.stationName ==
+                    stopsTimeArr2[i].stopName.Zh_tw
+                ) {
+                  stopsTimeArr2[i].reverseState = true;
+                } else {
+                  stopsTimeArr2[i].reverseState = false;
+                }
               }
             }
             setStopsTimeArr(stopsTimeArr2);
@@ -162,7 +191,7 @@ function CertainRouteBox() {
         }
       }
     }
-  }, [selectRouteStopsTime, stopsArr, remindBuses.length]);
+  }, [selectRouteStopsTime, stopsArr, remindBuses.length, reserveBus]);
 
   useEffect(() => {
     if (selectRouteBuses) {
@@ -338,15 +367,51 @@ function CertainRouteBox() {
                       : `${styles.stopInfoBox_ButtonBox_close}`
                   }
                 >
-                  <div
-                    className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
-                  >
-                    <FontAwesomeIcon
-                      className={styles.Button_icon}
-                      icon={faBus}
-                    />
-                    <div>預約下車</div>
-                  </div>
+                  {!stop.reverseState ? (
+                    <button
+                      className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                      onClick={() => {
+                        setReserveBus(dispatch, {
+                          bus: {
+                            currentRoutesBus: {
+                              direction,
+                              routeUID,
+                              routeName,
+                              stopStatus: stop.stopStatus,
+                            },
+                            certainRoute: {
+                              departureStopNameZh,
+                              destinationStopNameZh,
+                            },
+                            stationID: {
+                              stationName: stop.stopName.Zh_tw,
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        className={styles.Button_icon}
+                        icon={faBus}
+                      />
+                      <div>預約下車</div>
+                    </button>
+                  ) : (
+                    <button
+                      className={`${styles.ButtonBox_Button} ${styles.Button_cancelButton} ${styles.box__alignItemsCenter}`}
+                      onClick={() => {
+                        setReserveBus(dispatch, {
+                          bus: null,
+                        });
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        className={styles.ButtonBox_icon}
+                        icon={faBus}
+                      />
+                      <div>取消預約</div>
+                    </button>
+                  )}
                   {!stop.remindState ? (
                     <button
                       className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
