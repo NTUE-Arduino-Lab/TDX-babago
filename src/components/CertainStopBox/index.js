@@ -13,6 +13,7 @@ import {
   setCurrentBuses,
   setCertainRoutes,
   setRemindBuses,
+  setReserveBus,
 } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
@@ -40,6 +41,7 @@ function CertainStopBox() {
       currentBuses,
       certainRoutes,
       remindBuses,
+      reserveBus,
       // requestdata: { loading },
     },
     dispatch,
@@ -121,15 +123,33 @@ function CertainStopBox() {
         }
         for (let i = 0; i < currentBuses2.length; i++) {
           currentBuses2[i].remindState = remindBusesArray[i];
+          if (
+            reserveBus &&
+            reserveBus.currentRoutesBus.routeUID == currentBuses2[i].routeUID &&
+            reserveBus.currentRoutesBus.direction == currentBuses2[i].direction
+          ) {
+            currentBuses2[i].reverseState = true;
+          } else {
+            currentBuses2[i].reverseState = false;
+          }
         }
       } else {
         for (let i = 0; i < currentBuses2.length; i++) {
           currentBuses2[i].remindState = false;
+          if (
+            reserveBus &&
+            reserveBus.currentRoutesBus.routeUID == currentBuses2[i].routeUID &&
+            reserveBus.currentRoutesBus.direction == currentBuses2[i].direction
+          ) {
+            currentBuses2[i].reverseState = true;
+          } else {
+            currentBuses2[i].reverseState = false;
+          }
         }
       }
       setCurrentRoutesBuses(currentBuses2);
     }
-  }, [currentBuses, remindBuses.length]);
+  }, [currentBuses, remindBuses.length, reserveBus]);
 
   useEffect(() => {}, [certainRoutes, currentRoutesBuses]);
 
@@ -179,7 +199,6 @@ function CertainStopBox() {
                     ? `${styles.ChangeRouteBox_RouteBox} ${styles.ChangeRouteBox_RouteBoxFocus}`
                     : `${styles.ChangeRouteBox_RouteBox}`
                 }
-                // styles.ChangeRouteBox_RouteBox
                 key={index}
               >
                 {index + 1}
@@ -251,15 +270,46 @@ function CertainStopBox() {
                     : `${styles.box_displayNone}`
                 }
               >
-                <div
-                  className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
-                >
-                  <FontAwesomeIcon
-                    className={styles.Button_icon}
-                    icon={faBus}
-                  />
-                  <div>預約上車</div>
-                </div>
+                {!currentRoutesBus.reverseState ? (
+                  <button
+                    className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                    onClick={() => {
+                      setReserveBus(dispatch, {
+                        bus: {
+                          currentRoutesBus,
+                          certainRoute: certainRoutes[index],
+                          stationID: {
+                            stationName,
+                            stationID,
+                            stationDistance,
+                          },
+                        },
+                      });
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.Button_icon}
+                      icon={faBus}
+                    />
+                    <div>預約上車</div>
+                  </button>
+                ) : (
+                  <button
+                    className={`${styles.ButtonBox_Button} ${styles.Button_cancelButton} ${styles.box__alignItemsCenter}`}
+                    onClick={() => {
+                      setReserveBus(dispatch, {
+                        buses: null,
+                      });
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.ButtonBox_icon}
+                      icon={faBus}
+                    />
+                    <div>取消預約</div>
+                  </button>
+                )}
+
                 {!currentRoutesBus.remindState ? (
                   <button
                     className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}

@@ -523,3 +523,18 @@ export const setRemindBuses = async (dispatch, options) => {
     dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
   }
 };
+
+export const setReserveBus = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { bus } = options;
+
+  try {
+    dispatch({
+      type: type.SET_RESERVEBUS,
+      payload: bus,
+    });
+    dispatch({ type: type.SUCCESS_DATA_REQUEST });
+  } catch (error) {
+    dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+  }
+};
