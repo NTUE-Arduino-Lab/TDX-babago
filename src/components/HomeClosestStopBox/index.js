@@ -41,9 +41,18 @@ function ClosestStopBox() {
   } = useContext(StoreContext);
   const [closestStop, setClosestStop] = useState(null);
   const [currentRoutesBuses, setCurrentRoutesBuses] = useState(null);
+  const [pageUpdate, setPageUpdate] = useState(true);
 
   useEffect(() => {
-    if (nearbyStops) {
+    const timeout = setTimeout(() => {
+      setPageUpdate(!pageUpdate);
+    }, 20000);
+
+    return () => clearTimeout(timeout);
+  }, [pageUpdate]);
+
+  useEffect(() => {
+    if (nearbyStops && nearbyStops[0]) {
       setClosestStop(nearbyStops[0].stationIDs[0]);
     }
   }, [nearbyStops]);
@@ -65,7 +74,7 @@ function ClosestStopBox() {
         setClosestStopDivWidth(ClosestStop_d_ref.current.clientWidth);
       }
     }
-  }, [closestStop]);
+  }, [closestStop, pageUpdate]);
 
   useEffect(() => {
     if (currentBuses && closestStop) {

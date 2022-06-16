@@ -152,6 +152,17 @@ function NearbyStopsBox() {
             </div>
           ))}
         </div>
+      ) : nearbyStopsName && nearbyStopsName.length == 0 ? (
+        <div className={styles.nearbyBox_noInfoBox}>
+          <div className={styles.box__center}>
+            <div className={styles.nearbyBox_noInfoImg}></div>
+          </div>
+          <div className={styles.box__center}>
+            <div className={styles.nearbyBox_noInfoText}>
+              您的周圍沒有 附近站牌
+            </div>
+          </div>
+        </div>
       ) : (
         <></>
       )}

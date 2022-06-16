@@ -49,6 +49,7 @@ function CertainStopBox() {
   const [nearbyStopsName, setNearbyStopsName] = useState(null);
   const [currentRoutesBuses, setCurrentRoutesBuses] = useState(null);
   const [openRoutes, setOpenRoutes] = useState('0');
+  const [pageUpdate, setPageUpdate] = useState(true);
 
   useEffect(() => {
     setSelectRouteStopsSort(dispatch, {
@@ -64,6 +65,14 @@ function CertainStopBox() {
       selectRoute: null,
     });
   }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPageUpdate(!pageUpdate);
+    }, 20000);
+
+    return () => clearTimeout(timeout);
+  }, [pageUpdate]);
 
   useEffect(() => {
     if (nearbyStops && stationName) {
@@ -96,7 +105,7 @@ function CertainStopBox() {
         }
       }
     }
-  }, [nearbyStopsName, stationID]);
+  }, [nearbyStopsName, stationID, pageUpdate]);
 
   useEffect(() => {
     if (currentBuses) {
@@ -235,7 +244,10 @@ function CertainStopBox() {
           <></>
         )}
       </div>
-      {currentRoutesBuses && certainRoutes ? (
+      {currentRoutesBuses &&
+      certainRoutes &&
+      currentRoutesBuses.length > 0 &&
+      certainRoutes.length > 0 ? (
         <div className={styles.certainStopBox_AllRouteBox}>
           {currentRoutesBuses.map((currentRoutesBus, index) => (
             <div className={styles.certainStopBox_certainRouteBox} key={index}>
@@ -406,6 +418,20 @@ function CertainStopBox() {
               </div>
             </div>
           ))}
+        </div>
+      ) : currentRoutesBuses &&
+        certainRoutes &&
+        currentRoutesBuses.length == 0 &&
+        certainRoutes.length == 0 ? (
+        <div className={styles.certainStopBox_noInfoBox}>
+          <div className={styles.box__center}>
+            <div className={styles.certainStopBox_noInfoImg}></div>
+          </div>
+          <div className={styles.box__center}>
+            <div className={styles.certainStopBox_noInfoText}>
+              此站牌沒有 公車路線
+            </div>
+          </div>
         </div>
       ) : (
         <></>

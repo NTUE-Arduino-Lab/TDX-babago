@@ -51,6 +51,7 @@ function CertainRouteBox() {
   const [stopsTimeArr, setStopsTimeArr] = useState(null);
   const [routeBusesArr, setRouteBusesArr] = useState(null);
   const [directionStops, setDirectionStops] = useState(null);
+  const [pageUpdate, setPageUpdate] = useState(true);
 
   useEffect(() => {
     setCurrentBuses(dispatch, {
@@ -58,6 +59,14 @@ function CertainRouteBox() {
       stationID: null,
     });
   }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPageUpdate(!pageUpdate);
+    }, 20000);
+
+    return () => clearTimeout(timeout);
+  }, [pageUpdate]);
 
   useEffect(() => {
     if (routeName && routeUID) {
@@ -80,7 +89,7 @@ function CertainRouteBox() {
         },
       });
     }
-  }, [routeName, routeUID]);
+  }, [routeName, routeUID, pageUpdate]);
 
   useEffect(() => {
     if (selectRouteStopsSort) {
@@ -505,8 +514,8 @@ function CertainRouteBox() {
                 >
                   {stop.buses.length > 0 ? (
                     <div className={styles.stopCircle_plateNumb}>
-                      {stop.buses.map((bus) => (
-                        <div key={`${bus.plateNumb}-${direction}`}>
+                      {stop.buses.map((bus, index) => (
+                        <div key={`${bus.plateNumb}-${index}-${direction}`}>
                           {bus.plateNumb}
                         </div>
                       ))}
