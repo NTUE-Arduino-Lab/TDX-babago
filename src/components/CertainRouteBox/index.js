@@ -151,12 +151,12 @@ function CertainRouteBox() {
               );
               for (let i = 0; i < remindBuses.length; i++) {
                 if (
-                  remindBuses[i].currentRoutesBus.routeUID == routeUID &&
-                  remindBuses[i].currentRoutesBus.direction == direction
+                  remindBuses[i].routeUID == routeUID &&
+                  remindBuses[i].direction == direction
                 ) {
                   for (let j = 0; j < stopsTimeArr2.length; j++) {
                     if (
-                      remindBuses[i].stationID.stationName ==
+                      remindBuses[i].stationName ==
                       stopsTimeArr2[j].stopName.Zh_tw
                     ) {
                       remindBusesArray[j] = true;
@@ -168,11 +168,10 @@ function CertainRouteBox() {
                 stopsTimeArr2[i].remindState = remindBusesArray[i];
                 if (
                   reserveBus &&
-                  !reserveBus.stationID.stationID &&
-                  reserveBus.currentRoutesBus.routeUID == routeUID &&
-                  reserveBus.currentRoutesBus.direction == direction &&
-                  reserveBus.stationID.stationName ==
-                    stopsTimeArr2[i].stopName.Zh_tw
+                  !reserveBus.stationID &&
+                  reserveBus.routeUID == routeUID &&
+                  reserveBus.direction == direction &&
+                  reserveBus.stationName == stopsTimeArr2[i].stopName.Zh_tw
                 ) {
                   stopsTimeArr2[i].reverseState = true;
                 } else {
@@ -183,11 +182,10 @@ function CertainRouteBox() {
               for (let i = 0; i < stopsTimeArr2.length; i++) {
                 if (
                   reserveBus &&
-                  !reserveBus.stationID.stationID &&
-                  reserveBus.currentRoutesBus.routeUID == routeUID &&
-                  reserveBus.currentRoutesBus.direction == direction &&
-                  reserveBus.stationID.stationName ==
-                    stopsTimeArr2[i].stopName.Zh_tw
+                  !reserveBus.stationID &&
+                  reserveBus.routeUID == routeUID &&
+                  reserveBus.direction == direction &&
+                  reserveBus.stationName == stopsTimeArr2[i].stopName.Zh_tw
                 ) {
                   stopsTimeArr2[i].reverseState = true;
                 } else {
@@ -382,19 +380,13 @@ function CertainRouteBox() {
                       onClick={() => {
                         setReserveBus(dispatch, {
                           bus: {
-                            currentRoutesBus: {
-                              direction,
-                              routeUID,
-                              routeName,
-                              stopStatus: stop.stopStatus,
-                            },
-                            certainRoute: {
-                              departureStopNameZh,
-                              destinationStopNameZh,
-                            },
-                            stationID: {
-                              stationName: stop.stopName.Zh_tw,
-                            },
+                            direction,
+                            routeUID,
+                            routeName,
+                            stopStatus: stop.stopStatus,
+                            departureStopNameZh,
+                            destinationStopNameZh,
+                            stationName: stop.stopName.Zh_tw,
                           },
                         });
                       }}
@@ -427,19 +419,13 @@ function CertainRouteBox() {
                       onClick={() => {
                         let busesArr = [...remindBuses];
                         busesArr.push({
-                          currentRoutesBus: {
-                            direction,
-                            routeUID,
-                            routeName,
-                            stopStatus: stop.stopStatus,
-                          },
-                          certainRoute: {
-                            departureStopNameZh,
-                            destinationStopNameZh,
-                          },
-                          stationID: {
-                            stationName: stop.stopName.Zh_tw,
-                          },
+                          stationName: stop.stopName.Zh_tw,
+                          routeUID,
+                          routeName,
+                          direction,
+                          stopStatus: stop.stopStatus,
+                          departureStopNameZh,
+                          destinationStopNameZh,
                         });
                         setRemindBuses(dispatch, {
                           buses: busesArr,
@@ -459,11 +445,9 @@ function CertainRouteBox() {
                         let busesArr = [...remindBuses];
                         for (let i = 0; i < busesArr.length; i++) {
                           if (
-                            busesArr[i].currentRoutesBus.direction ==
-                              direction &&
-                            busesArr[i].currentRoutesBus.routeUID == routeUID &&
-                            busesArr[i].stationID.stationName ==
-                              stop.stopName.Zh_tw
+                            busesArr[i].direction == direction &&
+                            busesArr[i].routeUID == routeUID &&
+                            busesArr[i].stationName == stop.stopName.Zh_tw
                           ) {
                             busesArr.splice(i, 1);
                             i = busesArr.length - 1;

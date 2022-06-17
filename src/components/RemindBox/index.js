@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import styles from './styles.module.scss';
 
 import { setRemindBuses } from '../../store/actions';
@@ -15,8 +15,24 @@ function RemindBox() {
     },
     dispatch,
   } = useContext(StoreContext);
+  const [pageUpdate, setPageUpdate] = useState(true);
 
-  useEffect(() => {}, [remindBuses.length]);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPageUpdate(!pageUpdate);
+    }, 20000);
+
+    return () => clearTimeout(timeout);
+  }, [pageUpdate]);
+
+  useEffect(() => {
+    if (remindBuses) {
+      setRemindBuses(dispatch, {
+        buses: remindBuses,
+        update: true,
+      });
+    }
+  }, [remindBuses.length, pageUpdate]);
 
   return (
     <div className={styles.sidebar_box}>
@@ -29,16 +45,16 @@ function RemindBox() {
               >
                 <div>
                   <div className={styles.routeInfoBox_routeName}>
-                    {bus.currentRoutesBus.routeName}
+                    {bus.routeName}
                   </div>
                   <div className={styles.routeInfoBox_routeDirection}>
-                    {bus.currentRoutesBus.direction == 225
+                    {bus.direction == 225
                       ? ''
-                      : bus.currentRoutesBus.direction == 2
+                      : bus.direction == 2
                       ? '環形'
-                      : bus.currentRoutesBus.direction == 1
-                      ? `往${bus.certainRoute.departureStopNameZh}`
-                      : `往${bus.certainRoute.destinationStopNameZh}`}
+                      : bus.direction == 1
+                      ? `往${bus.departureStopNameZh}`
+                      : `往${bus.destinationStopNameZh}`}
                   </div>
                 </div>
                 <div
@@ -46,7 +62,7 @@ function RemindBox() {
                 >
                   <div className={styles.routeTimeBox_Time}>{/* 20 */}</div>
                   <div className={styles.routeTimeBox_Minute}>
-                    {bus.currentRoutesBus.stopStatus}
+                    {bus.stopStatus}
                   </div>
                 </div>
               </div>
@@ -54,7 +70,7 @@ function RemindBox() {
                 className={`${styles.routeInfoBox_stopName} ${styles.box__flex} ${styles.box__alignItemsCenter}`}
               >
                 <FontAwesomeIcon icon={faFlag} />
-                <div>{bus.stationID.stationName}</div>
+                <div>{bus.stationName}</div>
               </div>
               <div className={styles.box__end}>
                 <button

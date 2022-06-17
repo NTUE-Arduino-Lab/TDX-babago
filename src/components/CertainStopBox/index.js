@@ -98,9 +98,9 @@ function CertainStopBox() {
             authorityCodes: nearbyStopsName[i].authorityCodes,
             stationID: stationID,
           });
-          setCertainRoutes(dispatch, {
-            currentBuses: null,
-          });
+          // setCertainRoutes(dispatch, {
+          //   currentBuses: null,
+          // });
           i = nearbyStopsName.length;
         }
       }
@@ -117,13 +117,11 @@ function CertainStopBox() {
       if (remindBuses.length > 0) {
         let remindBusesArray = new Array(currentBuses2.length).fill(false);
         for (let i = 0; i < remindBuses.length; i++) {
-          if (remindBuses[i].stationID.stationID == stationID) {
+          if (remindBuses[i].stationName == stationName) {
             for (let j = 0; j < currentBuses2.length; j++) {
               if (
-                remindBuses[i].currentRoutesBus.routeUID ==
-                  currentBuses2[j].routeUID &&
-                remindBuses[i].currentRoutesBus.direction ==
-                  currentBuses2[j].direction
+                remindBuses[i].routeUID == currentBuses2[j].routeUID &&
+                remindBuses[i].direction == currentBuses2[j].direction
               ) {
                 remindBusesArray[j] = true;
               }
@@ -134,9 +132,9 @@ function CertainStopBox() {
           currentBuses2[i].remindState = remindBusesArray[i];
           if (
             reserveBus &&
-            reserveBus.stationID.stationID == stationID &&
-            reserveBus.currentRoutesBus.routeUID == currentBuses2[i].routeUID &&
-            reserveBus.currentRoutesBus.direction == currentBuses2[i].direction
+            reserveBus.stationID == stationID &&
+            reserveBus.routeUID == currentBuses2[i].routeUID &&
+            reserveBus.direction == currentBuses2[i].direction
           ) {
             currentBuses2[i].reverseState = true;
           } else {
@@ -148,9 +146,9 @@ function CertainStopBox() {
           currentBuses2[i].remindState = false;
           if (
             reserveBus &&
-            reserveBus.stationID.stationID == stationID &&
-            reserveBus.currentRoutesBus.routeUID == currentBuses2[i].routeUID &&
-            reserveBus.currentRoutesBus.direction == currentBuses2[i].direction
+            reserveBus.stationID == stationID &&
+            reserveBus.routeUID == currentBuses2[i].routeUID &&
+            reserveBus.direction == currentBuses2[i].direction
           ) {
             currentBuses2[i].reverseState = true;
           } else {
@@ -313,13 +311,16 @@ function CertainStopBox() {
                     onClick={() => {
                       setReserveBus(dispatch, {
                         bus: {
-                          currentRoutesBus,
-                          certainRoute: certainRoutes[index],
-                          stationID: {
-                            stationName,
-                            stationID,
-                            stationDistance,
-                          },
+                          stationID,
+                          stationName,
+                          routeUID: currentRoutesBus.routeUID,
+                          routeName: currentRoutesBus.routeName,
+                          direction: currentRoutesBus.direction,
+                          stopStatus: currentRoutesBus.stopStatus,
+                          departureStopNameZh:
+                            certainRoutes[index].departureStopNameZh,
+                          destinationStopNameZh:
+                            certainRoutes[index].destinationStopNameZh,
                         },
                       });
                     }}
@@ -351,15 +352,17 @@ function CertainStopBox() {
                   <button
                     className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
                     onClick={() => {
-                      let busesArr = remindBuses;
+                      let busesArr = [...remindBuses];
                       busesArr.push({
-                        currentRoutesBus,
-                        certainRoute: certainRoutes[index],
-                        stationID: {
-                          stationName,
-                          stationID,
-                          stationDistance,
-                        },
+                        stationName,
+                        routeUID: currentRoutesBus.routeUID,
+                        routeName: currentRoutesBus.routeName,
+                        direction: currentRoutesBus.direction,
+                        stopStatus: currentRoutesBus.stopStatus,
+                        departureStopNameZh:
+                          certainRoutes[index].departureStopNameZh,
+                        destinationStopNameZh:
+                          certainRoutes[index].destinationStopNameZh,
                       });
                       setRemindBuses(dispatch, {
                         buses: busesArr,
@@ -379,11 +382,9 @@ function CertainStopBox() {
                       let busesArr = [...remindBuses];
                       for (let i = 0; i < busesArr.length; i++) {
                         if (
-                          busesArr[i].stationID.stationID == stationID &&
-                          busesArr[i].currentRoutesBus.direction ==
-                            currentRoutesBus.direction &&
-                          busesArr[i].currentRoutesBus.routeUID ==
-                            currentRoutesBus.routeUID
+                          busesArr[i].stationName == stationName &&
+                          busesArr[i].direction == currentRoutesBus.direction &&
+                          busesArr[i].routeUID == currentRoutesBus.routeUID
                         ) {
                           busesArr.splice(i, 1);
                           i = busesArr.length - 1;
