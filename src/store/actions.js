@@ -634,3 +634,29 @@ export const setReserveBus = async (dispatch, options) => {
     dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
   }
 };
+
+export const setVehicle = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { cityEn, vehicle } = options;
+  let vehicle2 = vehicle;
+
+  try {
+    const url = `${TDXBUS_URL}/Vehicle/City/${cityEn}`;
+
+    const config = {
+      headers: GetAuthorizationHeader(),
+    };
+    const response = await axios.get(url, config);
+    const data = response.data;
+
+    vehicle2[cityEn] = data;
+
+    dispatch({
+      type: type.SET_VEHICLE,
+      payload: vehicle2,
+    });
+    dispatch({ type: type.SUCCESS_DATA_REQUEST });
+  } catch (error) {
+    dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+  }
+};

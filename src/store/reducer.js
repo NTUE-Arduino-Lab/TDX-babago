@@ -16,6 +16,7 @@ const initialState = {
   selectRouteBuses: null,
   remindBuses: [],
   reserveBus: null,
+  vehicle: {},
   requestdata: { loading: false, error: null },
 };
 
@@ -70,6 +71,11 @@ function reducer(state, action) {
       return {
         ...state,
         reserveBus: action.payload,
+      };
+    case type.SET_VEHICLE:
+      return {
+        ...state,
+        vehicle: action.payload,
       };
     case type.BEGIN_DATA_REQUEST:
       return {
