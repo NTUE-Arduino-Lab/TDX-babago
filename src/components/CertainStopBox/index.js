@@ -248,11 +248,11 @@ function CertainStopBox() {
               >
                 <div className={styles.certainRouteBox_routeInfo}>
                   <div
-                    ref={setRef(currentRoutesBus.routeName + 'div')}
+                    ref={setRef(currentRoutesBus.routeName + '_div')}
                     className={styles.certainRouteBox_routeNameBox}
                   >
                     <p
-                      ref={setRef(currentRoutesBus.routeName + 'p')}
+                      ref={setRef(currentRoutesBus.routeName + '_p')}
                       className={
                         overSize[index]
                           ? `${styles.marquee_animation} ${styles.certainRouteBox_routeName}`

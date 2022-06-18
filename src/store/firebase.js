@@ -21,6 +21,7 @@ const publicKey =
   'BJhB-CwmACWUjwyfpVFXeTKMQ5O2GeBAcy7u3Js7SA3Lw4XmipfUiStp1DcbsuhzEzuYCdJBVvGTXmDDWpcAq1c';
 
 export const fetchToken = (setTokenFound) => {
+  const messaging = getMessaging();
   return getToken(messaging, {
     vapidKey: publicKey,
   })

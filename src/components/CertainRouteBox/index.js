@@ -285,7 +285,7 @@ function CertainRouteBox() {
                 className={styles.Button_icon}
                 icon={faInfoCircle}
               />
-              <div>路線規劃</div>
+              <div>路線資訊</div>
             </div>
           </div>
           <div
