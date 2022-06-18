@@ -154,7 +154,6 @@
   top: 50%;
   transform: translateY(-50%);
   right: 16px;
-  padding: 2px;
   white-space: nowrap;
   background-color: $color-background;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
@@ -171,6 +170,24 @@
   height: 2px;
   background-color: $color-main;
   transform: translateX(100%);
+}
+
+.plateNumb_icon {
+  background: $color-main;
+  padding: 2px 3px;
+  background-color: $color-main;
+  color: #fcfcfc;
+  @include P;
+}
+.icon_topLeft_radius {
+  border-top-left-radius: 5px;
+}
+.icon_bottomLeft_radius {
+  border-bottom-left-radius: 5px;
+}
+
+.plateNumb_text {
+  padding: 2px;
 }
 
 .routeState__textYellow {
@@ -212,7 +229,7 @@
   color: #fcfcfc;
   background-color: $color-main;
 }
-.Button_cancelButton{
+.Button_cancelButton {
   background: #fcfcfc;
   color: $color-main;
   border: $color-main 1px solid;

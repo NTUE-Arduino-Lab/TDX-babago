@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import styles from './styles.module.scss';
 
 import { setReserveBus } from '../../store/actions';
@@ -15,30 +15,46 @@ function ReserveBox() {
     },
     dispatch,
   } = useContext(StoreContext);
+  const [pageUpdate, setPageUpdate] = useState(true);
 
-  useEffect(() => {}, [reserveBus]);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPageUpdate(!pageUpdate);
+    }, 20000);
+
+    return () => clearTimeout(timeout);
+  }, [pageUpdate]);
+
+  useEffect(() => {
+    if (reserveBus && reserveBus.stationID) {
+      setReserveBus(dispatch, {
+        bus: reserveBus,
+        update: true,
+      });
+    }
+  }, [reserveBus, pageUpdate]);
 
   return (
     <div className={styles.sidebar_box}>
       {reserveBus ? (
         <>
-          {reserveBus.stationID.stationID ? (
+          {reserveBus.stationID ? (
             <div className={`${styles.reserveBox}`}>
               <div
                 className={`${styles.reserveBox_routeInfoBox} ${styles.box__spaceBetween} ${styles.box__alignItemsCenter}`}
               >
                 <div>
                   <div className={styles.routeInfoBox_routeName}>
-                    {reserveBus.currentRoutesBus.routeName}
+                    {reserveBus.routeName}
                   </div>
                   <div className={styles.routeInfoBox_routeDirection}>
-                    {reserveBus.currentRoutesBus.direction == 225
+                    {reserveBus.direction == 225
                       ? ''
-                      : reserveBus.currentRoutesBus.direction == 2
+                      : reserveBus.direction == 2
                       ? '環形'
-                      : reserveBus.currentRoutesBus.direction == 1
-                      ? `往${reserveBus.certainRoute.departureStopNameZh}`
-                      : `往${reserveBus.certainRoute.destinationStopNameZh}`}
+                      : reserveBus.direction == 1
+                      ? `往${reserveBus.departureStopNameZh}`
+                      : `往${reserveBus.destinationStopNameZh}`}
                   </div>
                 </div>
                 <div
@@ -46,7 +62,7 @@ function ReserveBox() {
                 >
                   <div className={styles.routeTimeBox_Time}>{/* 20 */}</div>
                   <div className={styles.routeTimeBox_Minute}>
-                    {reserveBus.currentRoutesBus.stopStatus}
+                    {reserveBus.stopStatus}
                   </div>
                 </div>
               </div>
@@ -54,7 +70,7 @@ function ReserveBox() {
                 className={`${styles.routeInfoBox_stopName} ${styles.box__flex} ${styles.box__alignItemsCenter}`}
               >
                 <FontAwesomeIcon icon={faFlag} />
-                <div>{reserveBus.stationID.stationName}</div>
+                <div>{reserveBus.stationName}</div>
               </div>
               <div className={styles.box__end}>
                 <button
@@ -82,7 +98,7 @@ function ReserveBox() {
               >
                 <div>
                   <div className={styles.routeInfoBox_StopName}>
-                    {reserveBus.stationID.stationName}
+                    {reserveBus.stationName}
                   </div>
                 </div>
                 <div
@@ -97,13 +113,13 @@ function ReserveBox() {
               >
                 <FontAwesomeIcon icon={faBus} />
                 <div>
-                  {reserveBus.currentRoutesBus.direction == 225
-                    ? reserveBus.currentRoutesBus.routeName
-                    : reserveBus.currentRoutesBus.direction == 2
-                    ? `${reserveBus.currentRoutesBus.routeName} - 環形`
-                    : reserveBus.currentRoutesBus.direction == 1
-                    ? `${reserveBus.currentRoutesBus.routeName} - 往${reserveBus.certainRoute.departureStopNameZh}`
-                    : `${reserveBus.currentRoutesBus.routeName} - 往${reserveBus.certainRoute.destinationStopNameZh}`}
+                  {reserveBus.direction == 225
+                    ? reserveBus.routeName
+                    : reserveBus.direction == 2
+                    ? `${reserveBus.routeName} - 環形`
+                    : reserveBus.direction == 1
+                    ? `${reserveBus.routeName} - 往${reserveBus.departureStopNameZh}`
+                    : `${reserveBus.routeName} - 往${reserveBus.destinationStopNameZh}`}
                 </div>
               </div>
               <div
@@ -120,7 +136,7 @@ function ReserveBox() {
                   className={`${styles.buttonBox_button} ${styles.button_cancel} ${styles.box__alignItemsCenter} ${styles.box__center}`}
                   onClick={() => {
                     setReserveBus(dispatch, {
-                      buses: null,
+                      bus: null,
                     });
                   }}
                 >

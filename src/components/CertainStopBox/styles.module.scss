@@ -203,3 +203,20 @@
     transform: translateX(-100%);
   }
 }
+
+.certainStopBox_noInfoBox{
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background-color: $color-background;
+}
+.certainStopBox_noInfoImg {
+  background-image: url(../../asset/imgs/undraw_lost_re_xqjt.svg);
+  width: 200px;
+  height: 160px;
+}
+.certainStopBox_noInfoText {
+  @include H2;
+}
+

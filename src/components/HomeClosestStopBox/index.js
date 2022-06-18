@@ -41,9 +41,18 @@ function ClosestStopBox() {
   } = useContext(StoreContext);
   const [closestStop, setClosestStop] = useState(null);
   const [currentRoutesBuses, setCurrentRoutesBuses] = useState(null);
+  const [pageUpdate, setPageUpdate] = useState(true);
 
   useEffect(() => {
-    if (nearbyStops) {
+    const timeout = setTimeout(() => {
+      setPageUpdate(!pageUpdate);
+    }, 20000);
+
+    return () => clearTimeout(timeout);
+  }, [pageUpdate]);
+
+  useEffect(() => {
+    if (nearbyStops && nearbyStops[0]) {
       setClosestStop(nearbyStops[0].stationIDs[0]);
     }
   }, [nearbyStops]);
@@ -65,7 +74,7 @@ function ClosestStopBox() {
         setClosestStopDivWidth(ClosestStop_d_ref.current.clientWidth);
       }
     }
-  }, [closestStop]);
+  }, [closestStop, pageUpdate]);
 
   useEffect(() => {
     if (currentBuses && closestStop) {
@@ -83,11 +92,11 @@ function ClosestStopBox() {
       if (array.length > 0) {
         const remindBusesArray = new Array(array.length).fill(false);
         for (let i = 0; i < remindBuses.length; i++) {
-          if (remindBuses[i].stationID.stationID == closestStop.stationID) {
+          if (remindBuses[i].stationName == closestStop.stationName) {
             for (let j = 0; j < array.length; j++) {
               if (
-                remindBuses[i].currentRoutesBus.routeUID == array[j].routeUID &&
-                remindBuses[i].currentRoutesBus.direction == array[j].direction
+                remindBuses[i].routeUID == array[j].routeUID &&
+                remindBuses[i].direction == array[j].direction
               ) {
                 remindBusesArray[j] = true;
               }
@@ -231,9 +240,15 @@ function ClosestStopBox() {
                         onClick={() => {
                           let busesArr = [...remindBuses];
                           busesArr.push({
-                            currentRoutesBus,
-                            certainRoute: certainRoutes[index],
-                            stationID: closestStop,
+                            stationName: closestStop.stationName,
+                            routeUID: currentRoutesBus.routeUID,
+                            routeName: currentRoutesBus.routeName,
+                            direction: currentRoutesBus.direction,
+                            stopStatus: currentRoutesBus.stopStatus,
+                            departureStopNameZh:
+                              certainRoutes[index].departureStopNameZh,
+                            destinationStopNameZh:
+                              certainRoutes[index].destinationStopNameZh,
                           });
                           setRemindBuses(dispatch, {
                             buses: busesArr,
@@ -253,12 +268,11 @@ function ClosestStopBox() {
                           let busesArr = [...remindBuses];
                           for (let i = 0; i < busesArr.length; i++) {
                             if (
-                              busesArr[i].stationID.stationID ==
-                                closestStop.stationID &&
-                              busesArr[i].currentRoutesBus.direction ==
+                              busesArr[i].stationName ==
+                                closestStop.stationName &&
+                              busesArr[i].direction ==
                                 currentRoutesBus.direction &&
-                              busesArr[i].currentRoutesBus.routeUID ==
-                                currentRoutesBus.routeUID
+                              busesArr[i].routeUID == currentRoutesBus.routeUID
                             ) {
                               busesArr.splice(i, 1);
                               i = busesArr.length - 1;

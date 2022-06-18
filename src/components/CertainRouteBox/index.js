@@ -5,6 +5,8 @@ import * as QueryString from 'query-string';
 import path from '../../router/path';
 import styles from './styles.module.scss';
 
+import cityJson from '../../asset/json/city.json';
+
 import {
   setCurrentBuses,
   setSelectRouteStopsSort,
@@ -12,6 +14,7 @@ import {
   setSelectRouteBuses,
   setRemindBuses,
   setReserveBus,
+  setVehicle,
 } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -43,6 +46,7 @@ function CertainRouteBox() {
       selectRouteBuses,
       remindBuses,
       reserveBus,
+      vehicle,
       // requestdata: { loading },
     },
     dispatch,
@@ -51,6 +55,8 @@ function CertainRouteBox() {
   const [stopsTimeArr, setStopsTimeArr] = useState(null);
   const [routeBusesArr, setRouteBusesArr] = useState(null);
   const [directionStops, setDirectionStops] = useState(null);
+  const [pageUpdate, setPageUpdate] = useState(true);
+  const [city, setCity] = useState(null);
 
   useEffect(() => {
     setCurrentBuses(dispatch, {
@@ -60,27 +66,35 @@ function CertainRouteBox() {
   }, []);
 
   useEffect(() => {
-    if (routeName && routeUID) {
-      setSelectRouteStopsSort(dispatch, {
-        selectRoute: {
-          routeName,
-          routeUID,
-        },
-      });
-      setSelectRouteStopsTime(dispatch, {
-        selectRoute: {
-          routeName,
-          routeUID,
-        },
-      });
-      setSelectRouteBuses(dispatch, {
-        selectRoute: {
-          routeName,
-          routeUID,
-        },
-      });
+    const timeout = setTimeout(() => {
+      setPageUpdate(!pageUpdate);
+    }, 20000);
+
+    return () => clearTimeout(timeout);
+  }, [pageUpdate]);
+
+  useEffect(() => {
+    for (let i = 0; i < cityJson.length; i++) {
+      if (cityJson[i].AuthorityCode === routeUID.substring(0, 3)) {
+        if (!city) {
+          setCity(cityJson[i].cityEn);
+        } else if (!vehicle[city]) {
+          setVehicle(dispatch, {
+            vehicle,
+            cityEn: cityJson[i].cityEn,
+          });
+        } else if (routeName && routeUID) {
+          setSelectRouteStopsSort(dispatch, {
+            selectRoute: {
+              routeName,
+              routeUID,
+            },
+          });
+        }
+        i == cityJson.length;
+      }
     }
-  }, [routeName, routeUID]);
+  }, [routeName, routeUID, pageUpdate, city && vehicle[city]]);
 
   useEffect(() => {
     if (selectRouteStopsSort) {
@@ -93,6 +107,17 @@ function CertainRouteBox() {
       }
     }
   }, [selectRouteStopsSort, direction]);
+
+  useEffect(() => {
+    if (stopsArr) {
+      setSelectRouteStopsTime(dispatch, {
+        selectRoute: {
+          routeName,
+          routeUID,
+        },
+      });
+    }
+  }, [stopsArr]);
 
   useEffect(() => {
     if (selectRouteStopsTime && stopsArr && stopsArr.length > 0) {
@@ -111,19 +136,18 @@ function CertainRouteBox() {
               stopName: stopsArr[i].StopName,
               stopBoarding: stopsArr[i].StopBoarding,
               stopStatus:
-                selectRouteStopsTime2[j].stopStatus == 4
+                Math.round(selectRouteStopsTime2[j].estimateTime / 60) <= 1
+                  ? '進站中'
+                  : Math.round(selectRouteStopsTime2[j].estimateTime / 60) > 1
+                  ? `${Math.round(
+                      selectRouteStopsTime2[j].estimateTime / 60,
+                    )} 分`
+                  : selectRouteStopsTime2[j].stopStatus == 4
                   ? '今日未營運'
                   : selectRouteStopsTime2[j].stopStatus == 3
                   ? '末班車已過'
                   : selectRouteStopsTime2[j].stopStatus == 2
                   ? '交管不停靠'
-                  : selectRouteStopsTime2[j].stopStatus == 0 &&
-                    Math.round(selectRouteStopsTime2[j].estimateTime / 60) <= 1
-                  ? '進站中'
-                  : selectRouteStopsTime2[j].stopStatus == 0
-                  ? `${Math.round(
-                      selectRouteStopsTime2[j].estimateTime / 60,
-                    )} 分`
                   : '尚未發車',
               remindState: false,
               buses: [],
@@ -142,12 +166,12 @@ function CertainRouteBox() {
               );
               for (let i = 0; i < remindBuses.length; i++) {
                 if (
-                  remindBuses[i].currentRoutesBus.routeUID == routeUID &&
-                  remindBuses[i].currentRoutesBus.direction == direction
+                  remindBuses[i].routeUID == routeUID &&
+                  remindBuses[i].direction == direction
                 ) {
                   for (let j = 0; j < stopsTimeArr2.length; j++) {
                     if (
-                      remindBuses[i].stationID.stationName ==
+                      remindBuses[i].stationName ==
                       stopsTimeArr2[j].stopName.Zh_tw
                     ) {
                       remindBusesArray[j] = true;
@@ -159,11 +183,10 @@ function CertainRouteBox() {
                 stopsTimeArr2[i].remindState = remindBusesArray[i];
                 if (
                   reserveBus &&
-                  !reserveBus.stationID.stationID &&
-                  reserveBus.currentRoutesBus.routeUID == routeUID &&
-                  reserveBus.currentRoutesBus.direction == direction &&
-                  reserveBus.stationID.stationName ==
-                    stopsTimeArr2[i].stopName.Zh_tw
+                  !reserveBus.stationID &&
+                  reserveBus.routeUID == routeUID &&
+                  reserveBus.direction == direction &&
+                  reserveBus.stationName == stopsTimeArr2[i].stopName.Zh_tw
                 ) {
                   stopsTimeArr2[i].reverseState = true;
                 } else {
@@ -174,11 +197,10 @@ function CertainRouteBox() {
               for (let i = 0; i < stopsTimeArr2.length; i++) {
                 if (
                   reserveBus &&
-                  !reserveBus.stationID.stationID &&
-                  reserveBus.currentRoutesBus.routeUID == routeUID &&
-                  reserveBus.currentRoutesBus.direction == direction &&
-                  reserveBus.stationID.stationName ==
-                    stopsTimeArr2[i].stopName.Zh_tw
+                  !reserveBus.stationID &&
+                  reserveBus.routeUID == routeUID &&
+                  reserveBus.direction == direction &&
+                  reserveBus.stationName == stopsTimeArr2[i].stopName.Zh_tw
                 ) {
                   stopsTimeArr2[i].reverseState = true;
                 } else {
@@ -191,7 +213,18 @@ function CertainRouteBox() {
         }
       }
     }
-  }, [selectRouteStopsTime, stopsArr, remindBuses.length, reserveBus]);
+  }, [selectRouteStopsTime, remindBuses.length, reserveBus]);
+
+  useEffect(() => {
+    if (stopsTimeArr) {
+      setSelectRouteBuses(dispatch, {
+        selectRoute: {
+          routeName,
+          routeUID,
+        },
+      });
+    }
+  }, [stopsTimeArr]);
 
   useEffect(() => {
     if (selectRouteBuses) {
@@ -222,21 +255,41 @@ function CertainRouteBox() {
         setDirectionStops(stopsTimeArr);
       } else if (routeBusesArr.length > 0) {
         let directionStops2 = stopsTimeArr;
+        let routeBusesArr2 = routeBusesArr;
 
         for (let i = 0; i < stopsTimeArr.length; i++) {
-          for (let j = 0; j < routeBusesArr.length; j++) {
-            if (stopsTimeArr[i].stopUID == routeBusesArr[j].stopUID) {
+          for (let j = 0; j < routeBusesArr2.length; j++) {
+            if (
+              stopsTimeArr[i].stopUID == routeBusesArr2[j].stopUID &&
+              vehicle &&
+              vehicle[city]
+            ) {
               let index = i;
-              if (!routeBusesArr[j].a2EventType && i < stopsTimeArr.length) {
+              if (!routeBusesArr2[j].a2EventType && i < stopsTimeArr.length) {
                 index = i + 1;
               }
 
-              directionStops2[index].buses.push({
-                plateNumb: routeBusesArr[j].plateNumb,
-                busStatus: routeBusesArr[j].busStatus,
-                dutyStatus: routeBusesArr[j].dutyStatus,
-                stopSequence: routeBusesArr[j].stopSequence,
-              });
+              const found = vehicle[city].find(
+                (element) => element.PlateNumb == routeBusesArr2[j].plateNumb,
+              );
+              if (found) {
+                directionStops2[index].buses.push({
+                  plateNumb: routeBusesArr2[j].plateNumb,
+                  busStatus: routeBusesArr2[j].busStatus,
+                  dutyStatus: routeBusesArr2[j].dutyStatus,
+                  stopSequence: routeBusesArr2[j].stopSequence,
+                  vehicleType: found.VehicleType,
+                });
+              } else {
+                // 暫定
+                directionStops2[index].buses.push({
+                  plateNumb: routeBusesArr2[j].plateNumb,
+                  busStatus: routeBusesArr2[j].busStatus,
+                  dutyStatus: routeBusesArr2[j].dutyStatus,
+                  stopSequence: routeBusesArr2[j].stopSequence,
+                  vehicleType: 0,
+                });
+              }
             }
             if (i == stopsTimeArr.length - 1 && j == routeBusesArr.length - 1) {
               setDirectionStops(directionStops2);
@@ -245,7 +298,7 @@ function CertainRouteBox() {
         }
       }
     }
-  }, [stopsTimeArr, routeBusesArr]);
+  }, [routeBusesArr]);
 
   useEffect(() => {
     // console.log(directionStops);
@@ -373,19 +426,13 @@ function CertainRouteBox() {
                       onClick={() => {
                         setReserveBus(dispatch, {
                           bus: {
-                            currentRoutesBus: {
-                              direction,
-                              routeUID,
-                              routeName,
-                              stopStatus: stop.stopStatus,
-                            },
-                            certainRoute: {
-                              departureStopNameZh,
-                              destinationStopNameZh,
-                            },
-                            stationID: {
-                              stationName: stop.stopName.Zh_tw,
-                            },
+                            direction,
+                            routeUID,
+                            routeName,
+                            stopStatus: stop.stopStatus,
+                            departureStopNameZh,
+                            destinationStopNameZh,
+                            stationName: stop.stopName.Zh_tw,
                           },
                         });
                       }}
@@ -418,19 +465,13 @@ function CertainRouteBox() {
                       onClick={() => {
                         let busesArr = [...remindBuses];
                         busesArr.push({
-                          currentRoutesBus: {
-                            direction,
-                            routeUID,
-                            routeName,
-                            stopStatus: stop.stopStatus,
-                          },
-                          certainRoute: {
-                            departureStopNameZh,
-                            destinationStopNameZh,
-                          },
-                          stationID: {
-                            stationName: stop.stopName.Zh_tw,
-                          },
+                          stationName: stop.stopName.Zh_tw,
+                          routeUID,
+                          routeName,
+                          direction,
+                          stopStatus: stop.stopStatus,
+                          departureStopNameZh,
+                          destinationStopNameZh,
                         });
                         setRemindBuses(dispatch, {
                           buses: busesArr,
@@ -450,11 +491,9 @@ function CertainRouteBox() {
                         let busesArr = [...remindBuses];
                         for (let i = 0; i < busesArr.length; i++) {
                           if (
-                            busesArr[i].currentRoutesBus.direction ==
-                              direction &&
-                            busesArr[i].currentRoutesBus.routeUID == routeUID &&
-                            busesArr[i].stationID.stationName ==
-                              stop.stopName.Zh_tw
+                            busesArr[i].direction == direction &&
+                            busesArr[i].routeUID == routeUID &&
+                            busesArr[i].stationName == stop.stopName.Zh_tw
                           ) {
                             busesArr.splice(i, 1);
                             i = busesArr.length - 1;
@@ -504,10 +543,31 @@ function CertainRouteBox() {
                   }
                 >
                   {stop.buses.length > 0 ? (
-                    <div className={styles.stopCircle_plateNumb}>
-                      {stop.buses.map((bus) => (
-                        <div key={`${bus.plateNumb}-${direction}`}>
-                          {bus.plateNumb}
+                    <div className={`${styles.stopCircle_plateNumb}`}>
+                      {stop.buses.map((bus, index) => (
+                        <div key={`${bus.plateNumb}-${index}-${direction}`}>
+                          <div className={styles.box__center}>
+                            {bus.vehicleType == 1 || bus.vehicleType == 2 ? (
+                              <div
+                                className={
+                                  index == 0 && index == stop.buses.length - 1
+                                    ? `${styles.plateNumb_icon} ${styles.icon_topLeft_radius} ${styles.icon_bottomLeft_radius}`
+                                    : index == 0
+                                    ? `${styles.plateNumb_icon} ${styles.icon_topLeft_radius}`
+                                    : index == stop.buses.length - 1
+                                    ? `${styles.plateNumb_icon} ${styles.icon_bottomLeft_radius}`
+                                    : styles.plateNumb_icon
+                                }
+                              >
+                                <FontAwesomeIcon icon={farBell} />
+                              </div>
+                            ) : (
+                              <></>
+                            )}
+                            <div className={styles.plateNumb_text}>
+                              {bus.plateNumb}
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>

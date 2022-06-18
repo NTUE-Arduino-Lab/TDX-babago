@@ -165,7 +165,7 @@ export const setNearbyStops = async (dispatch, options) => {
         authorityCodeFlag = true;
         for (let k = 0; k < authorityCodes.length; k++) {
           if (
-            authorityCodes[k] == authorityCodes &&
+            authorityCodes[k] ==
             nearbyStopsID[i].stationStops[j].stationUID.substring(0, 3)
           ) {
             authorityCodeFlag = false;
@@ -256,6 +256,8 @@ export const setCurrentBuses = async (dispatch, options) => {
               let stopStatus = null;
               if (Math.round(bus.EstimateTime / 60) <= 1) {
                 stopStatus = stopStatusArray[5];
+              } else if (Math.round(bus.EstimateTime / 60) > 1) {
+                stopStatus = stopStatusArray[0];
               } else if (bus.StopStatus >= 0) {
                 stopStatus = stopStatusArray[bus.StopStatus];
               } else {
@@ -511,14 +513,64 @@ export const setSelectRouteBuses = async (dispatch, options) => {
 
 export const setRemindBuses = async (dispatch, options) => {
   dispatch({ type: type.BEGIN_DATA_REQUEST });
-  const { buses } = options;
+  const { buses, update } = options;
 
   try {
-    dispatch({
-      type: type.SET_REMINDBUSES,
-      payload: buses,
-    });
-    dispatch({ type: type.SUCCESS_DATA_REQUEST });
+    if (update && buses && buses.length > 0) {
+      let updatebuses = [...buses];
+
+      for (let i = 0; i < updatebuses.length; i++) {
+        for (let j = 0; j < cityJson.length; j++) {
+          if (
+            cityJson[j].AuthorityCode ===
+            updatebuses[i].routeUID.substring(0, 3)
+          ) {
+            const cityEn = cityJson[j].cityEn;
+
+            const url = `${TDXBUS_URL}/EstimatedTimeOfArrival/City/${cityEn}/${updatebuses[i].routeName}`;
+
+            const config = {
+              headers: GetAuthorizationHeader(),
+            };
+            const response = await axios.get(url, config);
+            const data = response.data;
+
+            for (let k = 0; k < data.length; k++) {
+              if (
+                updatebuses[i].routeUID == data[k].RouteUID &&
+                updatebuses[i].direction == data[k].Direction &&
+                updatebuses[i].stationName == data[k].StopName.Zh_tw
+              ) {
+                if (Math.round(data[k].EstimateTime / 60) <= 1) {
+                  updatebuses[i].stopStatus = '進站中';
+                } else if (Math.round(data[k].EstimateTime / 60) > 1) {
+                  updatebuses[i].stopStatus = `${Math.round(
+                    data[k].EstimateTime / 60,
+                  )} 分`;
+                }
+
+                if (i == updatebuses.length - 1) {
+                  dispatch({
+                    type: type.SET_REMINDBUSES,
+                    payload: updatebuses,
+                  });
+                  dispatch({ type: type.SUCCESS_DATA_REQUEST });
+                }
+
+                k = data.length;
+              }
+            }
+            j = cityJson.length;
+          }
+        }
+      }
+    } else {
+      dispatch({
+        type: type.SET_REMINDBUSES,
+        payload: buses,
+      });
+      dispatch({ type: type.SUCCESS_DATA_REQUEST });
+    }
   } catch (error) {
     dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
   }
@@ -526,12 +578,82 @@ export const setRemindBuses = async (dispatch, options) => {
 
 export const setReserveBus = async (dispatch, options) => {
   dispatch({ type: type.BEGIN_DATA_REQUEST });
-  const { bus } = options;
+  const { bus, update } = options;
 
   try {
+    if (update && bus) {
+      for (let i = 0; i < cityJson.length; i++) {
+        if (cityJson[i].AuthorityCode === bus.routeUID.substring(0, 3)) {
+          const cityEn = cityJson[i].cityEn;
+
+          const url = `${TDXBUS_URL}/EstimatedTimeOfArrival/City/${cityEn}/${bus.routeName}`;
+
+          const config = {
+            headers: GetAuthorizationHeader(),
+          };
+          const response = await axios.get(url, config);
+          const data = response.data;
+
+          let updatebus = bus;
+
+          for (let j = 0; j < data.length; j++) {
+            if (
+              bus.routeUID == data[j].RouteUID &&
+              bus.direction == data[j].Direction &&
+              bus.stationName == data[j].StopName.Zh_tw
+            ) {
+              if (Math.round(data[j].EstimateTime / 60) <= 1) {
+                updatebus.stopStatus = '進站中';
+              } else if (Math.round(data[j].EstimateTime / 60) > 1) {
+                updatebus.stopStatus = `${Math.round(
+                  data[j].EstimateTime / 60,
+                )} 分`;
+              }
+
+              j = data.length;
+            }
+          }
+
+          dispatch({
+            type: type.SET_RESERVEBUS,
+            payload: updatebus,
+          });
+          dispatch({ type: type.SUCCESS_DATA_REQUEST });
+
+          i = cityJson.length;
+        }
+      }
+    } else {
+      dispatch({
+        type: type.SET_RESERVEBUS,
+        payload: bus,
+      });
+      dispatch({ type: type.SUCCESS_DATA_REQUEST });
+    }
+  } catch (error) {
+    dispatch({ type: type.FAIL_DATA_REQUEST, payload: error });
+  }
+};
+
+export const setVehicle = async (dispatch, options) => {
+  dispatch({ type: type.BEGIN_DATA_REQUEST });
+  const { cityEn, vehicle } = options;
+  let vehicle2 = vehicle;
+
+  try {
+    const url = `${TDXBUS_URL}/Vehicle/City/${cityEn}`;
+
+    const config = {
+      headers: GetAuthorizationHeader(),
+    };
+    const response = await axios.get(url, config);
+    const data = response.data;
+
+    vehicle2[cityEn] = data;
+
     dispatch({
-      type: type.SET_RESERVEBUS,
-      payload: bus,
+      type: type.SET_VEHICLE,
+      payload: vehicle2,
     });
     dispatch({ type: type.SUCCESS_DATA_REQUEST });
   } catch (error) {

@@ -1,5 +1,5 @@
 @import '../../styles/color.scss';
-@import "../../styles/font.scss";
+@import '../../styles/font.scss';
 
 .sidebar_box {
   width: 100%;
@@ -33,7 +33,7 @@
 }
 
 // nearbyBox
-.certainStopBox_linkSetting{
+.certainStopBox_linkSetting {
   text-decoration: none;
 }
 .nearbyBox_titleBox {
@@ -48,7 +48,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  .titleBox_stopsInfo{
+  .titleBox_stopsInfo {
     display: flex;
     flex-direction: row;
     gap: 8px;
@@ -56,7 +56,7 @@
   }
 }
 
-.nearbyBox_AllStopBox{
+.nearbyBox_AllStopBox {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -99,4 +99,20 @@
   height: 24px;
   margin: 0 2px;
   color: $color-black;
+}
+
+.nearbyBox_noInfoBox{
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.nearbyBox_noInfoImg {
+  background-image: url(../../asset/imgs/undraw_lost_re_xqjt.svg);
+  width: 200px;
+  height: 160px;
+}
+.nearbyBox_noInfoText {
+  padding-top: 18px;
+  @include H2;
 }
