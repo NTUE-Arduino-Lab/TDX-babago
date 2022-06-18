@@ -21,7 +21,7 @@
   display: flex;
   justify-content: space-between;
 }
-.box_displayNone{
+.box_displayNone {
   display: none;
 }
 
@@ -159,8 +159,11 @@
 }
 
 .certainRouteBox_ButtonBox {
-  flex-wrap: wrap;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 10px;
 }
 .ButtonBox_Button {
   padding: 4px 4px 4px 6px;
@@ -173,17 +176,21 @@
   color: $color-main;
   background-color: #fcfcfc;
 }
-.Button_openButton {
-  color: #fcfcfc;
-  background-color: $color-main;
+.Button_rowButton {
+  width: 100%;
+  padding: 8px 6px 8px 4px;
+  border-radius: 5px;
 }
-.Button_cancelButton{
-  background: #fcfcfc;
+.Button_enableButton {
   color: $color-main;
-  border: $color-main 1px solid;
 }
+.Button_disableButton {
+  color: $color-disable;
+}
+
 .Button_icon {
   padding-top: 1px;
+  margin-right: 6px;
 }
 
 .marquee_animation {
@@ -204,8 +211,8 @@
   }
 }
 
-.certainStopBox_noInfoBox{
-  margin-top: 60px;
+.certainStopBox_noInfoBox {
+  margin: 60px 0 80px 0;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -219,4 +226,3 @@
 .certainStopBox_noInfoText {
   @include H2;
 }
-

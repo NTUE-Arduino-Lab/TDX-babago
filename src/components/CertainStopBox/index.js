@@ -23,7 +23,7 @@ import {
   faArrowAltCircleRight,
   faRoute,
 } from '@fortawesome/free-solid-svg-icons';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
+// import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 
 function CertainStopBox() {
@@ -301,13 +301,27 @@ function CertainStopBox() {
               <div
                 className={
                   openRoutes == currentRoutesBus.routeName + index
-                    ? `${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.certainRouteBox_ButtonBox}`
+                    ? `${styles.certainRouteBox_ButtonBox}`
                     : `${styles.box_displayNone}`
                 }
               >
-                {!currentRoutesBus.reverseState ? (
+                {!currentRoutesBus.stopStatus ||
+                currentRoutesBus.stopStatus === '尚未發車' ||
+                currentRoutesBus.stopStatus === '交管不停靠' ||
+                currentRoutesBus.stopStatus === '末班車已過' ||
+                currentRoutesBus.stopStatus === '今日未營運' ? (
                   <button
-                    className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                    className={`${styles.Button_rowButton} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.Button_icon}
+                      icon={faBus}
+                    />
+                    <div>預約上車</div>
+                  </button>
+                ) : !currentRoutesBus.reverseState ? (
+                  <button
+                    className={`${styles.Button_rowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                     onClick={() => {
                       setReserveBus(dispatch, {
                         bus: {
@@ -333,7 +347,7 @@ function CertainStopBox() {
                   </button>
                 ) : (
                   <button
-                    className={`${styles.ButtonBox_Button} ${styles.Button_cancelButton} ${styles.box__alignItemsCenter}`}
+                    className={`${styles.Button_rowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                     onClick={() => {
                       setReserveBus(dispatch, {
                         buses: null,
@@ -341,16 +355,30 @@ function CertainStopBox() {
                     }}
                   >
                     <FontAwesomeIcon
-                      className={styles.ButtonBox_icon}
+                      className={styles.Button_icon}
                       icon={faBus}
                     />
                     <div>取消預約</div>
                   </button>
                 )}
 
-                {!currentRoutesBus.remindState ? (
+                {!currentRoutesBus.stopStatus ||
+                currentRoutesBus.stopStatus === '尚未發車' ||
+                currentRoutesBus.stopStatus === '交管不停靠' ||
+                currentRoutesBus.stopStatus === '末班車已過' ||
+                currentRoutesBus.stopStatus === '今日未營運' ? (
                   <button
-                    className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                    className={`${styles.Button_rowButton} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.Button_icon}
+                      icon={farBell}
+                    />
+                    <div>開啟提醒</div>
+                  </button>
+                ) : !currentRoutesBus.remindState ? (
+                  <button
+                    className={`${styles.Button_rowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                     onClick={() => {
                       let busesArr = [...remindBuses];
                       busesArr.push({
@@ -377,7 +405,7 @@ function CertainStopBox() {
                   </button>
                 ) : (
                   <button
-                    className={`${styles.ButtonBox_Button} ${styles.Button_cancelButton} ${styles.box__alignItemsCenter}`}
+                    className={`${styles.Button_rowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                     onClick={() => {
                       let busesArr = [...remindBuses];
                       for (let i = 0; i < busesArr.length; i++) {
@@ -396,8 +424,8 @@ function CertainStopBox() {
                     }}
                   >
                     <FontAwesomeIcon
-                      className={styles.ButtonBox_icon}
-                      icon={faBell}
+                      className={styles.Button_icon}
+                      icon={farBell}
                     />
                     <div>取消提醒</div>
                   </button>
@@ -408,7 +436,7 @@ function CertainStopBox() {
                       ? `${path.certainRoute}?lng=${lng}&lat=${lat}&stationID=${stationID}&routeName=${currentRoutesBus.routeName}&routeUID=${currentRoutesBus.routeUID}&direction=${currentRoutesBus.direction}&departureStopNameZh=${certainRoutes[index].departureStopNameZh}&destinationStopNameZh=${certainRoutes[index].destinationStopNameZh}`
                       : ''
                   }
-                  className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter} ${styles.certainRouteBox_linkSetting}`}
+                  className={`${styles.Button_rowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter} ${styles.certainRouteBox_linkSetting}`}
                 >
                   <FontAwesomeIcon
                     className={styles.Button_icon}

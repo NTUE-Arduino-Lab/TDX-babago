@@ -83,6 +83,7 @@
 .certainRouteBox_routeInfoBox {
   display: flex;
   flex-direction: column;
+  padding: 8px 0;
   margin-bottom: 16px;
 }
 .certainRouteBox_routeStopBox {
@@ -226,10 +227,17 @@
   border: 1px solid #fcfcfc;
 }
 .Button_openButton {
+  box-sizing :border-box;
   color: #fcfcfc;
   background-color: $color-main;
 }
+.Button_disableButton {
+  box-sizing :border-box;
+  color: #fcfcfc;
+  background-color: $color-disable;
+}
 .Button_cancelButton {
+  box-sizing :border-box;
   background: #fcfcfc;
   color: $color-main;
   border: $color-main 1px solid;

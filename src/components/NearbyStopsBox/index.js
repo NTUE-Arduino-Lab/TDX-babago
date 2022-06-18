@@ -9,7 +9,7 @@ import { setCurrentBuses } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 function NearbyStopsBox() {
   const reactlocation = useLocation();
@@ -161,6 +161,14 @@ function NearbyStopsBox() {
             <div className={styles.nearbyBox_noInfoText}>
               您的周圍沒有 附近站牌
             </div>
+          </div>
+          <div className={styles.box__center}>
+            <button
+              className={`${styles.findStop_Button} ${styles.box__alignItemsCenter}`}
+            >
+              <FontAwesomeIcon className={styles.Button_icon} icon={faSearch} />
+              <div>查看最近站牌</div>
+            </button>
           </div>
         </div>
       ) : (

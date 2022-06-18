@@ -234,7 +234,21 @@ function ClosestStopBox() {
                   </div>
                   {/* 提醒按鈕區 */}
                   <div className={styles.currentInfoBox_ButtonBox}>
-                    {!currentRoutesBus.remindState ? (
+                    {!currentRoutesBus.stopStatus ||
+                    currentRoutesBus.stopStatus === '尚未發車' ||
+                    currentRoutesBus.stopStatus === '交管不停靠' ||
+                    currentRoutesBus.stopStatus === '末班車已過' ||
+                    currentRoutesBus.stopStatus === '今日未營運' ? (
+                      <button
+                        className={`${styles.ButtonBox_Button} ${styles.ButtonBox_disableButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
+                      >
+                        <FontAwesomeIcon
+                          className={styles.ButtonBox_icon}
+                          icon={farBell}
+                        />
+                        <div>開啟提醒</div>
+                      </button>
+                    ) : !currentRoutesBus.remindState ? (
                       <button
                         className={`${styles.ButtonBox_Button} ${styles.ButtonBox_openButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
                         onClick={() => {

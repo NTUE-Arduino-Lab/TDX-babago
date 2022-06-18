@@ -153,10 +153,17 @@
   gap: 0 6px;
 }
 .ButtonBox_openButton{
+  box-sizing: border-box;
   background: $color-main;
   color: #fff;
 }
+.ButtonBox_disableButton {
+  box-sizing: border-box;
+  background-color: $color-disable;
+  color: #fff;
+}
 .ButtonBox_cancelButton{
+  box-sizing: border-box;
   background: #fff;
   color: $color-main;
   border: $color-main 1px solid;
