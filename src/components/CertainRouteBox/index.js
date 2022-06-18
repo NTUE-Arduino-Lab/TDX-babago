@@ -24,7 +24,7 @@ import {
   faInfoCircle,
   faWheelchair,
 } from '@fortawesome/free-solid-svg-icons';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
+// import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 function CertainRouteBox() {
   const [openStops, setOpenStops] = useState('0');
@@ -293,6 +293,23 @@ function CertainRouteBox() {
               }
             }
             if (i == stopsTimeArr.length - 1 && j == routeBusesArr.length - 1) {
+              for (let k = 0; k < directionStops2.length; k++) {
+                if (directionStops2[k].buses.length > 0) {
+                  for (let l = 0; l < directionStops2[k].buses.length; l++) {
+                    let vehicleFlag = false;
+                    if (
+                      directionStops2[k].buses[l].vehicleType == 1 ||
+                      directionStops2[k].buses[l].vehicleType == 2
+                    ) {
+                      vehicleFlag = true;
+                      l = directionStops2[k].buses.length;
+                    }
+                    directionStops2[k].vehicleFlag = vehicleFlag;
+                  }
+                } else {
+                  directionStops2[k].vehicleFlag = false;
+                }
+              }
               setDirectionStops(directionStops2);
             }
           }
@@ -302,7 +319,7 @@ function CertainRouteBox() {
   }, [routeBusesArr]);
 
   useEffect(() => {
-    // console.log(directionStops);
+    console.log(directionStops);
   }, [directionStops, departureStopNameZh, destinationStopNameZh]);
 
   return (
@@ -407,8 +424,7 @@ function CertainRouteBox() {
                     className={
                       openStops === stop.stopUID
                         ? `${styles.stopInfoBox_stopName_open}`
-                        : '' +
-                          `${styles.box__alignItemsCenter} ${styles.box__start} ${styles.stopInfoBox_stopName}`
+                        : `${styles.box__alignItemsCenter} ${styles.box__start} ${styles.stopInfoBox_stopName}`
                     }
                   >
                     {stop.stopName.Zh_tw}
@@ -417,7 +433,7 @@ function CertainRouteBox() {
                 <div
                   className={
                     openStops === stop.stopUID
-                      ? `${styles.box__alignItemsCenter} ${styles.box__spaceBetween} ${styles.stopInfoBox_ButtonBox}`
+                      ? `${styles.stopInfoBox_ButtonBox}`
                       : `${styles.stopInfoBox_ButtonBox_close}`
                   }
                 >
@@ -427,7 +443,7 @@ function CertainRouteBox() {
                   stop.stopStatus === '末班車已過' ||
                   stop.stopStatus === '今日未營運' ? (
                     <button
-                      className={`${styles.ButtonBox_Button} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
+                      className={`${styles.ButtonBox_RowButton} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
                     >
                       <FontAwesomeIcon
                         className={styles.Button_icon}
@@ -437,7 +453,7 @@ function CertainRouteBox() {
                     </button>
                   ) : !stop.reverseState ? (
                     <button
-                      className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                      className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                       onClick={() => {
                         setReserveBus(dispatch, {
                           bus: {
@@ -460,7 +476,7 @@ function CertainRouteBox() {
                     </button>
                   ) : (
                     <button
-                      className={`${styles.ButtonBox_Button} ${styles.Button_cancelButton} ${styles.box__alignItemsCenter}`}
+                      className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                       onClick={() => {
                         setReserveBus(dispatch, {
                           bus: null,
@@ -468,7 +484,7 @@ function CertainRouteBox() {
                       }}
                     >
                       <FontAwesomeIcon
-                        className={styles.ButtonBox_icon}
+                        className={styles.Button_icon}
                         icon={faBus}
                       />
                       <div>取消預約</div>
@@ -480,17 +496,17 @@ function CertainRouteBox() {
                   stop.stopStatus === '末班車已過' ||
                   stop.stopStatus === '今日未營運' ? (
                     <button
-                      className={`${styles.ButtonBox_Button} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
+                      className={`${styles.ButtonBox_RowButton} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
                     >
                       <FontAwesomeIcon
                         className={styles.Button_icon}
                         icon={farBell}
                       />
-                      <div>開啟提醒</div>
+                      <div>開啟到站提醒</div>
                     </button>
                   ) : !stop.remindState ? (
                     <button
-                      className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                      className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                       onClick={() => {
                         let busesArr = [...remindBuses];
                         busesArr.push({
@@ -511,11 +527,11 @@ function CertainRouteBox() {
                         className={styles.Button_icon}
                         icon={farBell}
                       />
-                      <div>開啟提醒</div>
+                      <div>開啟到站提醒</div>
                     </button>
                   ) : (
                     <button
-                      className={`${styles.ButtonBox_Button} ${styles.Button_cancelButton} ${styles.box__alignItemsCenter}`}
+                      className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                       onClick={() => {
                         let busesArr = [...remindBuses];
                         for (let i = 0; i < busesArr.length; i++) {
@@ -535,22 +551,22 @@ function CertainRouteBox() {
                     >
                       <FontAwesomeIcon
                         className={styles.Button_icon}
-                        icon={faBell}
+                        icon={farBell}
                       />
-                      <div>取消提醒</div>
+                      <div>取消到站提醒</div>
                     </button>
                   )}
                   <div
-                    className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                    className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                   >
                     <FontAwesomeIcon
                       className={styles.Button_icon}
                       icon={faArrowAltCircleRight}
                     />
-                    <div>查看站牌</div>
+                    <div>查看經過路線</div>
                   </div>
                   <div
-                    className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                    className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                   >
                     <FontAwesomeIcon
                       className={styles.Button_icon}
@@ -584,21 +600,40 @@ function CertainRouteBox() {
                     <div className={`${styles.stopCircle_plateNumb}`}>
                       {stop.buses.map((bus, index) => (
                         <div key={`${bus.plateNumb}-${index}-${direction}`}>
-                          <div className={styles.box__center}>
-                            {bus.vehicleType == 1 || bus.vehicleType == 2 ? (
-                              <div
-                                className={
-                                  index == 0 && index == stop.buses.length - 1
-                                    ? `${styles.plateNumb_icon} ${styles.icon_topLeft_radius} ${styles.icon_bottomLeft_radius}`
-                                    : index == 0
-                                    ? `${styles.plateNumb_icon} ${styles.icon_topLeft_radius}`
-                                    : index == stop.buses.length - 1
-                                    ? `${styles.plateNumb_icon} ${styles.icon_bottomLeft_radius}`
-                                    : styles.plateNumb_icon
-                                }
-                              >
-                                <FontAwesomeIcon icon={faWheelchair} />
-                              </div>
+                          <div className={styles.box__start}>
+                            {stop.vehicleFlag ? (
+                              <>
+                                {bus.vehicleType == 1 ||
+                                bus.vehicleType == 2 ? (
+                                  <div
+                                    className={
+                                      index == 0 &&
+                                      index == stop.buses.length - 1
+                                        ? `${styles.plateNumb_icon} ${styles.icon_topLeft_radius} ${styles.icon_bottomLeft_radius}`
+                                        : index == 0
+                                        ? `${styles.plateNumb_icon} ${styles.icon_topLeft_radius}`
+                                        : index == stop.buses.length - 1
+                                        ? `${styles.plateNumb_icon} ${styles.icon_bottomLeft_radius}`
+                                        : styles.plateNumb_icon
+                                    }
+                                  >
+                                    <FontAwesomeIcon icon={faWheelchair} />
+                                  </div>
+                                ) : (
+                                  <div
+                                    className={
+                                      index == 0 &&
+                                      index == stop.buses.length - 1
+                                        ? `${styles.plateNumb_noIcon} ${styles.icon_topLeft_radius} ${styles.icon_bottomLeft_radius}`
+                                        : index == 0
+                                        ? `${styles.plateNumb_noIcon} ${styles.icon_topLeft_radius}`
+                                        : index == stop.buses.length - 1
+                                        ? `${styles.plateNumb_noIcon} ${styles.icon_bottomLeft_radius}`
+                                        : styles.plateNumb_noicon
+                                    }
+                                  ></div>
+                                )}
+                              </>
                             ) : (
                               <></>
                             )}
