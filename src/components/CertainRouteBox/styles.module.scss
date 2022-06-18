@@ -60,6 +60,15 @@
     gap: 4px;
   }
 }
+.detailBox_location{
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 60px;
+}
+.detailBox_location>p{
+  @include P;
+  display: inline-block; 
+}
 .certainRouteBox_buttonBox {
   display: flex;
   justify-content: space-around;
@@ -132,7 +141,7 @@
 }
 .routeDotBox_stopCircleBox_open {
   padding-top: 5px;
-  height: 68px;
+  height: 260px;
 }
 .stopCircleBox_stopCircle {
   position: relative;
@@ -229,7 +238,7 @@
 .ButtonBox_RowButton {
   width: 100%;
   padding: 8px 6px 8px 4px;
-  border-radius: 5px;
+  gap: 6px;
 }
 .Button_White {
   color: $color-main;
@@ -247,6 +256,30 @@
   color: $color-disable;
 }
 .Button_icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
   padding-top: 1px;
-  margin-right: 6px;
+  // margin-right: 6px;
+}
+
+.marquee_animation {
+  animation: marquee 4s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+
+  50% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
 }

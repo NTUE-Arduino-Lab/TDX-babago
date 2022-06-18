@@ -44,6 +44,7 @@ export const fetchToken = (dispatch) => {
           type: type.SET_TOKEN,
           payload: currentToken,
         });
+        console.log(currentToken);
       } else {
         console.log(
           'No registration token available. Request permission to generate one.',
@@ -90,7 +91,8 @@ export const remindNotification = async (remindBus, token) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${key.data}`,
+          // prettier-ignore
+          'Authorization': `Bearer ${key.data}`,
         },
       },
     );
@@ -124,7 +126,8 @@ export const onReserveNotification = async (busdata, token) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${key.data}`,
+          // prettier-ignore
+          'Authorization': `Bearer ${key.data}`,
         },
       },
     );
