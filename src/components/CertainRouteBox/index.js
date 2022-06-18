@@ -20,12 +20,14 @@ import { StoreContext } from '../../store/reducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBus,
-  faArrowAltCircleRight,
+  faDiamondTurnRight,
   faInfoCircle,
   faWheelchair,
 } from '@fortawesome/free-solid-svg-icons';
 // import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
+import { remindNotification } from '../../store/firebase';
+
 function CertainRouteBox() {
   const [openStops, setOpenStops] = useState('0');
   const reactlocation = useLocation();
@@ -49,6 +51,7 @@ function CertainRouteBox() {
       reserveBus,
       vehicle,
       // requestdata: { loading },
+      token,
     },
     dispatch,
   } = useContext(StoreContext);
@@ -521,6 +524,7 @@ function CertainRouteBox() {
                         setRemindBuses(dispatch, {
                           buses: busesArr,
                         });
+                        remindNotification(busesArr, token);
                       }}
                     >
                       <FontAwesomeIcon
@@ -561,7 +565,7 @@ function CertainRouteBox() {
                   >
                     <FontAwesomeIcon
                       className={styles.Button_icon}
-                      icon={faArrowAltCircleRight}
+                      icon={faBus}
                     />
                     <div>查看經過路線</div>
                   </div>
@@ -570,7 +574,7 @@ function CertainRouteBox() {
                   >
                     <FontAwesomeIcon
                       className={styles.Button_icon}
-                      icon={faArrowAltCircleRight}
+                      icon={faDiamondTurnRight}
                     />
                     <div>路線規劃</div>
                   </div>

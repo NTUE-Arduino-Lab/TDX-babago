@@ -20,12 +20,15 @@ import { StoreContext } from '../../store/reducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBus,
-  faArrowAltCircleRight,
+  faDiamondTurnRight,
   faRoute,
 } from '@fortawesome/free-solid-svg-icons';
 // import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
-import { onReserveNotification } from '../../store/firebase';
+import {
+  onReserveNotification,
+  remindNotification,
+} from '../../store/firebase';
 
 function CertainStopBox() {
   const [getRef, setRef] = useDynamicRefs();
@@ -214,7 +217,7 @@ function CertainStopBox() {
             >
               <FontAwesomeIcon
                 className={styles.Button_icon}
-                icon={faArrowAltCircleRight}
+                icon={faDiamondTurnRight}
               />
               <div>路線規劃</div>
             </div>
@@ -414,6 +417,7 @@ function CertainStopBox() {
                       setRemindBuses(dispatch, {
                         buses: busesArr,
                       });
+                      remindNotification(busesArr, token);
                     }}
                   >
                     <FontAwesomeIcon

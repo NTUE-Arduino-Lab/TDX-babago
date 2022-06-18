@@ -5,7 +5,7 @@ import { setReserveBus } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBus, faFlag, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBus, faFlag, faUserTie } from '@fortawesome/free-solid-svg-icons';
 
 function ReserveBox() {
   const {
@@ -86,7 +86,7 @@ function ReserveBox() {
                 <div
                   className={`${styles.buttonBox_button} ${styles.button_help} ${styles.box__alignItemsCenter} ${styles.box__center} `}
                 >
-                  <FontAwesomeIcon icon={faUser} />
+                  <FontAwesomeIcon icon={faUserTie} />
                   <div>司機協助</div>
                 </div>
               </div>
@@ -145,7 +145,7 @@ function ReserveBox() {
                 <div
                   className={`${styles.buttonBox_button} ${styles.button_help} ${styles.box__alignItemsCenter} ${styles.box__center} `}
                 >
-                  <FontAwesomeIcon icon={faUser} />
+                  <FontAwesomeIcon icon={faUserTie} />
                   <div>司機協助</div>
                 </div>
               </div>

@@ -192,12 +192,11 @@ function ClosestStopBox() {
           {currentRoutesBuses && certainRoutes && remindBuses && closestStop ? (
             <div className={styles.closestBox_BusInfo}>
               {currentRoutesBuses.map((currentRoutesBus, index) => (
-                <div
-                  className={`${styles.closestBox_currentInfoBox} ${styles.box__alignItemsFlexStart}`}
-                  key={index}
-                >
-                  <div className={`${styles.closestBox_flexBox}`}>
-                    <div className={styles.currentInfoBox_routeInfoBox}>
+                <div className={styles.currentInfoBox_closestBox} key={index}>
+                  <div
+                    className={`${styles.closestBox_currentInfoBox} ${styles.box__alignItemsFlexStart}`}
+                  >
+                    <div className={`${styles.closestBox_flexBox}`}>
                       <div className={styles.routeInfoBox_routeName}>
                         <p
                           ref={setRef(currentRoutesBus.routeName)}
@@ -208,105 +207,105 @@ function ClosestStopBox() {
                           {currentRoutesBus.routeName}
                         </p>
                       </div>
-                      <div className={styles.routeInfoBox_routeDirection}>
-                        {!certainRoutes[index] ||
-                        currentRoutesBus.direction == 225
-                          ? ''
-                          : currentRoutesBus.direction == 2
-                          ? '環形'
-                          : currentRoutesBus.direction == 1
-                          ? `往${certainRoutes[index].departureStopNameZh}`
-                          : `往${certainRoutes[index].destinationStopNameZh}`}
+                      <div
+                        className={
+                          currentRoutesBus.stopStatus === '進站中'
+                            ? `${styles.currentInfoBox_routeState} ${styles.routeState__textYellow}`
+                            : currentRoutesBus.stopStatus === '尚未發車' ||
+                              currentRoutesBus.stopStatus === '交管不停靠' ||
+                              currentRoutesBus.stopStatus === '末班車已過' ||
+                              currentRoutesBus.stopStatus === '今日未營運'
+                            ? `${styles.currentInfoBox_routeState} ${styles.routeState__textGray}`
+                            : `${styles.currentInfoBox_routeState} ${styles.routeState__textDark}`
+                        }
+                      >
+                        {currentRoutesBus.stopStatus}
                       </div>
                     </div>
-                    <div
-                      className={
-                        currentRoutesBus.stopStatus === '進站中'
-                          ? `${styles.currentInfoBox_routeState} ${styles.routeState__textYellow}`
-                          : currentRoutesBus.stopStatus === '尚未發車' ||
-                            currentRoutesBus.stopStatus === '交管不停靠' ||
-                            currentRoutesBus.stopStatus === '末班車已過' ||
-                            currentRoutesBus.stopStatus === '今日未營運'
-                          ? `${styles.currentInfoBox_routeState} ${styles.routeState__textGray}`
-                          : `${styles.currentInfoBox_routeState} ${styles.routeState__textDark}`
-                      }
-                    >
-                      {currentRoutesBus.stopStatus}
+                    {/* 提醒按鈕區 */}
+                    <div className={styles.currentInfoBox_ButtonBox}>
+                      {!currentRoutesBus.stopStatus ||
+                      currentRoutesBus.stopStatus === '尚未發車' ||
+                      currentRoutesBus.stopStatus === '交管不停靠' ||
+                      currentRoutesBus.stopStatus === '末班車已過' ||
+                      currentRoutesBus.stopStatus === '今日未營運' ? (
+                        <button
+                          className={`${styles.ButtonBox_Button} ${styles.ButtonBox_disableButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
+                        >
+                          <FontAwesomeIcon
+                            className={styles.ButtonBox_icon}
+                            icon={farBell}
+                          />
+                          <div>開啟提醒</div>
+                        </button>
+                      ) : !currentRoutesBus.remindState ? (
+                        <button
+                          className={`${styles.ButtonBox_Button} ${styles.ButtonBox_openButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
+                          onClick={() => {
+                            let busesArr = [...remindBuses];
+                            busesArr.push({
+                              stationName: closestStop.stationName,
+                              routeUID: currentRoutesBus.routeUID,
+                              routeName: currentRoutesBus.routeName,
+                              direction: currentRoutesBus.direction,
+                              stopStatus: currentRoutesBus.stopStatus,
+                              departureStopNameZh:
+                                certainRoutes[index].departureStopNameZh,
+                              destinationStopNameZh:
+                                certainRoutes[index].destinationStopNameZh,
+                            });
+                            setRemindBuses(dispatch, {
+                              buses: busesArr,
+                            });
+                            remindNotification(busesArr, token);
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            className={styles.ButtonBox_icon}
+                            icon={farBell}
+                          />
+                          <div>開啟提醒</div>
+                        </button>
+                      ) : (
+                        <button
+                          className={`${styles.ButtonBox_Button} ${styles.ButtonBox_cancelButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
+                          onClick={() => {
+                            let busesArr = [...remindBuses];
+                            for (let i = 0; i < busesArr.length; i++) {
+                              if (
+                                busesArr[i].stationName ==
+                                  closestStop.stationName &&
+                                busesArr[i].direction ==
+                                  currentRoutesBus.direction &&
+                                busesArr[i].routeUID ==
+                                  currentRoutesBus.routeUID
+                              ) {
+                                busesArr.splice(i, 1);
+                                i = busesArr.length - 1;
+                                setRemindBuses(dispatch, {
+                                  buses: busesArr,
+                                });
+                              }
+                            }
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            className={styles.ButtonBox_icon}
+                            icon={faBell}
+                          />
+                          <div>取消提醒</div>
+                        </button>
+                      )}
                     </div>
                   </div>
-                  {/* 提醒按鈕區 */}
-                  <div className={styles.currentInfoBox_ButtonBox}>
-                    {!currentRoutesBus.stopStatus ||
-                    currentRoutesBus.stopStatus === '尚未發車' ||
-                    currentRoutesBus.stopStatus === '交管不停靠' ||
-                    currentRoutesBus.stopStatus === '末班車已過' ||
-                    currentRoutesBus.stopStatus === '今日未營運' ? (
-                      <button
-                        className={`${styles.ButtonBox_Button} ${styles.ButtonBox_disableButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
-                      >
-                        <FontAwesomeIcon
-                          className={styles.ButtonBox_icon}
-                          icon={farBell}
-                        />
-                        <div>開啟提醒</div>
-                      </button>
-                    ) : !currentRoutesBus.remindState ? (
-                      <button
-                        className={`${styles.ButtonBox_Button} ${styles.ButtonBox_openButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
-                        onClick={() => {
-                          let busesArr = [...remindBuses];
-                          busesArr.push({
-                            stationName: closestStop.stationName,
-                            routeUID: currentRoutesBus.routeUID,
-                            routeName: currentRoutesBus.routeName,
-                            direction: currentRoutesBus.direction,
-                            stopStatus: currentRoutesBus.stopStatus,
-                            departureStopNameZh:
-                              certainRoutes[index].departureStopNameZh,
-                            destinationStopNameZh:
-                              certainRoutes[index].destinationStopNameZh,
-                          });
-                          setRemindBuses(dispatch, {
-                            buses: busesArr,
-                          });
-                          remindNotification(busesArr, token);
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          className={styles.ButtonBox_icon}
-                          icon={farBell}
-                        />
-                        <div>開啟提醒</div>
-                      </button>
-                    ) : (
-                      <button
-                        className={`${styles.ButtonBox_Button} ${styles.ButtonBox_cancelButton} ${styles.box__alignItemsCenter} ${styles.box__spaceAruond}`}
-                        onClick={() => {
-                          let busesArr = [...remindBuses];
-                          for (let i = 0; i < busesArr.length; i++) {
-                            if (
-                              busesArr[i].stationName ==
-                                closestStop.stationName &&
-                              busesArr[i].direction ==
-                                currentRoutesBus.direction &&
-                              busesArr[i].routeUID == currentRoutesBus.routeUID
-                            ) {
-                              busesArr.splice(i, 1);
-                              i = busesArr.length - 1;
-                              setRemindBuses(dispatch, {
-                                buses: busesArr,
-                              });
-                            }
-                          }
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          className={styles.ButtonBox_icon}
-                          icon={faBell}
-                        />
-                        <div>取消提醒</div>
-                      </button>
-                    )}
+                  <div className={styles.routeInfoBox_routeDirection}>
+                    {!certainRoutes[index] || currentRoutesBus.direction == 225
+                      ? ''
+                      : currentRoutesBus.direction == 2
+                      ? '環形'
+                      : currentRoutesBus.direction == 1
+                      ? `往${certainRoutes[index].departureStopNameZh}`
+                      : `往${certainRoutes[index].destinationStopNameZh}`}
                   </div>
                 </div>
               ))}
