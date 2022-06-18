@@ -35,9 +35,9 @@ function ReserveBox() {
   }, [reserveBus, pageUpdate]);
 
   return (
-    <div className={styles.sidebar_box}>
+    <>
       {reserveBus ? (
-        <>
+        <div className={styles.sidebar_box}>
           {reserveBus.stationID ? (
             <div className={`${styles.reserveBox}`}>
               <div
@@ -97,7 +97,7 @@ function ReserveBox() {
                 className={`${styles.reserveBox_routeInfoBox} ${styles.box__spaceBetween} ${styles.box__alignItemsCenter}`}
               >
                 <div>
-                  <div className={styles.routeInfoBox_StopName}>
+                  <div className={styles.routeInfoBox_StationName}>
                     {reserveBus.stationName}
                   </div>
                 </div>
@@ -151,11 +151,11 @@ function ReserveBox() {
               </div>
             </div>
           )}
-        </>
+        </div>
       ) : (
         <></>
       )}
-    </div>
+    </>
   );
 }
 

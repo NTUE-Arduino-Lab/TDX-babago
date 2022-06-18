@@ -37,6 +37,7 @@ function ClosestStopBox() {
       certainRoutes,
       remindBuses,
       // requestdata: { loading },
+      token,
     },
     dispatch,
   } = useContext(StoreContext);
@@ -268,7 +269,7 @@ function ClosestStopBox() {
                           setRemindBuses(dispatch, {
                             buses: busesArr,
                           });
-                          remindNotification(busesArr);
+                          remindNotification(busesArr, token);
                         }}
                       >
                         <FontAwesomeIcon

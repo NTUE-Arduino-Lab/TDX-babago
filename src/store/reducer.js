@@ -1,7 +1,10 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import type from './actionTypes';
+
+//firebase
+import { fetchToken, onMessageListener } from './firebase';
 
 export const StoreContext = createContext();
 
@@ -18,6 +21,7 @@ const initialState = {
   reserveBus: null,
   vehicle: {},
   requestdata: { loading: false, error: null },
+  token: null,
 };
 
 function reducer(state, action) {
@@ -96,6 +100,11 @@ function reducer(state, action) {
           error: action.payload,
         },
       };
+    case type.SET_TOKEN:
+      return {
+        ...state,
+        token: action.payload,
+      };
     default:
       return state;
   }
@@ -104,6 +113,15 @@ function reducer(state, action) {
 export function StoreProvider(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
+
+  useEffect(() => {
+    fetchToken(dispatch);
+  }, []);
+  onMessageListener()
+    .then((payload) => {
+      console.log(payload);
+    })
+    .catch((err) => console.log('failed: ', err));
 
   return (
     <StoreContext.Provider value={value}>

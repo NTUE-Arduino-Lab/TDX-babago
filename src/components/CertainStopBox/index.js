@@ -44,6 +44,7 @@ function CertainStopBox() {
       remindBuses,
       reserveBus,
       // requestdata: { loading },
+      token,
     },
     dispatch,
   } = useContext(StoreContext);
@@ -194,7 +195,7 @@ function CertainStopBox() {
     //   ) : (
     <div className={styles.sidebar_box}>
       {stationName && stationDistance && location ? (
-        <div className={styles.certainStopBox_titlebox__marginBottom}>
+        <div className={styles.certainStopBox_titlebox}>
           <div
             className={`${styles.box__alignItemsCenter} ${styles.box__start} ${styles.certainStopBox_stopName}`}
           >
@@ -220,7 +221,7 @@ function CertainStopBox() {
           </div>
         </div>
       ) : (
-        <div className={styles.certainStopBox_titlebox__marginBottom}></div>
+        <div className={styles.certainStopBox_titlebox}></div>
       )}
       <div className={styles.certainStopBox_ChangeRouteBox}>
         {nearbyStopsName && nearbyStopsName.length > 0 ? (
@@ -338,20 +339,23 @@ function CertainStopBox() {
                             certainRoutes[index].destinationStopNameZh,
                         },
                       });
-                      onReserveNotification({
-                        bus: {
-                          stationID,
-                          stationName,
-                          routeUID: currentRoutesBus.routeUID,
-                          routeName: currentRoutesBus.routeName,
-                          direction: currentRoutesBus.direction,
-                          stopStatus: currentRoutesBus.stopStatus,
-                          departureStopNameZh:
-                            certainRoutes[index].departureStopNameZh,
-                          destinationStopNameZh:
-                            certainRoutes[index].destinationStopNameZh,
+                      onReserveNotification(
+                        {
+                          bus: {
+                            stationID,
+                            stationName,
+                            routeUID: currentRoutesBus.routeUID,
+                            routeName: currentRoutesBus.routeName,
+                            direction: currentRoutesBus.direction,
+                            stopStatus: currentRoutesBus.stopStatus,
+                            departureStopNameZh:
+                              certainRoutes[index].departureStopNameZh,
+                            destinationStopNameZh:
+                              certainRoutes[index].destinationStopNameZh,
+                          },
                         },
-                      });
+                        token,
+                      );
                     }}
                   >
                     <FontAwesomeIcon

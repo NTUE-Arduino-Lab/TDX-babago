@@ -4,8 +4,13 @@
 .sidebar_box {
   width: 100%;
   padding: 0px 24px 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
-
+.sidebar_box:empty{
+  padding: 0;
+}
 .box__alignItemsCenter {
   display: flex;
   align-items: center;
@@ -35,9 +40,9 @@
   gap: 12px 0;
 }
 
-.reserveBox_routeInfoBox {
-  // flex-wrap: wrap;
-}
+// .reserveBox_routeInfoBox {
+//   // flex-wrap: wrap;
+// }
 .routeInfoBox_routeName {
   @include H1_Bold;
 }
