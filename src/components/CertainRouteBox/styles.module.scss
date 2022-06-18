@@ -98,16 +98,15 @@
 .stopInfoBox_busStatus {
   font-size: 16px;
   color: $color-black;
-  width: 25%;
+  width: 28%;
 }
 .stopInfoBox_stopName {
   @include P;
   color: $color-black;
-  width: 75%;
+  width: 72%;
 }
 .stopInfoBox_stopName_open {
   @include P_Bold;
-  color: $color-main;
 }
 
 .certainRouteBox_routeDotBox {
@@ -119,15 +118,15 @@
   position: absolute;
   width: 2px;
   background-color: $color-gray;
-  top: 12px;
+  top: 16px;
   left: calc(50% - 0.75px);
-  height: calc(100% - 44px);
+  height: calc(100% - 50px);
   z-index: 1;
 }
 .routeDotBox_stopCircleBox {
   width: 100%;
   min-width: 20px;
-  height: 24px;
+  height: 40px;
   margin-bottom: 16px;
   z-index: 2;
 }
@@ -174,12 +173,17 @@
 }
 
 .plateNumb_icon {
-  background: $color-main;
   padding: 2px 3px;
   background-color: $color-main;
   color: #fcfcfc;
   @include P;
 }
+.plateNumb_noIcon {
+  padding: 2px 3px;
+  width: 22px;
+  background-color: $color-background;
+}
+
 .icon_topLeft_radius {
   border-top-left-radius: 5px;
 }
@@ -205,8 +209,13 @@
 }
 
 .stopInfoBox_ButtonBox {
-  flex-wrap: wrap;
-  padding-top: 12px;
+  width: 72%;
+  padding-top: 16px;
+  padding-left: 28%;
+  padding-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 .stopInfoBox_ButtonBox_close {
   display: none;
@@ -217,6 +226,11 @@
   @include P;
   gap: 6px;
 }
+.ButtonBox_RowButton {
+  width: 100%;
+  padding: 8px 6px 8px 4px;
+  border-radius: 5px;
+}
 .Button_White {
   color: $color-main;
   background-color: #fcfcfc;
@@ -226,22 +240,13 @@
   background-color: $color-main;
   border: 1px solid #fcfcfc;
 }
-.Button_openButton {
-  box-sizing :border-box;
-  color: #fcfcfc;
-  background-color: $color-main;
+.Button_enableButton {
+  color: $color-main;
 }
 .Button_disableButton {
-  box-sizing :border-box;
-  color: #fcfcfc;
-  background-color: $color-disable;
-}
-.Button_cancelButton {
-  box-sizing :border-box;
-  background: #fcfcfc;
-  color: $color-main;
-  border: $color-main 1px solid;
+  color: $color-disable;
 }
 .Button_icon {
   padding-top: 1px;
+  margin-right: 6px;
 }
