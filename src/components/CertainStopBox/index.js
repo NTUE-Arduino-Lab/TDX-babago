@@ -25,6 +25,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
+import { onReserveNotification } from '../../store/firebase';
 
 function CertainStopBox() {
   const [getRef, setRef] = useDynamicRefs();
@@ -310,6 +311,20 @@ function CertainStopBox() {
                     className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
                     onClick={() => {
                       setReserveBus(dispatch, {
+                        bus: {
+                          stationID,
+                          stationName,
+                          routeUID: currentRoutesBus.routeUID,
+                          routeName: currentRoutesBus.routeName,
+                          direction: currentRoutesBus.direction,
+                          stopStatus: currentRoutesBus.stopStatus,
+                          departureStopNameZh:
+                            certainRoutes[index].departureStopNameZh,
+                          destinationStopNameZh:
+                            certainRoutes[index].destinationStopNameZh,
+                        },
+                      });
+                      onReserveNotification({
                         bus: {
                           stationID,
                           stationName,

@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // eslint-disable-next-line no-unused-vars
 import { faArrowRight, faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
+import { remindNotification } from '../../store/firebase';
 
 function ClosestStopBox() {
   const [getRef, setRef] = useDynamicRefs();
@@ -253,6 +254,7 @@ function ClosestStopBox() {
                           setRemindBuses(dispatch, {
                             buses: busesArr,
                           });
+                          remindNotification(busesArr);
                         }}
                       >
                         <FontAwesomeIcon

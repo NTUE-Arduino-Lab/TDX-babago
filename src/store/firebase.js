@@ -1,7 +1,14 @@
+import axios from 'axios';
 //Firebase
 import { initializeApp } from 'firebase/app';
 // import { getAnalytics } from 'firebase/analytics';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+
+const FIREBASE_URL =
+  'https://fcm.googleapis.com/v1/projects/babago-noti/messages:send';
+const KEY_API = 'https://babago-api.herokuapp.com/';
+const token =
+  'egjfDhSeMA4xv-RtsPaNZO:APA91bFj-DfT8kUurHr34cpLVUpdZsbbR3R3MSJ5YDt1LvqLlEqF0mmTIJ8fv24X760Y0Rwx9-6qOgXUHWT1ACSByBb6C2jIHCW_DhDp4XEOIXY6174BRV1Yokek6L7LN9Ro7rw_wz-Q';
 
 //Firebase configuration
 const firebaseConfig = {
@@ -51,3 +58,72 @@ export const onMessageListener = () =>
       resolve(payload);
     });
   });
+
+export const remindNotification = async (remindBus) => {
+  try {
+    // console.log(remindBus);
+    let stopStatus = '';
+    if (remindBus[0].stopStatus !== '進站中') {
+      stopStatus = '即將在' + remindBus[0].stopStatus + '內抵達';
+    } else {
+      stopStatus = '即將抵達';
+    }
+    const key = await axios.get(KEY_API);
+    const { data } = await axios.post(
+      FIREBASE_URL,
+      {
+        message: {
+          data: {
+            title: '公車即將抵達',
+            body:
+              remindBus[0].routeName + stopStatus + remindBus[0].stationName,
+          },
+          token: token,
+        },
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${key.data}`,
+        },
+      },
+    );
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const onReserveNotification = async (busdata) => {
+  try {
+    const { bus } = busdata;
+    let stopStatus = '';
+    if (bus.stopStatus !== '進站中') {
+      stopStatus = '即將在' + bus.stopStatus + '內抵達';
+    } else {
+      stopStatus = '即將抵達';
+    }
+    const key = await axios.get(KEY_API);
+    const { data } = await axios.post(
+      FIREBASE_URL,
+      {
+        message: {
+          data: {
+            title: '您預約的公車即將抵達',
+            body: bus.routeName + stopStatus + bus.stationName,
+          },
+          token: token,
+        },
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${key.data}`,
+        },
+      },
+    );
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
