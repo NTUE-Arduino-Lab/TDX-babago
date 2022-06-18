@@ -22,6 +22,9 @@ import {
 import { setPosition, setLocation, setNearbyStops } from '../../store/actions';
 import { StoreContext } from '../../store/reducer';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCrosshairs } from '@fortawesome/free-solid-svg-icons';
+
 function LocationMarker() {
   const reactlocation = useLocation();
   const { lng, lat, stationID } = QueryString.parse(reactlocation.search);
@@ -127,6 +130,12 @@ function LocationMarker() {
 
   return location === null ? null : (
     <Fragment>
+      <button>
+        <FontAwesomeIcon
+          className={styles.rePosition_Botton}
+          icon={faCrosshairs}
+        />
+      </button>
       <Marker position={position} icon={redIcon}>
         <Tooltip
           className={styles.tooltip}

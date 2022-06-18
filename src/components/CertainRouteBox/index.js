@@ -22,6 +22,7 @@ import {
   faBus,
   faArrowAltCircleRight,
   faInfoCircle,
+  faWheelchair,
 } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
@@ -420,7 +421,21 @@ function CertainRouteBox() {
                       : `${styles.stopInfoBox_ButtonBox_close}`
                   }
                 >
-                  {!stop.reverseState ? (
+                  {!stop.stopStatus ||
+                  stop.stopStatus === '尚未發車' ||
+                  stop.stopStatus === '交管不停靠' ||
+                  stop.stopStatus === '末班車已過' ||
+                  stop.stopStatus === '今日未營運' ? (
+                    <button
+                      className={`${styles.ButtonBox_Button} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
+                    >
+                      <FontAwesomeIcon
+                        className={styles.Button_icon}
+                        icon={faBus}
+                      />
+                      <div>預約下車</div>
+                    </button>
+                  ) : !stop.reverseState ? (
                     <button
                       className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
                       onClick={() => {
@@ -459,7 +474,21 @@ function CertainRouteBox() {
                       <div>取消預約</div>
                     </button>
                   )}
-                  {!stop.remindState ? (
+                  {!stop.stopStatus ||
+                  stop.stopStatus === '尚未發車' ||
+                  stop.stopStatus === '交管不停靠' ||
+                  stop.stopStatus === '末班車已過' ||
+                  stop.stopStatus === '今日未營運' ? (
+                    <button
+                      className={`${styles.ButtonBox_Button} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
+                    >
+                      <FontAwesomeIcon
+                        className={styles.Button_icon}
+                        icon={farBell}
+                      />
+                      <div>開啟提醒</div>
+                    </button>
+                  ) : !stop.remindState ? (
                     <button
                       className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
                       onClick={() => {
@@ -518,6 +547,15 @@ function CertainRouteBox() {
                       className={styles.Button_icon}
                       icon={faArrowAltCircleRight}
                     />
+                    <div>查看站牌</div>
+                  </div>
+                  <div
+                    className={`${styles.ButtonBox_Button} ${styles.Button_openButton} ${styles.box__alignItemsCenter}`}
+                  >
+                    <FontAwesomeIcon
+                      className={styles.Button_icon}
+                      icon={faArrowAltCircleRight}
+                    />
                     <div>路線規劃</div>
                   </div>
                 </div>
@@ -559,7 +597,7 @@ function CertainRouteBox() {
                                     : styles.plateNumb_icon
                                 }
                               >
-                                <FontAwesomeIcon icon={farBell} />
+                                <FontAwesomeIcon icon={faWheelchair} />
                               </div>
                             ) : (
                               <></>
