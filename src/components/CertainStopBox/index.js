@@ -20,12 +20,15 @@ import { StoreContext } from '../../store/reducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBus,
-  faArrowAltCircleRight,
+  faDiamondTurnRight,
   faRoute,
 } from '@fortawesome/free-solid-svg-icons';
 // import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
-import { onReserveNotification } from '../../store/firebase';
+import {
+  onReserveNotification,
+  remindNotification,
+} from '../../store/firebase';
 
 function CertainStopBox() {
   const [getRef, setRef] = useDynamicRefs();
@@ -44,6 +47,7 @@ function CertainStopBox() {
       remindBuses,
       reserveBus,
       // requestdata: { loading },
+      token,
     },
     dispatch,
   } = useContext(StoreContext);
@@ -194,7 +198,7 @@ function CertainStopBox() {
     //   ) : (
     <div className={styles.sidebar_box}>
       {stationName && stationDistance && location ? (
-        <div className={styles.certainStopBox_titlebox__marginBottom}>
+        <div className={styles.certainStopBox_titlebox}>
           <div
             className={`${styles.box__alignItemsCenter} ${styles.box__start} ${styles.certainStopBox_stopName}`}
           >
@@ -213,14 +217,14 @@ function CertainStopBox() {
             >
               <FontAwesomeIcon
                 className={styles.Button_icon}
-                icon={faArrowAltCircleRight}
+                icon={faDiamondTurnRight}
               />
               <div>路線規劃</div>
             </div>
           </div>
         </div>
       ) : (
-        <div className={styles.certainStopBox_titlebox__marginBottom}></div>
+        <div className={styles.certainStopBox_titlebox}></div>
       )}
       <div className={styles.certainStopBox_ChangeRouteBox}>
         {nearbyStopsName && nearbyStopsName.length > 0 ? (
@@ -338,20 +342,23 @@ function CertainStopBox() {
                             certainRoutes[index].destinationStopNameZh,
                         },
                       });
-                      onReserveNotification({
-                        bus: {
-                          stationID,
-                          stationName,
-                          routeUID: currentRoutesBus.routeUID,
-                          routeName: currentRoutesBus.routeName,
-                          direction: currentRoutesBus.direction,
-                          stopStatus: currentRoutesBus.stopStatus,
-                          departureStopNameZh:
-                            certainRoutes[index].departureStopNameZh,
-                          destinationStopNameZh:
-                            certainRoutes[index].destinationStopNameZh,
+                      onReserveNotification(
+                        {
+                          bus: {
+                            stationID,
+                            stationName,
+                            routeUID: currentRoutesBus.routeUID,
+                            routeName: currentRoutesBus.routeName,
+                            direction: currentRoutesBus.direction,
+                            stopStatus: currentRoutesBus.stopStatus,
+                            departureStopNameZh:
+                              certainRoutes[index].departureStopNameZh,
+                            destinationStopNameZh:
+                              certainRoutes[index].destinationStopNameZh,
+                          },
                         },
-                      });
+                        token,
+                      );
                     }}
                   >
                     <FontAwesomeIcon
@@ -410,6 +417,7 @@ function CertainStopBox() {
                       setRemindBuses(dispatch, {
                         buses: busesArr,
                       });
+                      remindNotification(busesArr, token);
                     }}
                   >
                     <FontAwesomeIcon

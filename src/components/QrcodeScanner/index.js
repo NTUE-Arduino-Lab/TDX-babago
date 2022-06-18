@@ -23,6 +23,14 @@ function QrcodeScanner() {
         }}
       />
       <p>{qrdata}</p>
+      <div className={styles.infoBox}>
+        <div className={styles.infoBox_title}>三步驟預約上車</div>
+        <ul>
+          <li>掃描公車站牌上含有巴巴走標示的QR Code</li>
+          <li>選擇想要預約的路線</li>
+          <li>點擊預約上車</li>
+        </ul>
+      </div>
     </div>
   );
 }

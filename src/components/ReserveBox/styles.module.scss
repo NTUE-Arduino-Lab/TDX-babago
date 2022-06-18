@@ -40,6 +40,9 @@
 .reserveBox_routeInfoBox {
   // flex-wrap: wrap;
 }
+.routeInfoBox_StationName{
+  @include H2_Bold;
+}
 .routeInfoBox_routeName {
   @include H1_Bold;
 }
@@ -59,7 +62,10 @@
   font-size: 18px;
   font-weight: 700;
 }
-
+.routeInfoBox_busName{
+  gap: 0px 6px;
+  @include P;
+}
 .routeInfoBox_stopName {
   gap: 0px 6px;
   @include P;

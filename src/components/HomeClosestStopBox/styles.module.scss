@@ -86,6 +86,11 @@
   flex-direction: column;
   gap: 16px;
 }
+.currentInfoBox_closestBox{
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
 .closestBox_currentInfoBox {
   display: flex;
   flex-wrap: wrap;
@@ -96,10 +101,6 @@
 .closestBox_flexBox {
   display: flex;
   flex-wrap: wrap;
-}
-.currentInfoBox_routeInfoBox{
-  margin: 0;
-  padding: 0;
 }
 .routeInfoBox_routeName {
   margin-top: -5px;

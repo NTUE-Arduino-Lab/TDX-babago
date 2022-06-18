@@ -3,6 +3,7 @@
 
 .sidebar_box {
   width: 100%;
+  height: 45vh;
 }
 
 .box__alignItemsCenter {
@@ -25,7 +26,7 @@
   display: none;
 }
 
-.certainStopBox_titlebox__marginBottom {
+.certainStopBox_titlebox {
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -35,6 +36,8 @@
   margin-left: -24px;
   margin-right: -24px;
   min-height: 120px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 .certainStopBox_stopName {
   @include H1_Bold;
@@ -92,6 +95,9 @@
   flex-direction: column;
   gap: 8px;
   background-color: $color-background;
+  
+  height: 100%;
+  overflow-y: scroll;
 }
 .certainStopBox_AllRouteBox > div:last-child {
   border-bottom: 0px;

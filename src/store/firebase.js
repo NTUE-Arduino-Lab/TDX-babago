@@ -1,4 +1,6 @@
 import axios from 'axios';
+import type from './actionTypes';
+
 //Firebase
 import { initializeApp } from 'firebase/app';
 // import { getAnalytics } from 'firebase/analytics';
@@ -7,8 +9,8 @@ import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 const FIREBASE_URL =
   'https://fcm.googleapis.com/v1/projects/babago-noti/messages:send';
 const KEY_API = 'https://babago-api.herokuapp.com/';
-const token =
-  'egjfDhSeMA4xv-RtsPaNZO:APA91bFj-DfT8kUurHr34cpLVUpdZsbbR3R3MSJ5YDt1LvqLlEqF0mmTIJ8fv24X760Y0Rwx9-6qOgXUHWT1ACSByBb6C2jIHCW_DhDp4XEOIXY6174BRV1Yokek6L7LN9Ro7rw_wz-Q';
+// const token =
+//   'egjfDhSeMA4xv-RtsPaNZO:APA91bFj-DfT8kUurHr34cpLVUpdZsbbR3R3MSJ5YDt1LvqLlEqF0mmTIJ8fv24X760Y0Rwx9-6qOgXUHWT1ACSByBb6C2jIHCW_DhDp4XEOIXY6174BRV1Yokek6L7LN9Ro7rw_wz-Q';
 
 //Firebase configuration
 const firebaseConfig = {
@@ -27,22 +29,26 @@ const messaging = getMessaging(firebaseApp);
 const publicKey =
   'BJhB-CwmACWUjwyfpVFXeTKMQ5O2GeBAcy7u3Js7SA3Lw4XmipfUiStp1DcbsuhzEzuYCdJBVvGTXmDDWpcAq1c';
 
-export const fetchToken = (setTokenFound) => {
+export const fetchToken = (dispatch) => {
   const messaging = getMessaging();
   return getToken(messaging, {
     vapidKey: publicKey,
   })
     .then((currentToken) => {
       if (currentToken) {
-        console.log('current token for client: ', currentToken);
-        setTokenFound(true);
+        // console.log('current token for client: ', currentToken);
+        // setTokenFound(true);
         // Track the token -> client mapping, by sending to backend server
         // show on the UI that permission is secured
+        dispatch({
+          type: type.SET_TOKEN,
+          payload: currentToken,
+        });
       } else {
         console.log(
           'No registration token available. Request permission to generate one.',
         );
-        setTokenFound(false);
+        // setTokenFound(false);
         // shows on the UI that permission is required
       }
     })
@@ -59,9 +65,9 @@ export const onMessageListener = () =>
     });
   });
 
-export const remindNotification = async (remindBus) => {
+export const remindNotification = async (remindBus, token) => {
   try {
-    // console.log(remindBus);
+    // console.log(token);
     let stopStatus = '';
     if (remindBus[0].stopStatus !== '進站中') {
       stopStatus = '即將在' + remindBus[0].stopStatus + '內抵達';
@@ -94,7 +100,7 @@ export const remindNotification = async (remindBus) => {
   }
 };
 
-export const onReserveNotification = async (busdata) => {
+export const onReserveNotification = async (busdata, token) => {
   try {
     const { bus } = busdata;
     let stopStatus = '';
