@@ -185,7 +185,7 @@
 .Button_rowButton {
   width: 100%;
   padding: 8px 6px 8px 4px;
-  border-radius: 5px;
+  gap: 6px;
 }
 .Button_enableButton {
   color: $color-main;
@@ -195,8 +195,14 @@
 }
 
 .Button_icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
   padding-top: 1px;
-  margin-right: 6px;
+  // margin-right: 6px;
 }
 
 .marquee_animation {

@@ -15,7 +15,7 @@ import { StoreContext } from '../../store/reducer';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // eslint-disable-next-line no-unused-vars
-import { faArrowRight, faBell } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faBellSlash } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 import { remindNotification } from '../../store/firebase';
 
@@ -291,7 +291,7 @@ function ClosestStopBox() {
                         >
                           <FontAwesomeIcon
                             className={styles.ButtonBox_icon}
-                            icon={faBell}
+                            icon={faBellSlash}
                           />
                           <div>取消提醒</div>
                         </button>

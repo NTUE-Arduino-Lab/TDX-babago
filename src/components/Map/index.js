@@ -85,13 +85,20 @@ function LocationMarker() {
         navigate(`${path.home}?lng=${e.latlng.lng}&lat=${e.latlng.lat}`);
       });
     }
-  }, [initMap]);
+  }, [initMap, lng, lat]);
 
   const clickMap = useMapEvents({
     click(e) {
-      setPosition(dispatch, { position: e.latlng });
-      clickMap.flyTo(e.latlng, clickMap.getZoom());
-      navigate(`${path.nearbyStops}?lng=${e.latlng.lng}&lat=${e.latlng.lat}`);
+      if (
+        !(
+          e.originalEvent.target.tagName == 'path' ||
+          e.originalEvent.target.tagName == 'svg'
+        )
+      ) {
+        setPosition(dispatch, { position: e.latlng });
+        clickMap.flyTo(e.latlng, clickMap.getZoom());
+        navigate(`${path.nearbyStops}?lng=${e.latlng.lng}&lat=${e.latlng.lat}`);
+      }
     },
   });
 
@@ -130,7 +137,25 @@ function LocationMarker() {
 
   return location === null ? null : (
     <Fragment>
-      <button>
+      <button
+        onClick={() => {
+          navigator.geolocation.getCurrentPosition((e) => {
+            setPosition(dispatch, {
+              position: {
+                lng: e.coords.longitude,
+                lat: e.coords.latitude,
+              },
+            });
+            clickMap.flyTo(
+              { lng: e.coords.longitude, lat: e.coords.latitude },
+              clickMap.getZoom(),
+            );
+            navigate(
+              `${path.nearbyStops}?lng=${e.coords.longitude}&lat=${e.coords.latitude}`,
+            );
+          });
+        }}
+      >
         <FontAwesomeIcon
           className={styles.rePosition_Botton}
           icon={faCrosshairs}

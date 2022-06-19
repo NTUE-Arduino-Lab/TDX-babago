@@ -25,8 +25,8 @@ import {
   faUserClock,
   faUserXmark,
   faWheelchair,
+  faBellSlash,
 } from '@fortawesome/free-solid-svg-icons';
-// import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 import { remindNotification } from '../../store/firebase';
 
@@ -248,19 +248,19 @@ function CertainRouteBox() {
             if (routeBusesArr2.length > 0) {
               setRouteBusesArr(routeBusesArr2);
             } else {
-              setRouteBusesArr(-1);
+              setRouteBusesArr([-1]);
             }
           }
         }
       } else {
-        setRouteBusesArr(-1);
+        setRouteBusesArr([-1]);
       }
     }
   }, [selectRouteBuses]);
 
   useEffect(() => {
     if (stopsTimeArr && stopsTimeArr.length > 0 && routeBusesArr) {
-      if (routeBusesArr == -1) {
+      if (routeBusesArr[0] != -1) {
         setDirectionStops(stopsTimeArr);
       } else if (routeBusesArr.length > 0) {
         let directionStops2 = stopsTimeArr;
@@ -327,7 +327,7 @@ function CertainRouteBox() {
   }, [routeBusesArr]);
 
   useEffect(() => {
-    console.log(directionStops);
+    // console.log(directionStops);
     if (startStop_ref.current && startStop_ref.current.clientWidth) {
       setStartStopWidth(startStop_ref.current.clientWidth);
     }
@@ -337,8 +337,8 @@ function CertainRouteBox() {
   }, [directionStops, departureStopNameZh, destinationStopNameZh]);
 
   useEffect(() => {
-    console.log(startStopWidth);
-    console.log(endStopWidth);
+    // console.log(startStopWidth);
+    // console.log(endStopWidth);
   }, [startStopWidth, endStopWidth]);
 
   return (
@@ -582,19 +582,20 @@ function CertainRouteBox() {
                       }}
                     >
                       <div className={styles.Button_icon}>
-                        <FontAwesomeIcon icon={farBell} />
+                        <FontAwesomeIcon icon={faBellSlash} />
                       </div>
                       <div>取消到站提醒</div>
                     </button>
                   )}
-                  <div
+                  <Link
                     className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
+                    to={`${path.certainStop}?lng=${stop.stopPosition.PositionLon}&lat=${stop.stopPosition.PositionLat}&stationName=${stop.stopName.Zh_tw}&stopUID=${stop.stopUID}`}
                   >
                     <div className={styles.Button_icon}>
                       <FontAwesomeIcon icon={faBus} />
                     </div>
                     <div>查看經過路線</div>
-                  </div>
+                  </Link>
                   <div
                     className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                   >
