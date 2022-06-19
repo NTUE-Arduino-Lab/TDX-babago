@@ -266,10 +266,9 @@ function CertainStopBox() {
             <div
               className={`${styles.ButtonBox_Button} ${styles.Button_White} ${styles.box__alignItemsCenter}`}
             >
-              <FontAwesomeIcon
-                className={styles.Button_icon}
-                icon={faDiamondTurnRight}
-              />
+              <div className={styles.Button_icon}>
+                <FontAwesomeIcon icon={faDiamondTurnRight} />
+              </div>
               <div>路線規劃</div>
             </div>
           </div>
@@ -369,10 +368,9 @@ function CertainStopBox() {
                   <button
                     className={`${styles.Button_rowButton} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
                   >
-                    <FontAwesomeIcon
-                      className={styles.Button_icon}
-                      icon={faUserClock}
-                    />
+                    <div className={styles.Button_icon}>
+                      <FontAwesomeIcon icon={faUserClock} />
+                    </div>
                     <div>預約上車</div>
                   </button>
                 ) : !currentRoutesBus.reverseState ? (
@@ -412,10 +410,9 @@ function CertainStopBox() {
                       );
                     }}
                   >
-                    <FontAwesomeIcon
-                      className={styles.Button_icon}
-                      icon={faUserClock}
-                    />
+                    <div className={styles.Button_icon}>
+                      <FontAwesomeIcon icon={faUserClock} />
+                    </div>
                     <div>預約上車</div>
                   </button>
                 ) : (
@@ -427,10 +424,9 @@ function CertainStopBox() {
                       });
                     }}
                   >
-                    <FontAwesomeIcon
-                      className={styles.Button_icon}
-                      icon={faUserXmark}
-                    />
+                    <div className={styles.Button_icon}>
+                      <FontAwesomeIcon icon={faUserXmark} />
+                    </div>
                     <div>取消預約</div>
                   </button>
                 )}
@@ -443,10 +439,9 @@ function CertainStopBox() {
                   <button
                     className={`${styles.Button_rowButton} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
                   >
-                    <FontAwesomeIcon
-                      className={styles.Button_icon}
-                      icon={farBell}
-                    />
+                    <div className={styles.Button_icon}>
+                      <FontAwesomeIcon icon={farBell} />
+                    </div>
                     <div>開啟提醒</div>
                   </button>
                 ) : !currentRoutesBus.remindState ? (
@@ -471,10 +466,9 @@ function CertainStopBox() {
                       remindNotification(busesArr, token);
                     }}
                   >
-                    <FontAwesomeIcon
-                      className={styles.Button_icon}
-                      icon={farBell}
-                    />
+                    <div className={styles.Button_icon}>
+                      <FontAwesomeIcon icon={farBell} />
+                    </div>
                     <div>開啟提醒</div>
                   </button>
                 ) : (
@@ -497,10 +491,9 @@ function CertainStopBox() {
                       }
                     }}
                   >
-                    <FontAwesomeIcon
-                      className={styles.Button_icon}
-                      icon={faBellSlash}
-                    />
+                    <div className={styles.Button_icon}>
+                      <FontAwesomeIcon icon={faBellSlash} />
+                    </div>
                     <div>取消提醒</div>
                   </button>
                 )}
@@ -512,10 +505,9 @@ function CertainStopBox() {
                   }
                   className={`${styles.Button_rowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter} ${styles.certainRouteBox_linkSetting}`}
                 >
-                  <FontAwesomeIcon
-                    className={styles.Button_icon}
-                    icon={faRoute}
-                  />
+                  <div className={styles.Button_icon}>
+                    <FontAwesomeIcon icon={faRoute} />
+                  </div>
                   <div>查看路線</div>
                 </Link>
               </div>
