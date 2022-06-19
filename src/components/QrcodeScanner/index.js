@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 
 // import path from '../../router/path';
@@ -8,7 +7,6 @@ import Step2 from '../../asset/imgs/Step2.svg';
 import Step3 from '../../asset/imgs/Step3.svg';
 
 function QrcodeScanner() {
-  const navigate = useNavigate();
   return (
     <div className={styles.sidebar_box}>
       <BarcodeScannerComponent
@@ -16,7 +14,7 @@ function QrcodeScanner() {
         height={'100%'}
         onUpdate={(err, result) => {
           if (result) {
-            navigate(result.text);
+            window.location.href = result.text;
           } else {
             console.log('Not Found');
           }
