@@ -20,7 +20,6 @@ const firebaseConfig = {
   storageBucket: 'babago-noti.appspot.com',
   messagingSenderId: '127721117499',
   appId: '1:127721117499:web:48b56d8aea4e31f1d5c91e',
-  measurementId: 'G-M4R7NFGZB0',
 };
 
 initializeApp(firebaseConfig);
@@ -30,7 +29,7 @@ const publicKey =
   'BJhB-CwmACWUjwyfpVFXeTKMQ5O2GeBAcy7u3Js7SA3Lw4XmipfUiStp1DcbsuhzEzuYCdJBVvGTXmDDWpcAq1c';
 
 export const fetchToken = (dispatch) => {
-  const messaging = getMessaging();
+  // const messaging = getMessaging();
   return getToken(messaging, {
     vapidKey: publicKey,
   })

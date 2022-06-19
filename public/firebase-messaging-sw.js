@@ -1,9 +1,9 @@
 // Scripts for firebase and firebase messaging
 importScripts(
-  'https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/9.8.3/firebase-app-compat.js',
 );
 importScripts(
-  'https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js',
+  'https://www.gstatic.com/firebasejs/9.8.3/firebase-messaging-compat.js',
 );
 
 var firebaseConfig = {
@@ -13,7 +13,6 @@ var firebaseConfig = {
   storageBucket: 'babago-noti.appspot.com',
   messagingSenderId: '127721117499',
   appId: '1:127721117499:web:48b56d8aea4e31f1d5c91e',
-  measurementId: 'G-M4R7NFGZB0',
 };
 
 firebase.initializeApp(firebaseConfig);
