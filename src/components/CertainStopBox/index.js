@@ -23,7 +23,8 @@ import { StoreContext } from '../../store/reducer';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faBus,
+  faUserClock,
+  faUserXmark,
   faDiamondTurnRight,
   faRoute,
 } from '@fortawesome/free-solid-svg-icons';
@@ -370,7 +371,7 @@ function CertainStopBox() {
                   >
                     <FontAwesomeIcon
                       className={styles.Button_icon}
-                      icon={faBus}
+                      icon={faUserClock}
                     />
                     <div>預約上車</div>
                   </button>
@@ -413,7 +414,7 @@ function CertainStopBox() {
                   >
                     <FontAwesomeIcon
                       className={styles.Button_icon}
-                      icon={faBus}
+                      icon={faUserClock}
                     />
                     <div>預約上車</div>
                   </button>
@@ -428,7 +429,7 @@ function CertainStopBox() {
                   >
                     <FontAwesomeIcon
                       className={styles.Button_icon}
-                      icon={faBus}
+                      icon={faUserXmark}
                     />
                     <div>取消預約</div>
                   </button>

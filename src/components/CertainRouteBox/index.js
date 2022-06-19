@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import * as QueryString from 'query-string';
 
@@ -22,6 +22,8 @@ import {
   faBus,
   faDiamondTurnRight,
   faInfoCircle,
+  faUserClock,
+  faUserXmark,
   faWheelchair,
 } from '@fortawesome/free-solid-svg-icons';
 // import { faBell } from '@fortawesome/free-solid-svg-icons';
@@ -61,7 +63,10 @@ function CertainRouteBox() {
   const [directionStops, setDirectionStops] = useState(null);
   const [pageUpdate, setPageUpdate] = useState(true);
   const [city, setCity] = useState(null);
-
+  const startStop_ref = useRef(null);
+  const endStop_ref = useRef(null);
+  const [startStopWidth, setStartStopWidth] = useState(0);
+  const [endStopWidth, setEndStopWidth] = useState(0);
   useEffect(() => {
     setCurrentBuses(dispatch, {
       city: null,
@@ -322,8 +327,19 @@ function CertainRouteBox() {
   }, [routeBusesArr]);
 
   useEffect(() => {
-    // console.log(directionStops);
+    console.log(directionStops);
+    if (startStop_ref.current && startStop_ref.current.clientWidth) {
+      setStartStopWidth(startStop_ref.current.clientWidth);
+    }
+    if (endStop_ref.current && endStop_ref.current.clientWidth) {
+      setEndStopWidth(endStop_ref.current.clientWidth);
+    }
   }, [directionStops, departureStopNameZh, destinationStopNameZh]);
+
+  useEffect(() => {
+    console.log(startStopWidth);
+    console.log(endStopWidth);
+  }, [startStopWidth, endStopWidth]);
 
   return (
     // <>
@@ -346,19 +362,36 @@ function CertainRouteBox() {
             className={`${styles.box__alignItemsCenter} ${styles.certainRouteBox_routeInfo} ${styles.box__spaceBetween}`}
           >
             <div className={styles.routeInfo_detailBox}>
-              <div>{departureStopNameZh}</div>
+              <div className={styles.detailBox_location}>
+                <p
+                  ref={startStop_ref}
+                  className={
+                    startStopWidth > 60 ? `${styles.marquee_animation}` : ''
+                  }
+                >
+                  {departureStopNameZh}
+                </p>
+              </div>
               <div>－</div>
-              <div>{destinationStopNameZh}</div>
+              <div className={styles.detailBox_location}>
+                <p
+                  ref={endStop_ref}
+                  className={
+                    endStopWidth > 60 ? `${styles.marquee_animation}` : ''
+                  }
+                >
+                  {destinationStopNameZh}
+                </p>
+              </div>
               <div>｜</div>
               <div>{directionStops.length}站</div>
             </div>
             <div
               className={`${styles.ButtonBox_Button} ${styles.Button_White_outline} ${styles.box__alignItemsCenter}`}
             >
-              <FontAwesomeIcon
-                className={styles.Button_icon}
-                icon={faInfoCircle}
-              />
+              <div className={styles.Button_icon}>
+                <FontAwesomeIcon icon={faInfoCircle} />
+              </div>
               <div>路線資訊</div>
             </div>
           </div>
@@ -448,10 +481,9 @@ function CertainRouteBox() {
                     <button
                       className={`${styles.ButtonBox_RowButton} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
                     >
-                      <FontAwesomeIcon
-                        className={styles.Button_icon}
-                        icon={faBus}
-                      />
+                      <div className={styles.Button_icon}>
+                        <FontAwesomeIcon icon={faUserClock} />
+                      </div>
                       <div>預約下車</div>
                     </button>
                   ) : !stop.reverseState ? (
@@ -471,10 +503,9 @@ function CertainRouteBox() {
                         });
                       }}
                     >
-                      <FontAwesomeIcon
-                        className={styles.Button_icon}
-                        icon={faBus}
-                      />
+                      <div className={styles.Button_icon}>
+                        <FontAwesomeIcon icon={faUserClock} />
+                      </div>
                       <div>預約下車</div>
                     </button>
                   ) : (
@@ -486,10 +517,9 @@ function CertainRouteBox() {
                         });
                       }}
                     >
-                      <FontAwesomeIcon
-                        className={styles.Button_icon}
-                        icon={faBus}
-                      />
+                      <div className={styles.Button_icon}>
+                        <FontAwesomeIcon icon={faUserXmark} />
+                      </div>
                       <div>取消預約</div>
                     </button>
                   )}
@@ -501,10 +531,9 @@ function CertainRouteBox() {
                     <button
                       className={`${styles.ButtonBox_RowButton} ${styles.Button_disableButton} ${styles.box__alignItemsCenter}`}
                     >
-                      <FontAwesomeIcon
-                        className={styles.Button_icon}
-                        icon={farBell}
-                      />
+                      <div className={styles.Button_icon}>
+                        <FontAwesomeIcon icon={farBell} />
+                      </div>
                       <div>開啟到站提醒</div>
                     </button>
                   ) : !stop.remindState ? (
@@ -527,10 +556,9 @@ function CertainRouteBox() {
                         remindNotification(busesArr, token);
                       }}
                     >
-                      <FontAwesomeIcon
-                        className={styles.Button_icon}
-                        icon={farBell}
-                      />
+                      <div className={styles.Button_icon}>
+                        <FontAwesomeIcon icon={farBell} />
+                      </div>
                       <div>開啟到站提醒</div>
                     </button>
                   ) : (
@@ -553,10 +581,9 @@ function CertainRouteBox() {
                         }
                       }}
                     >
-                      <FontAwesomeIcon
-                        className={styles.Button_icon}
-                        icon={farBell}
-                      />
+                      <div className={styles.Button_icon}>
+                        <FontAwesomeIcon icon={farBell} />
+                      </div>
                       <div>取消到站提醒</div>
                     </button>
                   )}
@@ -564,19 +591,17 @@ function CertainRouteBox() {
                     className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                     to={`${path.certainStop}?lng=${stop.stopPosition.PositionLon}&lat=${stop.stopPosition.PositionLat}&stationName=${stop.stopName.Zh_tw}&stopUID=${stop.stopUID}`}
                   >
-                    <FontAwesomeIcon
-                      className={styles.Button_icon}
-                      icon={faBus}
-                    />
+                    <div className={styles.Button_icon}>
+                      <FontAwesomeIcon icon={faBus} />
+                    </div>
                     <div>查看經過路線</div>
                   </Link>
                   <div
                     className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                   >
-                    <FontAwesomeIcon
-                      className={styles.Button_icon}
-                      icon={faDiamondTurnRight}
-                    />
+                    <div className={styles.Button_icon}>
+                      <FontAwesomeIcon icon={faDiamondTurnRight} />
+                    </div>
                     <div>路線規劃</div>
                   </div>
                 </div>

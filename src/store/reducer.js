@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import type from './actionTypes';
 
 //firebase
-import { fetchToken, onMessageListener } from './firebase';
+import { fetchToken } from './firebase';
 
 export const StoreContext = createContext();
 
@@ -117,11 +117,6 @@ export function StoreProvider(props) {
   useEffect(() => {
     fetchToken(dispatch);
   }, []);
-  onMessageListener()
-    .then((payload) => {
-      console.log(payload);
-    })
-    .catch((err) => console.log('failed: ', err));
 
   return (
     <StoreContext.Provider value={value}>
