@@ -327,7 +327,7 @@ function CertainRouteBox() {
   }, [routeBusesArr]);
 
   useEffect(() => {
-    console.log(directionStops);
+    // console.log(directionStops);
     if (startStop_ref.current && startStop_ref.current.clientWidth) {
       setStartStopWidth(startStop_ref.current.clientWidth);
     }
@@ -337,8 +337,8 @@ function CertainRouteBox() {
   }, [directionStops, departureStopNameZh, destinationStopNameZh]);
 
   useEffect(() => {
-    console.log(startStopWidth);
-    console.log(endStopWidth);
+    // console.log(startStopWidth);
+    // console.log(endStopWidth);
   }, [startStopWidth, endStopWidth]);
 
   return (
