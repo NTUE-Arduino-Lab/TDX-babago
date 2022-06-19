@@ -248,19 +248,19 @@ function CertainRouteBox() {
             if (routeBusesArr2.length > 0) {
               setRouteBusesArr(routeBusesArr2);
             } else {
-              setRouteBusesArr(-1);
+              setRouteBusesArr([-1]);
             }
           }
         }
       } else {
-        setRouteBusesArr(-1);
+        setRouteBusesArr([-1]);
       }
     }
   }, [selectRouteBuses]);
 
   useEffect(() => {
     if (stopsTimeArr && stopsTimeArr.length > 0 && routeBusesArr) {
-      if (routeBusesArr == -1) {
+      if (routeBusesArr[0] != -1) {
         setDirectionStops(stopsTimeArr);
       } else if (routeBusesArr.length > 0) {
         let directionStops2 = stopsTimeArr;
