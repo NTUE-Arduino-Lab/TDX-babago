@@ -67,10 +67,11 @@ export const onMessageListener = () =>
 
 export const remindNotification = async (remindBus, token) => {
   try {
-    // console.log(token);
+    console.log(remindBus);
+    let bus = remindBus;
     let stopStatus = '';
-    if (remindBus[0].stopStatus !== '進站中') {
-      stopStatus = '即將在' + remindBus[0].stopStatus + '內抵達';
+    if (bus.stopStatus !== '進站中') {
+      stopStatus = '即將在' + bus.stopStatus + '內抵達';
     } else {
       stopStatus = '即將抵達';
     }
@@ -81,8 +82,7 @@ export const remindNotification = async (remindBus, token) => {
         message: {
           data: {
             title: '公車即將抵達',
-            body:
-              remindBus[0].routeName + stopStatus + remindBus[0].stationName,
+            body: bus.routeName + stopStatus + bus.stationName,
           },
           token: token,
         },

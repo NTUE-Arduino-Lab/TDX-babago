@@ -463,7 +463,14 @@ function CertainStopBox() {
                       setRemindBuses(dispatch, {
                         buses: busesArr,
                       });
-                      remindNotification(busesArr, token);
+                      remindNotification(
+                        {
+                          stationName,
+                          routeName: currentRoutesBus.routeName,
+                          stopStatus: currentRoutesBus.stopStatus,
+                        },
+                        token,
+                      );
                     }}
                   >
                     <div className={styles.Button_icon}>

@@ -22,10 +22,6 @@ const Router = () => {
   const [show, setShow] = useState(false);
   const [notification, setNotification] = useState({ title: '', body: '' });
 
-  const close = () => {
-    setShow(false);
-  };
-
   onMessageListener()
     .then((payload) => {
       setShow(true);
@@ -43,7 +39,6 @@ const Router = () => {
         {show ? (
           <Notification
             show={show}
-            close={close}
             title={notification.title}
             body={notification.body}
           />

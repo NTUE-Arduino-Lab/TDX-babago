@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import notiIcon from '../../asset/imgs/noti-icon.svg';
 
-function Notification({ show, close, title, body }) {
+function Notification({ show, title, body }) {
   const Msg = () => (
     <div>
       <div>{title}</div>
@@ -16,12 +16,11 @@ function Notification({ show, close, title, body }) {
     if (show && title !== '' && body !== '') {
       toast.info(<Msg />, {
         icon: () => <img src={notiIcon} />,
-        onClose: () => close(),
         theme: 'light',
         type: 'info',
       });
     }
-    console.log(show);
+    console.log(title + body);
   }, [show, title, body]);
 
   return (

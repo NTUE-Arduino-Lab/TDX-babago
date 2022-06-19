@@ -257,7 +257,14 @@ function ClosestStopBox() {
                             setRemindBuses(dispatch, {
                               buses: busesArr,
                             });
-                            remindNotification(busesArr, token);
+                            remindNotification(
+                              {
+                                stationName: closestStop.stationName,
+                                routeName: currentRoutesBus.routeName,
+                                stopStatus: currentRoutesBus.stopStatus,
+                              },
+                              token,
+                            );
                           }}
                         >
                           <FontAwesomeIcon

@@ -27,10 +27,10 @@ function QrcodeScanner() {
         <div className={styles.infoBox_content}>
           <div>1.</div>掃描公車站牌上含有巴巴走標示的QR Code
         </div>
-        <img src={Step2} />
         <div className={styles.infoBox_content}>
           <div>2.</div>選擇想要預約的路線
         </div>
+        <img src={Step2} />
         <div className={styles.infoBox_content}>
           <div>3.</div>點擊預約上車
         </div>
