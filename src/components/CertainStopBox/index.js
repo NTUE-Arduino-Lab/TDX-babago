@@ -1,10 +1,14 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import * as QueryString from 'query-string';
 import useDynamicRefs from 'use-dynamic-refs';
 
+import axios from 'axios';
+import jsSHA from 'jssha';
+
 import path from '../../router/path';
 import styles from './styles.module.scss';
+import cityJson from '../../asset/json/city.json';
 
 import {
   setSelectRouteStopsSort,
@@ -33,9 +37,10 @@ import {
 function CertainStopBox() {
   const [getRef, setRef] = useDynamicRefs();
   const [overSize, SetOverSize] = useState([]);
+  const navigate = useNavigate();
 
   const reactlocation = useLocation();
-  const { lng, lat, stationID, stationName, stationDistance } =
+  const { lng, lat, stationID, stationName, stationDistance, stopUID } =
     QueryString.parse(reactlocation.search);
 
   const {
@@ -56,7 +61,52 @@ function CertainStopBox() {
   const [openRoutes, setOpenRoutes] = useState('0');
   const [pageUpdate, setPageUpdate] = useState(true);
 
+  function GetAuthorizationHeader() {
+    const AppID = '88836dc3bd984400b7b3ea51e35e2627';
+    const AppKey = 'AqupXvSAdKge3ptnkghRmreRdrc';
+
+    const GMTString = new Date().toGMTString();
+    const ShaObj = new jsSHA('SHA-1', 'TEXT');
+    ShaObj.setHMACKey(AppKey, 'TEXT');
+    ShaObj.update('x-date: ' + GMTString);
+    const HMAC = ShaObj.getHMAC('B64');
+    const Authorization =
+      'hmac username="' +
+      AppID +
+      '", algorithm="hmac-sha1", headers="x-date", signature="' +
+      HMAC +
+      '"';
+
+    return {
+      Authorization: Authorization,
+      'X-Date': GMTString /*,'Accept-Encoding': 'gzip'*/,
+    }; //如果要將js運行在伺服器，可額外加入 'Accept-Encoding': 'gzip'，要求壓縮以減少網路傳輸資料量
+  }
+
   useEffect(() => {
+    if (stopUID && !stationID) {
+      for (let i = 0; i < cityJson.length; i++) {
+        if (cityJson[i].AuthorityCode === stopUID.substring(0, 3)) {
+          const fetchStation = async () => {
+            const url = `https://ptx.transportdata.tw/MOTC/v2/Bus/Station/City/${cityJson[i].cityEn}?%24filter=Stops%2Fany(c%3Ac%2FStopUID%20eq%20'${stopUID}')`;
+
+            const config = {
+              headers: GetAuthorizationHeader(),
+            };
+            const response = await axios.get(url, config);
+            const data = response.data;
+            // console.log(data);
+            navigate(
+              `${path.certainStop}?lng=${lng}&lat=${lat}&stationName=${stationName}&stationID=${data[0].StationID}&stationDistance=0`,
+            );
+          };
+
+          fetchStation().catch(console.error);
+          i = cityJson.length;
+        }
+      }
+    }
+
     setSelectRouteStopsSort(dispatch, {
       city: null,
       selectRoute: null,
@@ -177,8 +227,8 @@ function CertainStopBox() {
             p_ref.current !== null &&
             p_ref.current.offsetWidth > div_ref.current.offsetWidth
           ) {
-            console.log(p_ref.current.offsetWidth);
-            console.log(div_ref.current.offsetWidth);
+            // console.log(p_ref.current.offsetWidth);
+            // console.log(div_ref.current.offsetWidth);
             array.push(true);
           } else {
             array.push(false);

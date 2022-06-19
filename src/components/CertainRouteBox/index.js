@@ -322,7 +322,7 @@ function CertainRouteBox() {
   }, [routeBusesArr]);
 
   useEffect(() => {
-    console.log(directionStops);
+    // console.log(directionStops);
   }, [directionStops, departureStopNameZh, destinationStopNameZh]);
 
   return (
@@ -560,15 +560,16 @@ function CertainRouteBox() {
                       <div>取消到站提醒</div>
                     </button>
                   )}
-                  <div
+                  <Link
                     className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
+                    to={`${path.certainStop}?lng=${stop.stopPosition.PositionLon}&lat=${stop.stopPosition.PositionLat}&stationName=${stop.stopName.Zh_tw}&stopUID=${stop.stopUID}`}
                   >
                     <FontAwesomeIcon
                       className={styles.Button_icon}
                       icon={faBus}
                     />
                     <div>查看經過路線</div>
-                  </div>
+                  </Link>
                   <div
                     className={`${styles.ButtonBox_RowButton} ${styles.Button_enableButton} ${styles.box__alignItemsCenter}`}
                   >
