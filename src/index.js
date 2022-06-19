@@ -5,6 +5,7 @@ import './global.scss';
 import Router from './router';
 
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import path from './router/path';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -26,7 +27,7 @@ serviceWorkerRegistration.register();
 //firebase service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
-    .register('../firebase-messaging-sw.js')
+    .register(`${path.home}/firebase-messaging-sw.js`)
     .then(function (registration) {
       console.log('Registration successful, scope is:', registration.scope);
     })
