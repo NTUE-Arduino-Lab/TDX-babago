@@ -27,8 +27,8 @@ import {
   faUserXmark,
   faDiamondTurnRight,
   faRoute,
+  faBellSlash,
 } from '@fortawesome/free-solid-svg-icons';
-// import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 import {
   onReserveNotification,
@@ -499,7 +499,7 @@ function CertainStopBox() {
                   >
                     <FontAwesomeIcon
                       className={styles.Button_icon}
-                      icon={farBell}
+                      icon={faBellSlash}
                     />
                     <div>取消提醒</div>
                   </button>

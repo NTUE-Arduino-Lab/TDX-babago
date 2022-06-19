@@ -25,8 +25,8 @@ import {
   faUserClock,
   faUserXmark,
   faWheelchair,
+  faBellSlash,
 } from '@fortawesome/free-solid-svg-icons';
-// import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 import { remindNotification } from '../../store/firebase';
 
@@ -582,7 +582,7 @@ function CertainRouteBox() {
                       }}
                     >
                       <div className={styles.Button_icon}>
-                        <FontAwesomeIcon icon={farBell} />
+                        <FontAwesomeIcon icon={faBellSlash} />
                       </div>
                       <div>取消到站提醒</div>
                     </button>
