@@ -260,7 +260,7 @@ function CertainRouteBox() {
 
   useEffect(() => {
     if (stopsTimeArr && stopsTimeArr.length > 0 && routeBusesArr) {
-      if (routeBusesArr[0] != -1) {
+      if (routeBusesArr[0] == -1) {
         setDirectionStops(stopsTimeArr);
       } else if (routeBusesArr.length > 0) {
         let directionStops2 = stopsTimeArr;
@@ -300,7 +300,10 @@ function CertainRouteBox() {
                 });
               }
             }
-            if (i == stopsTimeArr.length - 1 && j == routeBusesArr.length - 1) {
+            if (
+              i == stopsTimeArr.length - 1 &&
+              j == routeBusesArr2.length - 1
+            ) {
               for (let k = 0; k < directionStops2.length; k++) {
                 if (directionStops2[k].buses.length > 0) {
                   for (let l = 0; l < directionStops2[k].buses.length; l++) {
